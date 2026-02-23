@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PLAYPOP — Creative Toy Store</title>
+    <meta name="description"
+        content="PLAYPOP — Curated toys by age, educational play, and the best new arrivals. Find the perfect gift for every little explorer." />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet" />
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        display: ['"Fredoka"', 'system-ui', 'sans-serif'],
+                        sans: ['"Nunito"', 'system-ui', 'sans-serif'],
+                    },
+                    colors: {
+                        pop: '#F43F5E',
+                        popDark: '#E11D48',
+                        popPale: '#FFF1F2',
+                        sun: '#FACC15',
+                        sunDark: '#EAB308',
+                        sunPale: '#FEFCE8',
+                        sky: '#38BDF8',
+                        skyDark: '#0EA5E9',
+                        skyPale: '#F0F9FF',
+                        mint: '#34D399',
+                        mintPale: '#ECFDF5',
+                        violet: '#A78BFA',
+                        violetPale: '#F5F3FF',
+                        orange: '#FB923C',
+                        orangePale: '#FFF7ED',
+                        night: '#1E1B4B',
+                        slate: '#64748B',
+                        mist: '#E2E8F0',
+                        cloud: '#F8FAFC',
+                        snow: '#FFFFFF',
+                    },
+                },
+            },
+        };
+    </script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Nunito', system-ui, sans-serif;
+            background: #FFFFFF;
+            color: #1E1B4B;
+            overflow-x: hidden;
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity .7s ease, transform .7s ease;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .card {
+            transition: transform .35s, box-shadow .35s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px) rotate(-1deg);
+            box-shadow: 0 16px 48px rgba(244, 63, 94, .1);
+        }
+
+        .card img {
+            transition: transform .5s ease;
+        }
+
+        .card:hover img {
+            transform: scale(1.06);
+        }
+
+        .btn-pop {
+            transition: transform .25s, box-shadow .25s;
+        }
+
+        .btn-pop:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(244, 63, 94, .3);
+        }
+
+        .bounce {
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+
+            0%,
+            100% {
+                transform: translateY(0)
+            }
+
+            50% {
+                transform: translateY(-8px)
+            }
+        }
+
+        ::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #FFFFFF;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #F43F5E;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+
+<body x-data="{ mobileMenu: false, cartOpen: false, cartCount: 1 }" class="bg-snow text-night">
+
+    <!-- ====== NAVIGATION ====== -->
+    <header class="fixed top-0 left-0 w-full z-50 bg-snow/90 backdrop-blur-md border-b border-mist/50">
+        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16 md:h-20">
+                <a href="#home" class="flex items-center gap-1.5">
+                    <span class="text-2xl bounce">🧸</span>
+                    <span class="font-display text-2xl font-bold text-pop">PLAY<span class="text-sun">POP</span></span>
+                </a>
+                <ul class="hidden md:flex items-center space-x-7 text-sm text-slate font-semibold">
+                    <li><a href="#age" class="hover:text-pop transition">Shop by Age</a></li>
+                    <li><a href="#educational" class="hover:text-pop transition">Educational</a></li>
+                    <li><a href="#new" class="hover:text-pop transition">New & Fun</a></li>
+                    <li><a href="#about" class="hover:text-pop transition">About Us</a></li>
+                </ul>
+                <div class="hidden md:flex items-center gap-3">
+                    <button @click="cartOpen=true" aria-label="Cart"
+                        class="p-2 text-slate hover:text-pop transition relative">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007z" />
+                        </svg>
+                        <span x-text="cartCount"
+                            class="absolute -top-1 -right-1 bg-pop text-white text-[10px] w-4 h-4 flex items-center justify-center rounded-full font-bold"></span>
+                    </button>
+                </div>
+                <button @click="mobileMenu=!mobileMenu" class="md:hidden p-2" aria-label="Menu">
+                    <svg x-show="!mobileMenu" class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.5"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 9h16.5m-16.5 6.75h16.5" />
+                    </svg>
+                    <svg x-show="mobileMenu" x-cloak class="w-6 h-6" fill="none" stroke="currentColor"
+                        stroke-width="1.5" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+            <div x-show="mobileMenu" x-cloak x-transition class="md:hidden pb-6 border-t border-mist/50">
+                <ul class="flex flex-col space-y-4 pt-4 text-sm font-semibold">
+                    <li><a @click="mobileMenu=false" href="#age" class="block py-1 text-slate hover:text-pop">Shop by
+                            Age</a></li>
+                    <li><a @click="mobileMenu=false" href="#educational"
+                            class="block py-1 text-slate hover:text-pop">Educational</a></li>
+                    <li><a @click="mobileMenu=false" href="#new" class="block py-1 text-slate hover:text-pop">New &
+                            Fun</a></li>
+                    <li><a @click="mobileMenu=false" href="#about" class="block py-1 text-slate hover:text-pop">About
+                            Us</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <!-- ====== CART SIDEBAR ====== -->
+    <div x-show="cartOpen" x-cloak class="fixed inset-0 z-[60]" @keydown.escape.window="cartOpen=false">
+        <div class="absolute inset-0 bg-night/30" @click="cartOpen=false"></div>
+        <div x-show="cartOpen" x-transition:enter="transition ease-out duration-300"
+            x-transition:enter-start="translate-x-full" x-transition:enter-end="translate-x-0"
+            x-transition:leave="transition ease-in duration-200" x-transition:leave-start="translate-x-0"
+            x-transition:leave-end="translate-x-full"
+            class="absolute right-0 top-0 h-full w-full max-w-md bg-snow shadow-2xl flex flex-col">
+            <div class="flex items-center justify-between px-6 py-5 border-b border-mist/50">
+                <h3 class="font-display text-xl font-bold">Your Bag 🛒 (<span x-text="cartCount"></span>)</h3><button
+                    @click="cartOpen=false"><svg class="w-5 h-5 text-slate" fill="none" stroke="currentColor"
+                        stroke-width="1.5" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg></button>
+            </div>
+            <div class="flex-1 overflow-y-auto px-6 py-6 space-y-4">
+                <div class="flex gap-4 pb-4 border-b border-mist/30">
+                    <div class="w-16 h-16 bg-sunPale rounded-xl flex-shrink-0 overflow-hidden"><img
+                            src="https://images.unsplash.com/photo-1566576912321-d58ddd7a6088?w=200&q=80&auto=format&fit=crop"
+                            alt="Wooden blocks" class="w-full h-full object-cover" /></div>
+                    <div class="flex-1">
+                        <h4 class="text-sm font-medium">Rainbow Stacking Blocks</h4>
+                        <p class="text-slate text-xs">Ages 1–3</p>
+                        <div class="flex justify-between mt-1">
+                            <p class="font-bold text-pop">$28</p><button
+                                class="text-slate text-xs hover:text-red-500">Remove</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-mist/50 px-6 py-5 space-y-3">
+                <div class="flex justify-between text-sm"><span class="text-slate">Subtotal</span><span
+                        class="font-bold text-lg">$28</span></div>
+                <button
+                    class="btn-pop w-full py-3.5 bg-pop text-white text-sm tracking-wider uppercase font-bold rounded-full">Checkout
+                    🎉</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ====== HERO ====== -->
+    <section id="home" class="relative min-h-screen flex items-center overflow-hidden bg-sunPale">
+        <div class="absolute top-20 left-0 w-72 h-72 bg-pop/10 rounded-full blur-3xl"></div>
+        <div class="absolute bottom-10 right-10 w-64 h-64 bg-sky/10 rounded-full blur-3xl"></div>
+        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-32">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+                <div>
+                    <span
+                        class="inline-flex items-center gap-1.5 px-3 py-1 bg-pop/10 text-pop text-xs font-bold tracking-wider uppercase rounded-full mb-5">🎉
+                        Free Shipping on Orders Over $50</span>
+                    <h1 class="font-display text-5xl sm:text-6xl lg:text-7xl font-bold leading-[1.05] mb-6">
+                        Play. <span class="text-pop">Learn.</span> <span class="text-sky">Grow.</span>
+                    </h1>
+                    <p class="text-slate text-base sm:text-lg leading-relaxed mb-8 max-w-md">Curated, screen-free toys
+                        that spark imagination. Educational, creative, and just plain fun — for ages 0 to 12+.</p>
+                    <div class="flex flex-col sm:flex-row gap-3">
+                        <a href="#age"
+                            class="btn-pop inline-flex items-center justify-center px-8 py-3.5 bg-pop text-white text-sm tracking-wider uppercase font-bold rounded-full">Shop
+                            by Age</a>
+                        <a href="#new"
+                            class="btn-pop inline-flex items-center justify-center px-8 py-3.5 bg-sun text-night text-sm tracking-wider uppercase font-bold rounded-full">New
+                            Arrivals ✨</a>
+                    </div>
+                </div>
+                <div class="relative flex justify-center">
+                    <img src="https://images.unsplash.com/photo-1566576912321-d58ddd7a6088?w=700&q=80&auto=format&fit=crop"
+                        alt="Colorful creative toys" class="w-full max-w-lg rounded-3xl shadow-xl shadow-pop/10" />
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== SHOP BY AGE ====== -->
+    <section id="age" class="py-20 md:py-28 bg-snow">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-14 reveal">
+                <p class="text-pop text-xs tracking-[0.3em] uppercase font-bold mb-3">Find the Perfect Toy</p>
+                <h2 class="font-display text-4xl md:text-5xl font-bold">Shop by Age</h2>
+            </div>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <a href="#" class="card rounded-2xl overflow-hidden relative group reveal">
+                    <div class="aspect-square bg-popPale flex items-center justify-center"><span
+                            class="text-6xl">👶</span></div>
+                    <div class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-pop to-pop/80 p-4">
+                        <p class="text-white font-display font-bold text-lg">Baby</p>
+                        <p class="text-white/70 text-xs">0–12 months</p>
+                    </div>
+                </a>
+                <a href="#" class="card rounded-2xl overflow-hidden relative group reveal" style="transition-delay:.1s">
+                    <div class="aspect-square bg-skyPale flex items-center justify-center"><span
+                            class="text-6xl">🧒</span></div>
+                    <div class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-skyDark to-skyDark/80 p-4">
+                        <p class="text-white font-display font-bold text-lg">Toddler</p>
+                        <p class="text-white/70 text-xs">1–3 years</p>
+                    </div>
+                </a>
+                <a href="#" class="card rounded-2xl overflow-hidden relative group reveal"
+                    style="transition-delay:.15s">
+                    <div class="aspect-square bg-mintPale flex items-center justify-center"><span
+                            class="text-6xl">🎨</span></div>
+                    <div class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-mint to-mint/80 p-4">
+                        <p class="text-white font-display font-bold text-lg">Preschool</p>
+                        <p class="text-white/70 text-xs">3–6 years</p>
+                    </div>
+                </a>
+                <a href="#" class="card rounded-2xl overflow-hidden relative group reveal" style="transition-delay:.2s">
+                    <div class="aspect-square bg-violetPale flex items-center justify-center"><span
+                            class="text-6xl">🧠</span></div>
+                    <div class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-violet to-violet/80 p-4">
+                        <p class="text-white font-display font-bold text-lg">Big Kids</p>
+                        <p class="text-white/70 text-xs">6–12+ years</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== EDUCATIONAL TOYS ====== -->
+    <section id="educational" class="py-20 md:py-28 bg-cloud">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 reveal">
+                <div>
+                    <p class="text-skyDark text-xs tracking-[0.3em] uppercase font-bold mb-2">Smart Play</p>
+                    <h2 class="font-display text-4xl md:text-5xl font-bold">Educational Toys 📚</h2>
+                </div>
+                <a href="#" class="text-skyDark text-sm font-medium mt-3 md:mt-0 hover:text-night transition">View All
+                    →</a>
+            </div>
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="card bg-snow rounded-2xl overflow-hidden reveal">
+                    <div class="aspect-square bg-skyPale/50 overflow-hidden p-4 flex items-center justify-center"><img
+                            src="https://images.unsplash.com/photo-1566576912321-d58ddd7a6088?w=400&q=80&auto=format&fit=crop"
+                            alt="STEM building kit" class="w-full h-full object-contain" loading="lazy" /></div>
+                    <div class="p-3"><span
+                            class="text-skyDark text-[10px] tracking-wider uppercase font-bold">STEM</span>
+                        <h4 class="font-semibold text-sm mt-1">Circuit Builder Kit</h4>
+                        <p class="text-slate text-xs mt-0.5">Ages 6+ • 60 experiments</p>
+                        <div class="flex items-center justify-between mt-2"><span
+                                class="font-bold text-pop">$45</span><button @click="cartCount++"
+                                class="text-xs bg-pop/10 text-pop px-3 py-1.5 rounded-full font-bold hover:bg-pop hover:text-white transition">Add</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="card bg-snow rounded-2xl overflow-hidden reveal" style="transition-delay:.1s">
+                    <div class="aspect-square bg-mintPale/50 overflow-hidden p-4 flex items-center justify-center"><img
+                            src="https://images.unsplash.com/photo-1596461404969-9ae70f2830c1?w=400&q=80&auto=format&fit=crop"
+                            alt="Wooden Montessori set" class="w-full h-full object-contain" loading="lazy" /></div>
+                    <div class="p-3"><span
+                            class="text-mint text-[10px] tracking-wider uppercase font-bold">Montessori</span>
+                        <h4 class="font-semibold text-sm mt-1">Rainbow Stacking Blocks</h4>
+                        <p class="text-slate text-xs mt-0.5">Ages 1+ • FSC wood</p>
+                        <div class="flex items-center justify-between mt-2"><span
+                                class="font-bold text-pop">$28</span><button @click="cartCount++"
+                                class="text-xs bg-pop/10 text-pop px-3 py-1.5 rounded-full font-bold hover:bg-pop hover:text-white transition">Add</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="card bg-snow rounded-2xl overflow-hidden reveal" style="transition-delay:.15s">
+                    <div class="aspect-square bg-sunPale/50 overflow-hidden p-4 flex items-center justify-center"><img
+                            src="https://images.unsplash.com/photo-1566576912321-d58ddd7a6088?w=400&q=80&auto=format&fit=crop"
+                            alt="World map puzzle" class="w-full h-full object-contain" loading="lazy" /></div>
+                    <div class="p-3"><span
+                            class="text-sunDark text-[10px] tracking-wider uppercase font-bold">Geography</span>
+                        <h4 class="font-semibold text-sm mt-1">World Map Floor Puzzle</h4>
+                        <p class="text-slate text-xs mt-0.5">Ages 4+ • 100 pieces</p>
+                        <div class="flex items-center justify-between mt-2"><span
+                                class="font-bold text-pop">$22</span><button @click="cartCount++"
+                                class="text-xs bg-pop/10 text-pop px-3 py-1.5 rounded-full font-bold hover:bg-pop hover:text-white transition">Add</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="card bg-snow rounded-2xl overflow-hidden reveal" style="transition-delay:.2s">
+                    <div class="aspect-square bg-violetPale/50 overflow-hidden p-4 flex items-center justify-center">
+                        <img src="https://images.unsplash.com/photo-1596461404969-9ae70f2830c1?w=400&q=80&auto=format&fit=crop"
+                            alt="Coding robot" class="w-full h-full object-contain" loading="lazy" /></div>
+                    <div class="p-3"><span
+                            class="text-violet text-[10px] tracking-wider uppercase font-bold">Coding</span>
+                        <h4 class="font-semibold text-sm mt-1">BotBuddy Coding Robot</h4>
+                        <p class="text-slate text-xs mt-0.5">Ages 5+ • Screen-free</p>
+                        <div class="flex items-center justify-between mt-2"><span
+                                class="font-bold text-pop">$59</span><button @click="cartCount++"
+                                class="text-xs bg-pop/10 text-pop px-3 py-1.5 rounded-full font-bold hover:bg-pop hover:text-white transition">Add</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== NEW & FUN ====== -->
+    <section id="new" class="py-20 md:py-28 bg-pop text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-10 reveal">
+                <p class="text-popPale text-xs tracking-[0.3em] uppercase font-bold mb-3">Just Dropped</p>
+                <h2 class="font-display text-4xl md:text-5xl font-bold">New & Fun ✨</h2>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                <div class="bg-white/10 backdrop-blur rounded-2xl p-5 reveal">
+                    <div class="w-full aspect-video rounded-xl overflow-hidden mb-4 bg-white/10"><img
+                            src="https://images.unsplash.com/photo-1596461404969-9ae70f2830c1?w=500&q=80&auto=format&fit=crop"
+                            alt="Magnetic tiles set" class="w-full h-full object-cover" loading="lazy" /></div>
+                    <span class="text-sun text-[10px] tracking-wider uppercase font-bold">New</span>
+                    <h3 class="font-display text-xl font-bold mt-1">Magnetic Tile Mega Set</h3>
+                    <p class="text-white/60 text-sm mt-1">120 pieces • Translucent rainbow • Ages 3+</p>
+                    <div class="flex items-center justify-between mt-3"><span
+                            class="font-display text-2xl font-bold text-sun">$68</span><button @click="cartCount++"
+                            class="text-xs bg-white text-pop px-4 py-2 rounded-full font-bold hover:bg-sun hover:text-night transition">Add
+                            to Cart</button></div>
+                </div>
+                <div class="bg-white/10 backdrop-blur rounded-2xl p-5 reveal" style="transition-delay:.1s">
+                    <div class="w-full aspect-video rounded-xl overflow-hidden mb-4 bg-white/10"><img
+                            src="https://images.unsplash.com/photo-1566576912321-d58ddd7a6088?w=500&q=80&auto=format&fit=crop"
+                            alt="Play kitchen set" class="w-full h-full object-cover" loading="lazy" /></div>
+                    <span class="text-sun text-[10px] tracking-wider uppercase font-bold">Bestseller</span>
+                    <h3 class="font-display text-xl font-bold mt-1">Wooden Play Kitchen</h3>
+                    <p class="text-white/60 text-sm mt-1">30 accessories • FSC certified • Ages 2+</p>
+                    <div class="flex items-center justify-between mt-3"><span
+                            class="font-display text-2xl font-bold text-sun">$125</span><button @click="cartCount++"
+                            class="text-xs bg-white text-pop px-4 py-2 rounded-full font-bold hover:bg-sun hover:text-night transition">Add
+                            to Cart</button></div>
+                </div>
+                <div class="bg-white/10 backdrop-blur rounded-2xl p-5 reveal" style="transition-delay:.15s">
+                    <div class="w-full aspect-video rounded-xl overflow-hidden mb-4 bg-white/10"><img
+                            src="https://images.unsplash.com/photo-1596461404969-9ae70f2830c1?w=500&q=80&auto=format&fit=crop"
+                            alt="Art easel" class="w-full h-full object-cover" loading="lazy" /></div>
+                    <span class="text-sun text-[10px] tracking-wider uppercase font-bold">New</span>
+                    <h3 class="font-display text-xl font-bold mt-1">Double-Sided Art Easel</h3>
+                    <p class="text-white/60 text-sm mt-1">Chalkboard + whiteboard • Adjustable • Ages 3+</p>
+                    <div class="flex items-center justify-between mt-3"><span
+                            class="font-display text-2xl font-bold text-sun">$79</span><button @click="cartCount++"
+                            class="text-xs bg-white text-pop px-4 py-2 rounded-full font-bold hover:bg-sun hover:text-night transition">Add
+                            to Cart</button></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== ABOUT US ====== -->
+    <section id="about" class="py-20 md:py-28 bg-snow">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div class="reveal"><img
+                        src="https://images.unsplash.com/photo-1566576912321-d58ddd7a6088?w=800&q=80&auto=format&fit=crop"
+                        alt="PLAYPOP toy store interior" class="w-full aspect-[4/3] object-cover rounded-2xl"
+                        loading="lazy" /></div>
+                <div class="reveal" style="transition-delay:.15s">
+                    <p class="text-pop text-xs tracking-[0.3em] uppercase font-bold mb-3">Our Mission</p>
+                    <h2 class="font-display text-4xl md:text-5xl font-bold mb-6">About <span
+                            class="text-pop">PLAY</span><span class="text-sun">POP</span></h2>
+                    <div class="space-y-4 text-slate leading-relaxed">
+                        <p>We started PLAYPOP because we were tired of plastic junk. Every toy in our store is
+                            hand-selected for quality, safety, and actual play value — no batteries required (well,
+                            mostly).</p>
+                        <p>We partner with 50+ independent toy makers, prioritize sustainable materials, and test every
+                            single product on our own kids. If they lose interest in 5 minutes, it doesn't make the cut.
+                        </p>
+                    </div>
+                    <div class="grid grid-cols-3 gap-4 mt-8 text-center">
+                        <div class="bg-popPale rounded-xl p-3">
+                            <p class="font-display text-2xl font-bold text-pop">500+</p>
+                            <p class="text-slate text-xs mt-1">Toys</p>
+                        </div>
+                        <div class="bg-sunPale rounded-xl p-3">
+                            <p class="font-display text-2xl font-bold text-sunDark">50+</p>
+                            <p class="text-slate text-xs mt-1">Makers</p>
+                        </div>
+                        <div class="bg-skyPale rounded-xl p-3">
+                            <p class="font-display text-2xl font-bold text-skyDark">0</p>
+                            <p class="text-slate text-xs mt-1">Screens Needed</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== FOOTER ====== -->
+    <footer class="bg-night py-14">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-10">
+                <div class="col-span-2 md:col-span-1"><a href="#home" class="flex items-center gap-1.5"><span
+                            class="text-xl">🧸</span><span class="font-display font-bold text-lg text-pop">PLAY<span
+                                class="text-sun">POP</span></span></a>
+                    <p class="text-white/40 text-sm mt-3">Creative toys for curious kids.</p>
+                </div>
+                <div>
+                    <h4 class="text-white/50 text-xs tracking-wider uppercase mb-4">Shop</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-white/40 text-sm hover:text-pop transition">Baby</a></li>
+                        <li><a href="#" class="text-white/40 text-sm hover:text-pop transition">Toddler</a></li>
+                        <li><a href="#" class="text-white/40 text-sm hover:text-pop transition">Preschool</a></li>
+                        <li><a href="#" class="text-white/40 text-sm hover:text-pop transition">Big Kids</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white/50 text-xs tracking-wider uppercase mb-4">Help</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-white/40 text-sm hover:text-pop transition">Shipping</a></li>
+                        <li><a href="#" class="text-white/40 text-sm hover:text-pop transition">Returns</a></li>
+                        <li><a href="#" class="text-white/40 text-sm hover:text-pop transition">Gift Cards</a></li>
+                        <li><a href="#" class="text-white/40 text-sm hover:text-pop transition">FAQ</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white/50 text-xs tracking-wider uppercase mb-4">Follow</h4>
+                    <div class="flex gap-3"><a href="#" aria-label="Instagram"
+                            class="text-white/40 hover:text-pop transition"><svg class="w-5 h-5" fill="currentColor"
+                                viewBox="0 0 24 24">
+                                <path
+                                    d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" />
+                            </svg></a><a href="#" aria-label="TikTok"
+                            class="text-white/40 hover:text-pop transition"><svg class="w-5 h-5" fill="currentColor"
+                                viewBox="0 0 24 24">
+                                <path
+                                    d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z" />
+                            </svg></a></div>
+                </div>
+            </div>
+            <div class="border-t border-white/10 pt-6 text-center">
+                <p class="text-white/30 text-xs">&copy; 2026 PLAYPOP Inc. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('active'); observer.unobserve(e.target); } });
+            }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+            document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+        });
+    </script>
+</body>
+
+</html>

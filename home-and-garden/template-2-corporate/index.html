@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FORMØ — Modern Furniture</title>
+    <meta name="description"
+        content="FORMØ — Timeless modern furniture for every room. Shop sofas, dining, bedroom, and office pieces designed to last." />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Lora:ital,wght@0,400;0,500;0,600;1,400&display=swap"
+        rel="stylesheet" />
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Space Grotesk"', 'system-ui', 'sans-serif'],
+                        serif: ['"Lora"', 'Georgia', 'serif'],
+                    },
+                    colors: {
+                        snow: '#FAFAFA',
+                        cloud: '#F0F0F0',
+                        mist: '#E5E5E5',
+                        iron: '#404040',
+                        steel: '#6B6B6B',
+                        midnight: '#1A1A1A',
+                        olive: '#6B7C47',
+                        oliveLight: '#EEF2E4',
+                        terra: '#C27C4E',
+                        blush: '#F5E6D8',
+                    },
+                },
+            },
+        };
+    </script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Space Grotesk', system-ui, sans-serif;
+            background: #FAFAFA;
+            color: #1A1A1A;
+            overflow-x: hidden;
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(24px);
+            transition: opacity .7s ease, transform .7s ease;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .product-card {
+            transition: transform .4s, box-shadow .4s;
+        }
+
+        .product-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 32px rgba(0, 0, 0, .06);
+        }
+
+        .product-card img {
+            transition: transform .6s ease;
+        }
+
+        .product-card:hover img {
+            transform: scale(1.04);
+        }
+
+        .btn-dark {
+            transition: transform .3s, box-shadow .3s;
+        }
+
+        .btn-dark:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(26, 26, 26, .15);
+        }
+
+        ::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #FAFAFA;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #E5E5E5;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+
+<body x-data="{ mobileMenu: false, cartOpen: false, cartCount: 1, roomFilter: 'all' }" class="bg-snow text-midnight">
+
+    <!-- ====== NAVIGATION ====== -->
+    <header class="fixed top-0 left-0 w-full z-50 bg-snow/90 backdrop-blur-md border-b border-mist">
+        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16 md:h-20">
+                <a href="#home" class="font-sans text-2xl md:text-3xl font-bold tracking-tight">FORM<span
+                        class="text-olive">Ø</span></a>
+                <ul class="hidden md:flex items-center space-x-8 text-sm tracking-wider uppercase text-steel">
+                    <li><a href="#shop" class="hover:text-midnight transition">Shop by Room</a></li>
+                    <li><a href="#new" class="hover:text-midnight transition">New Arrivals</a></li>
+                    <li><a href="#sale" class="hover:text-midnight transition">Sale</a></li>
+                    <li><a href="#inspiration" class="hover:text-midnight transition">Inspiration</a></li>
+                </ul>
+                <div class="hidden md:flex items-center gap-3">
+                    <button aria-label="Search" class="p-2 text-steel hover:text-midnight transition"><svg
+                            class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+                        </svg></button>
+                    <button @click="cartOpen=true" aria-label="Cart"
+                        class="p-2 text-steel hover:text-midnight transition relative">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007z" />
+                        </svg>
+                        <span x-text="cartCount"
+                            class="absolute -top-1 -right-1 bg-olive text-white text-[10px] w-4 h-4 flex items-center justify-center rounded-full font-bold"></span>
+                    </button>
+                </div>
+                <button @click="mobileMenu = !mobileMenu" class="md:hidden p-2" aria-label="Toggle menu">
+                    <svg x-show="!mobileMenu" class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.5"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 9h16.5m-16.5 6.75h16.5" />
+                    </svg>
+                    <svg x-show="mobileMenu" x-cloak class="w-6 h-6" fill="none" stroke="currentColor"
+                        stroke-width="1.5" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+            <div x-show="mobileMenu" x-cloak x-transition class="md:hidden pb-6 border-t border-mist">
+                <ul class="flex flex-col space-y-4 pt-4 text-sm tracking-wider uppercase">
+                    <li><a @click="mobileMenu=false" href="#shop" class="block py-1 text-steel hover:text-midnight">Shop
+                            by Room</a></li>
+                    <li><a @click="mobileMenu=false" href="#new" class="block py-1 text-steel hover:text-midnight">New
+                            Arrivals</a></li>
+                    <li><a @click="mobileMenu=false" href="#sale"
+                            class="block py-1 text-steel hover:text-midnight">Sale</a></li>
+                    <li><a @click="mobileMenu=false" href="#inspiration"
+                            class="block py-1 text-steel hover:text-midnight">Inspiration</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <!-- ====== CART SIDEBAR ====== -->
+    <div x-show="cartOpen" x-cloak class="fixed inset-0 z-[60]" @keydown.escape.window="cartOpen=false">
+        <div class="absolute inset-0 bg-midnight/40" @click="cartOpen=false"></div>
+        <div x-show="cartOpen" x-transition:enter="transition ease-out duration-300"
+            x-transition:enter-start="translate-x-full" x-transition:enter-end="translate-x-0"
+            x-transition:leave="transition ease-in duration-200" x-transition:leave-start="translate-x-0"
+            x-transition:leave-end="translate-x-full"
+            class="absolute right-0 top-0 h-full w-full max-w-md bg-snow shadow-xl flex flex-col">
+            <div class="flex items-center justify-between px-6 py-5 border-b border-mist">
+                <h3 class="font-sans font-semibold text-lg">Your Cart (<span x-text="cartCount"></span>)</h3>
+                <button @click="cartOpen=false" aria-label="Close cart"><svg class="w-5 h-5" fill="none"
+                        stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg></button>
+            </div>
+            <div class="flex-1 overflow-y-auto px-6 py-6">
+                <div class="flex gap-4 pb-5 border-b border-mist">
+                    <div class="w-20 h-20 bg-cloud rounded-sm overflow-hidden flex-shrink-0"><img
+                            src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=200&q=80&auto=format&fit=crop"
+                            alt="Oslo Sofa" class="w-full h-full object-cover" /></div>
+                    <div class="flex-1">
+                        <h4 class="text-sm font-medium">Oslo Modular Sofa</h4>
+                        <p class="text-steel text-xs mt-1">3-Seater — Oat Linen</p>
+                        <div class="flex items-center justify-between mt-2">
+                            <p class="font-semibold">$2,490</p><button
+                                class="text-steel text-xs hover:text-red-500 transition">Remove</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-mist px-6 py-5 space-y-3">
+                <div class="flex justify-between text-sm"><span class="text-steel">Subtotal</span><span
+                        class="font-semibold">$2,490</span></div>
+                <button
+                    class="btn-dark w-full py-3.5 bg-midnight text-snow text-sm tracking-wider uppercase font-medium rounded-sm hover:bg-olive transition">Checkout</button>
+                <button @click="cartOpen=false"
+                    class="w-full py-2.5 text-steel text-sm tracking-wider uppercase border border-mist rounded-sm hover:bg-cloud transition">Continue
+                    Shopping</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ====== HERO ====== -->
+    <section id="home" class="relative min-h-screen flex items-center bg-cloud">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-32">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+                <div>
+                    <span
+                        class="inline-block px-3 py-1 bg-oliveLight text-olive text-xs font-medium tracking-wider uppercase rounded-full mb-4">Spring
+                        Collection 2026</span>
+                    <h1 class="font-serif text-5xl sm:text-6xl lg:text-7xl leading-[1.1] mb-6">Furniture That <span
+                            class="italic text-olive">Lives</span> With You</h1>
+                    <p class="text-steel text-base sm:text-lg leading-relaxed mb-8 max-w-md">Timeless designs in natural
+                        materials — built for real life, not just the showroom.</p>
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <a href="#shop"
+                            class="btn-dark inline-flex items-center justify-center px-8 py-3.5 bg-midnight text-snow text-sm tracking-wider uppercase font-medium rounded-sm">Shop
+                            Now</a>
+                        <a href="#new"
+                            class="btn-dark inline-flex items-center justify-center px-8 py-3.5 border border-midnight/20 text-midnight text-sm tracking-wider uppercase font-medium rounded-sm hover:bg-midnight hover:text-snow transition">New
+                            Arrivals</a>
+                    </div>
+                </div>
+                <div class="relative">
+                    <img src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=800&q=80&auto=format&fit=crop"
+                        alt="Scandinavian sofa in bright living room"
+                        class="w-full aspect-[4/3] object-cover rounded-sm" />
+                    <div class="absolute bottom-4 left-4 bg-snow/90 backdrop-blur-sm p-3 rounded-sm">
+                        <p class="text-xs text-steel">Featured</p>
+                        <p class="font-semibold text-sm">Oslo Modular Sofa</p>
+                        <p class="text-olive font-semibold text-sm">$2,490</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== SHOP BY ROOM ====== -->
+    <section id="shop" class="py-20 md:py-28 bg-snow">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-10 reveal">
+                <p class="text-olive text-xs tracking-[0.3em] uppercase font-medium mb-3">Browse</p>
+                <h2 class="font-serif text-4xl md:text-5xl">Shop by Room</h2>
+            </div>
+
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 reveal">
+                <a href="#" class="group relative aspect-[3/4] overflow-hidden rounded-sm">
+                    <img src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=500&q=80&auto=format&fit=crop"
+                        alt="Living room"
+                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                        loading="lazy" />
+                    <div class="absolute inset-0 bg-gradient-to-t from-midnight/50 to-transparent flex items-end p-5">
+                        <div>
+                            <h3 class="text-white font-semibold text-lg">Living Room</h3>
+                            <p class="text-white/60 text-xs">42 pieces</p>
+                        </div>
+                    </div>
+                </a>
+                <a href="#" class="group relative aspect-[3/4] overflow-hidden rounded-sm">
+                    <img src="https://images.unsplash.com/photo-1617325247661-675ab4b64ae2?w=500&q=80&auto=format&fit=crop"
+                        alt="Dining room"
+                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                        loading="lazy" />
+                    <div class="absolute inset-0 bg-gradient-to-t from-midnight/50 to-transparent flex items-end p-5">
+                        <div>
+                            <h3 class="text-white font-semibold text-lg">Dining</h3>
+                            <p class="text-white/60 text-xs">28 pieces</p>
+                        </div>
+                    </div>
+                </a>
+                <a href="#" class="group relative aspect-[3/4] overflow-hidden rounded-sm">
+                    <img src="https://images.unsplash.com/photo-1616594039964-ae9021a400a0?w=500&q=80&auto=format&fit=crop"
+                        alt="Bedroom"
+                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                        loading="lazy" />
+                    <div class="absolute inset-0 bg-gradient-to-t from-midnight/50 to-transparent flex items-end p-5">
+                        <div>
+                            <h3 class="text-white font-semibold text-lg">Bedroom</h3>
+                            <p class="text-white/60 text-xs">35 pieces</p>
+                        </div>
+                    </div>
+                </a>
+                <a href="#" class="group relative aspect-[3/4] overflow-hidden rounded-sm">
+                    <img src="https://images.unsplash.com/photo-1524758631624-e2822e304c36?w=500&q=80&auto=format&fit=crop"
+                        alt="Home office"
+                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                        loading="lazy" />
+                    <div class="absolute inset-0 bg-gradient-to-t from-midnight/50 to-transparent flex items-end p-5">
+                        <div>
+                            <h3 class="text-white font-semibold text-lg">Office</h3>
+                            <p class="text-white/60 text-xs">19 pieces</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== NEW ARRIVALS ====== -->
+    <section id="new" class="py-20 md:py-28 bg-cloud/50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 reveal">
+                <div>
+                    <p class="text-olive text-xs tracking-[0.3em] uppercase font-medium mb-2">Just Landed</p>
+                    <h2 class="font-serif text-4xl md:text-5xl">New Arrivals</h2>
+                </div>
+                <a href="#"
+                    class="text-olive text-sm font-medium tracking-wider uppercase mt-4 md:mt-0 hover:text-iron transition">View
+                    All →</a>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+                <div class="product-card bg-snow rounded-sm overflow-hidden reveal">
+                    <div class="aspect-square overflow-hidden bg-cloud"><img
+                            src="https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?w=400&q=80&auto=format&fit=crop"
+                            alt="Walnut dining table" class="w-full h-full object-cover" loading="lazy" /></div>
+                    <div class="p-4"><span class="text-olive text-[10px] tracking-wider uppercase font-bold">New</span>
+                        <h3 class="font-sans font-medium mt-1">Kyoto Dining Table</h3>
+                        <p class="text-steel text-xs mt-1">Solid walnut, seats 6</p>
+                        <div class="flex items-center justify-between mt-2"><span
+                                class="font-semibold">$1,890</span><button @click="cartCount++"
+                                class="text-xs text-olive font-medium hover:underline">Add to Cart</button></div>
+                    </div>
+                </div>
+                <div class="product-card bg-snow rounded-sm overflow-hidden reveal" style="transition-delay:.1s">
+                    <div class="aspect-square overflow-hidden bg-cloud"><img
+                            src="https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=400&q=80&auto=format&fit=crop"
+                            alt="Lounge chair" class="w-full h-full object-cover" loading="lazy" /></div>
+                    <div class="p-4"><span class="text-olive text-[10px] tracking-wider uppercase font-bold">New</span>
+                        <h3 class="font-sans font-medium mt-1">Bergen Lounge Chair</h3>
+                        <p class="text-steel text-xs mt-1">Oak frame, bouclé upholstery</p>
+                        <div class="flex items-center justify-between mt-2"><span
+                                class="font-semibold">$890</span><button @click="cartCount++"
+                                class="text-xs text-olive font-medium hover:underline">Add to Cart</button></div>
+                    </div>
+                </div>
+                <div class="product-card bg-snow rounded-sm overflow-hidden reveal" style="transition-delay:.15s">
+                    <div class="aspect-square overflow-hidden bg-cloud"><img
+                            src="https://images.unsplash.com/photo-1540574163026-643ea20ade25?w=400&q=80&auto=format&fit=crop"
+                            alt="Pendant light" class="w-full h-full object-cover" loading="lazy" /></div>
+                    <div class="p-4"><span class="text-olive text-[10px] tracking-wider uppercase font-bold">New</span>
+                        <h3 class="font-sans font-medium mt-1">Arc Pendant Light</h3>
+                        <p class="text-steel text-xs mt-1">Handblown glass, brass hardware</p>
+                        <div class="flex items-center justify-between mt-2"><span
+                                class="font-semibold">$320</span><button @click="cartCount++"
+                                class="text-xs text-olive font-medium hover:underline">Add to Cart</button></div>
+                    </div>
+                </div>
+                <div class="product-card bg-snow rounded-sm overflow-hidden reveal" style="transition-delay:.2s">
+                    <div class="aspect-square overflow-hidden bg-cloud"><img
+                            src="https://images.unsplash.com/photo-1556228453-efd6c1ff04f6?w=400&q=80&auto=format&fit=crop"
+                            alt="Linen bedding" class="w-full h-full object-cover" loading="lazy" /></div>
+                    <div class="p-4"><span class="text-olive text-[10px] tracking-wider uppercase font-bold">New</span>
+                        <h3 class="font-sans font-medium mt-1">Stonewashed Linen Set</h3>
+                        <p class="text-steel text-xs mt-1">Queen, natural oat</p>
+                        <div class="flex items-center justify-between mt-2"><span
+                                class="font-semibold">$260</span><button @click="cartCount++"
+                                class="text-xs text-olive font-medium hover:underline">Add to Cart</button></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== SALE ====== -->
+    <section id="sale" class="py-20 md:py-28 bg-blush/40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-10 reveal">
+                <p class="text-terra text-xs tracking-[0.3em] uppercase font-medium mb-3">Limited Time</p>
+                <h2 class="font-serif text-4xl md:text-5xl">Up to 30% Off</h2>
+                <p class="text-steel mt-4 max-w-lg mx-auto">End-of-season clearance on select living room, dining, and
+                    bedroom pieces. While stock lasts.</p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                <div class="product-card bg-snow rounded-sm overflow-hidden reveal">
+                    <div class="aspect-[4/3] overflow-hidden bg-cloud relative"><img
+                            src="https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?w=500&q=80&auto=format&fit=crop"
+                            alt="Mid-century sofa" class="w-full h-full object-cover" loading="lazy" /><span
+                            class="absolute top-3 left-3 bg-terra text-white text-[10px] tracking-wider uppercase font-bold px-2 py-1 rounded-sm">-25%</span>
+                    </div>
+                    <div class="p-5">
+                        <h3 class="font-sans font-medium text-lg">Aarhus 2-Seater Sofa</h3>
+                        <p class="text-steel text-xs mt-1">Boucle cream, solid ash legs</p>
+                        <div class="flex items-center gap-3 mt-2"><span
+                                class="font-semibold text-terra">$1,340</span><span
+                                class="line-through text-steel text-sm">$1,790</span></div><button @click="cartCount++"
+                            class="mt-3 text-xs text-olive font-medium tracking-wider uppercase hover:underline">Add to
+                            Cart</button>
+                    </div>
+                </div>
+                <div class="product-card bg-snow rounded-sm overflow-hidden reveal" style="transition-delay:.1s">
+                    <div class="aspect-[4/3] overflow-hidden bg-cloud relative"><img
+                            src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=500&q=80&auto=format&fit=crop"
+                            alt="Bookshelf" class="w-full h-full object-cover" loading="lazy" /><span
+                            class="absolute top-3 left-3 bg-terra text-white text-[10px] tracking-wider uppercase font-bold px-2 py-1 rounded-sm">-30%</span>
+                    </div>
+                    <div class="p-5">
+                        <h3 class="font-sans font-medium text-lg">Tana Bookshelf</h3>
+                        <p class="text-steel text-xs mt-1">Black steel frame, oak shelves, 5-tier</p>
+                        <div class="flex items-center gap-3 mt-2"><span
+                                class="font-semibold text-terra">$490</span><span
+                                class="line-through text-steel text-sm">$699</span></div><button @click="cartCount++"
+                            class="mt-3 text-xs text-olive font-medium tracking-wider uppercase hover:underline">Add to
+                            Cart</button>
+                    </div>
+                </div>
+                <div class="product-card bg-snow rounded-sm overflow-hidden reveal" style="transition-delay:.15s">
+                    <div class="aspect-[4/3] overflow-hidden bg-cloud relative"><img
+                            src="https://images.unsplash.com/photo-1631679706909-1844bbd07221?w=500&q=80&auto=format&fit=crop"
+                            alt="Nightstand" class="w-full h-full object-cover" loading="lazy" /><span
+                            class="absolute top-3 left-3 bg-terra text-white text-[10px] tracking-wider uppercase font-bold px-2 py-1 rounded-sm">-20%</span>
+                    </div>
+                    <div class="p-5">
+                        <h3 class="font-sans font-medium text-lg">Norra Nightstand (Pair)</h3>
+                        <p class="text-steel text-xs mt-1">Solid oak, single drawer, set of 2</p>
+                        <div class="flex items-center gap-3 mt-2"><span
+                                class="font-semibold text-terra">$360</span><span
+                                class="line-through text-steel text-sm">$450</span></div><button @click="cartCount++"
+                            class="mt-3 text-xs text-olive font-medium tracking-wider uppercase hover:underline">Add to
+                            Cart</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== INSPIRATION ====== -->
+    <section id="inspiration" class="py-20 md:py-28 bg-snow">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 reveal">
+                <div>
+                    <p class="text-olive text-xs tracking-[0.3em] uppercase font-medium mb-2">Ideas</p>
+                    <h2 class="font-serif text-4xl md:text-5xl">Inspiration</h2>
+                </div>
+                <a href="#"
+                    class="text-olive text-sm font-medium tracking-wider uppercase mt-4 md:mt-0 hover:text-iron transition">Read
+                    All →</a>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <article class="group reveal">
+                    <div class="aspect-[16/10] overflow-hidden rounded-sm mb-4"><img
+                            src="https://images.unsplash.com/photo-1600210492493-0946911f159a?w=600&q=80&auto=format&fit=crop"
+                            alt="Scandinavian living room interior"
+                            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                            loading="lazy" /></div>
+                    <span class="text-olive text-[10px] tracking-wider uppercase font-bold">Style Guide</span>
+                    <h3 class="font-serif text-xl mt-1 group-hover:text-olive transition">The Art of Hygge: Creating
+                        Nordic Comfort in Any Space</h3>
+                    <p class="text-steel text-sm mt-2">Warm textiles, soft lighting, and the Scandinavian principles
+                        that make any room feel like a refuge.</p>
+                </article>
+                <article class="group reveal" style="transition-delay:.1s">
+                    <div class="aspect-[16/10] overflow-hidden rounded-sm mb-4"><img
+                            src="https://images.unsplash.com/photo-1618219908412-a29a1bb7b86e?w=600&q=80&auto=format&fit=crop"
+                            alt="Small apartment design"
+                            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                            loading="lazy" /></div>
+                    <span class="text-olive text-[10px] tracking-wider uppercase font-bold">Small Spaces</span>
+                    <h3 class="font-serif text-xl mt-1 group-hover:text-olive transition">Big Living in 500 Sq Ft:
+                        Furniture That Maximizes Every Inch</h3>
+                    <p class="text-steel text-sm mt-2">Multifunctional furniture, vertical storage, and smart layout
+                        strategies for compact apartments.</p>
+                </article>
+                <article class="group reveal" style="transition-delay:.2s">
+                    <div class="aspect-[16/10] overflow-hidden rounded-sm mb-4"><img
+                            src="https://images.unsplash.com/photo-1615529328331-f8917597711f?w=600&q=80&auto=format&fit=crop"
+                            alt="Sustainable materials"
+                            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                            loading="lazy" /></div>
+                    <span class="text-olive text-[10px] tracking-wider uppercase font-bold">Sustainability</span>
+                    <h3 class="font-serif text-xl mt-1 group-hover:text-olive transition">Why We Choose FSC Wood and
+                        Natural Finishes — Every Time</h3>
+                    <p class="text-steel text-sm mt-2">Our sourcing philosophy and the environmental certifications that
+                        back every piece in our collection.</p>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== NEWSLETTER ====== -->
+    <section class="bg-midnight py-14">
+        <div class="max-w-3xl mx-auto px-4 text-center">
+            <h2 class="font-serif text-3xl md:text-4xl text-snow mb-3">Get <span
+                    class="italic text-olive">Inspired</span></h2>
+            <p class="text-snow/50 text-sm mb-6">New collections, design tips, and 10% off your first order.</p>
+            <form class="flex flex-col sm:flex-row gap-3 max-w-lg mx-auto">
+                <input type="email" placeholder="your@email.com"
+                    class="flex-1 px-5 py-3 bg-white/10 border border-white/15 text-snow placeholder-snow/30 text-sm rounded-sm focus:border-olive outline-none transition" />
+                <button type="submit"
+                    class="px-8 py-3 bg-olive text-snow text-sm tracking-wider uppercase font-medium rounded-sm btn-dark hover:bg-olive/80 transition">Subscribe</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- ====== FOOTER ====== -->
+    <footer class="bg-midnight py-14">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-10">
+                <div class="col-span-2 md:col-span-1"><a href="#home"
+                        class="font-sans text-2xl font-bold text-snow">FORM<span class="text-olive">Ø</span></a>
+                    <p class="text-snow/40 text-sm mt-3">Modern furniture for modern living.</p>
+                </div>
+                <div>
+                    <h4 class="text-snow/60 text-xs tracking-wider uppercase mb-4">Shop</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-snow/40 text-sm hover:text-olive transition">Living Room</a></li>
+                        <li><a href="#" class="text-snow/40 text-sm hover:text-olive transition">Dining</a></li>
+                        <li><a href="#" class="text-snow/40 text-sm hover:text-olive transition">Bedroom</a></li>
+                        <li><a href="#" class="text-snow/40 text-sm hover:text-olive transition">Office</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-snow/60 text-xs tracking-wider uppercase mb-4">Help</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-snow/40 text-sm hover:text-olive transition">Shipping</a></li>
+                        <li><a href="#" class="text-snow/40 text-sm hover:text-olive transition">Returns</a></li>
+                        <li><a href="#" class="text-snow/40 text-sm hover:text-olive transition">Assembly</a></li>
+                        <li><a href="#" class="text-snow/40 text-sm hover:text-olive transition">FAQ</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-snow/60 text-xs tracking-wider uppercase mb-4">Company</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-snow/40 text-sm hover:text-olive transition">About</a></li>
+                        <li><a href="#" class="text-snow/40 text-sm hover:text-olive transition">Sustainability</a></li>
+                        <li><a href="#" class="text-snow/40 text-sm hover:text-olive transition">Careers</a></li>
+                        <li><a href="#" class="text-snow/40 text-sm hover:text-olive transition">Press</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-snow/10 pt-6 flex flex-col md:flex-row items-center justify-between gap-4">
+                <p class="text-snow/30 text-xs">&copy; 2026 FORMØ. All rights reserved.</p>
+                <div class="flex gap-3"><a href="#" aria-label="Instagram"
+                        class="text-snow/30 hover:text-olive transition"><svg class="w-5 h-5" fill="currentColor"
+                            viewBox="0 0 24 24">
+                            <path
+                                d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" />
+                        </svg></a><a href="#" aria-label="Pinterest"
+                        class="text-snow/30 hover:text-olive transition"><svg class="w-5 h-5" fill="currentColor"
+                            viewBox="0 0 24 24">
+                            <path
+                                d="M12.017 0C5.396 0 .029 5.367.029 11.987c0 5.079 3.158 9.417 7.618 11.162-.105-.949-.199-2.403.041-3.439.219-.937 1.406-5.957 1.406-5.957s-.359-.72-.359-1.781c0-1.668.967-2.914 2.171-2.914 1.023 0 1.518.769 1.518 1.69 0 1.029-.655 2.568-.994 3.995-.283 1.194.599 2.169 1.777 2.169 2.133 0 3.772-2.249 3.772-5.495 0-2.873-2.064-4.882-5.012-4.882-3.414 0-5.418 2.561-5.418 5.207 0 1.031.397 2.138.893 2.738a.36.36 0 01.083.345l-.333 1.36c-.053.22-.174.267-.402.161-1.499-.698-2.436-2.889-2.436-4.649 0-3.785 2.75-7.262 7.929-7.262 4.163 0 7.398 2.967 7.398 6.931 0 4.136-2.607 7.464-6.227 7.464-1.216 0-2.359-.631-2.75-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24 12.017 24c6.624 0 11.99-5.367 11.99-11.988C24.007 5.367 18.641.001 12.017.001z" />
+                        </svg></a></div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('active'); observer.unobserve(entry.target); } });
+            }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+            document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Flour & Flame — Artisan Cafe & Bakery</title>
+    <meta name="description"
+        content="Flour & Flame — Handcrafted sourdough, artisan pastries, and specialty coffee in a warm, rustic setting. Catering available." />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Lato:wght@300;400;700&display=swap"
+        rel="stylesheet" />
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        serif: ['"DM Serif Display"', 'Georgia', 'serif'],
+                        sans: ['"Lato"', 'system-ui', 'sans-serif'],
+                    },
+                    colors: {
+                        linen: '#FDF6EC',
+                        oat: '#F0E4D0',
+                        crust: '#C8A97E',
+                        coffee: '#6F4E37',
+                        espresso: '#3B2414',
+                        cherry: '#B5434A',
+                        rust: '#C46A47',
+                        cream: '#FFFDF8',
+                    },
+                },
+            },
+        };
+    </script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Lato', system-ui, sans-serif;
+            background: #FDF6EC;
+            color: #3B2414;
+            overflow-x: hidden;
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(24px);
+            transition: opacity 0.7s ease, transform 0.7s ease;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .menu-card {
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+        }
+
+        .menu-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 32px rgba(111, 78, 55, 0.1);
+        }
+
+        .menu-card img {
+            transition: transform 0.6s ease;
+        }
+
+        .menu-card:hover img {
+            transform: scale(1.05);
+        }
+
+        .btn-crust {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .btn-crust:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(200, 169, 126, 0.3);
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #FDF6EC;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #C8A97E;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+
+<body x-data="{ mobileMenu: false }" class="bg-linen text-espresso">
+
+    <!-- ====== NAVIGATION ====== -->
+    <header class="fixed top-0 left-0 w-full z-50 bg-linen/90 backdrop-blur-md border-b border-oat">
+        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16 md:h-20">
+                <a href="#home" class="font-serif text-2xl md:text-3xl">
+                    Flour <span class="text-cherry">&</span> Flame
+                </a>
+
+                <ul
+                    class="hidden md:flex items-center space-x-8 font-sans text-sm tracking-wider uppercase text-coffee/60">
+                    <li><a href="#home" class="hover:text-espresso transition">Home</a></li>
+                    <li><a href="#menu" class="hover:text-espresso transition">Menu</a></li>
+                    <li><a href="#story" class="hover:text-espresso transition">Our Story</a></li>
+                    <li><a href="#catering" class="hover:text-espresso transition">Catering</a></li>
+                    <li><a href="#locations" class="hover:text-espresso transition">Locations</a></li>
+                </ul>
+
+                <a href="#catering"
+                    class="hidden md:inline-flex items-center px-5 py-2 bg-cherry text-white text-xs tracking-wider uppercase font-medium rounded-full btn-crust hover:bg-cherry/90 transition">
+                    Order Catering
+                </a>
+
+                <button @click="mobileMenu = !mobileMenu" class="md:hidden p-2 text-espresso" aria-label="Toggle menu">
+                    <svg x-show="!mobileMenu" class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.5"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 9h16.5m-16.5 6.75h16.5" />
+                    </svg>
+                    <svg x-show="mobileMenu" x-cloak class="w-6 h-6" fill="none" stroke="currentColor"
+                        stroke-width="1.5" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+
+            <div x-show="mobileMenu" x-cloak x-transition class="md:hidden pb-6 border-t border-oat">
+                <ul class="flex flex-col space-y-4 pt-4 font-sans text-sm tracking-wider uppercase">
+                    <li><a @click="mobileMenu=false" href="#home"
+                            class="block py-1 text-coffee/60 hover:text-espresso">Home</a></li>
+                    <li><a @click="mobileMenu=false" href="#menu"
+                            class="block py-1 text-coffee/60 hover:text-espresso">Menu</a></li>
+                    <li><a @click="mobileMenu=false" href="#story"
+                            class="block py-1 text-coffee/60 hover:text-espresso">Our Story</a></li>
+                    <li><a @click="mobileMenu=false" href="#catering"
+                            class="block py-1 text-coffee/60 hover:text-espresso">Catering</a></li>
+                    <li><a @click="mobileMenu=false" href="#locations"
+                            class="block py-1 text-cherry font-medium">Locations</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <!-- ====== HERO ====== -->
+    <section id="home" class="relative min-h-screen flex items-center overflow-hidden">
+        <div class="absolute inset-0">
+            <img src="https://images.unsplash.com/photo-1509440159596-0249088772ff?w=1920&q=80&auto=format&fit=crop"
+                alt="Freshly baked artisan sourdough bread on rustic wooden table" class="w-full h-full object-cover" />
+            <div class="absolute inset-0 bg-gradient-to-r from-linen via-linen/75 to-transparent"></div>
+        </div>
+
+        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-32">
+            <div class="max-w-xl">
+                <p class="font-sans text-xs tracking-[0.3em] uppercase text-cherry mb-4">Artisan Bakery • Specialty
+                    Coffee</p>
+                <h1 class="font-serif text-5xl sm:text-6xl lg:text-7xl leading-[1.1] mb-6">
+                    Baked with <br /><span class="italic text-cherry">Passion</span>
+                </h1>
+                <p class="text-coffee text-base sm:text-lg leading-relaxed mb-8 max-w-md">
+                    From our stone ovens to your table — handcrafted sourdough, flaky croissants, and pastries made
+                    daily with organic flour and pure love.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <a href="#menu"
+                        class="btn-crust inline-flex items-center justify-center px-8 py-3.5 bg-cherry text-white text-sm tracking-wider uppercase font-medium rounded-full">
+                        View Today's Menu
+                    </a>
+                    <a href="#story"
+                        class="btn-crust inline-flex items-center justify-center px-8 py-3.5 border border-espresso/25 text-espresso text-sm tracking-wider uppercase font-medium rounded-full hover:bg-espresso hover:text-linen transition">
+                        Our Story
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== DAILY SPECIALS STRIP ====== -->
+    <section class="bg-espresso py-8">
+        <div class="max-w-7xl mx-auto px-4 overflow-hidden">
+            <div
+                class="flex items-center gap-8 text-oat/60 text-sm tracking-wider uppercase whitespace-nowrap animate-marquee">
+                <span>☕ Daily Special: Lavender Oat Latte</span>
+                <span class="text-cherry">•</span>
+                <span>🥐 Fresh Almond Croissants — baked at 6am</span>
+                <span class="text-cherry">•</span>
+                <span>🍞 Sourdough Country Loaf — available Fri–Sun</span>
+                <span class="text-cherry">•</span>
+                <span>🎂 Ask about our custom celebration cakes</span>
+                <span class="text-cherry">•</span>
+                <span>☕ Daily Special: Lavender Oat Latte</span>
+                <span class="text-cherry">•</span>
+                <span>🥐 Fresh Almond Croissants — baked at 6am</span>
+            </div>
+        </div>
+        <style>
+            @keyframes marquee {
+                0% {
+                    transform: translateX(0);
+                }
+
+                100% {
+                    transform: translateX(-50%);
+                }
+            }
+
+            .animate-marquee {
+                animation: marquee 25s linear infinite;
+                display: flex;
+                width: max-content;
+            }
+        </style>
+    </section>
+
+    <!-- ====== MENU ====== -->
+    <section id="menu" class="py-20 md:py-28 bg-cream">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-14 reveal">
+                <p class="text-cherry text-xs tracking-[0.3em] uppercase font-medium mb-3">From Our Kitchen</p>
+                <h2 class="font-serif text-4xl md:text-5xl">Our Menu</h2>
+                <p class="text-coffee/60 mt-4 max-w-lg mx-auto">Everything is made fresh daily, from scratch, using
+                    organic stone-milled flour, local dairy, and seasonal fruits.</p>
+            </div>
+
+            <!-- Menu Categories Tabs -->
+            <div x-data="{ cat: 'bakery' }">
+                <div class="flex justify-center flex-wrap gap-3 mb-10">
+                    <button @click="cat='bakery'"
+                        :class="cat==='bakery' ? 'bg-cherry text-white' : 'bg-oat text-coffee'"
+                        class="px-5 py-2 text-xs tracking-wider uppercase font-medium rounded-full transition">Bakery</button>
+                    <button @click="cat='breakfast'"
+                        :class="cat==='breakfast' ? 'bg-cherry text-white' : 'bg-oat text-coffee'"
+                        class="px-5 py-2 text-xs tracking-wider uppercase font-medium rounded-full transition">Breakfast</button>
+                    <button @click="cat='lunch'" :class="cat==='lunch' ? 'bg-cherry text-white' : 'bg-oat text-coffee'"
+                        class="px-5 py-2 text-xs tracking-wider uppercase font-medium rounded-full transition">Lunch</button>
+                    <button @click="cat='drinks'"
+                        :class="cat==='drinks' ? 'bg-cherry text-white' : 'bg-oat text-coffee'"
+                        class="px-5 py-2 text-xs tracking-wider uppercase font-medium rounded-full transition">Coffee &
+                        Drinks</button>
+                </div>
+
+                <!-- Bakery -->
+                <div x-show="cat==='bakery'" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="menu-card bg-white rounded-xl overflow-hidden reveal">
+                        <div class="aspect-[16/10] overflow-hidden"><img
+                                src="https://images.unsplash.com/photo-1549931319-a545753467c8?w=500&q=80&auto=format&fit=crop"
+                                alt="Sourdough bread loaf" class="w-full h-full object-cover" loading="lazy" /></div>
+                        <div class="p-5">
+                            <div class="flex items-center justify-between">
+                                <h3 class="font-serif text-lg">Classic Sourdough Loaf</h3><span
+                                    class="text-cherry font-medium text-sm">$8.50</span>
+                            </div>
+                            <p class="text-coffee/50 text-sm mt-1">48-hour fermented, stone-baked, crispy crust with an
+                                airy crumb</p>
+                        </div>
+                    </div>
+                    <div class="menu-card bg-white rounded-xl overflow-hidden reveal" style="transition-delay:0.1s">
+                        <div class="aspect-[16/10] overflow-hidden"><img
+                                src="https://images.unsplash.com/photo-1555507036-ab1f4038024a?w=500&q=80&auto=format&fit=crop"
+                                alt="Butter croissants" class="w-full h-full object-cover" loading="lazy" /></div>
+                        <div class="p-5">
+                            <div class="flex items-center justify-between">
+                                <h3 class="font-serif text-lg">Butter Croissant</h3><span
+                                    class="text-cherry font-medium text-sm">$4.25</span>
+                            </div>
+                            <p class="text-coffee/50 text-sm mt-1">Laminated by hand with French cultured butter, 64
+                                flaky layers</p>
+                        </div>
+                    </div>
+                    <div class="menu-card bg-white rounded-xl overflow-hidden reveal" style="transition-delay:0.15s">
+                        <div class="aspect-[16/10] overflow-hidden"><img
+                                src="https://images.unsplash.com/photo-1558303065-b9e04e75f476?w=500&q=80&auto=format&fit=crop"
+                                alt="Cinnamon rolls" class="w-full h-full object-cover" loading="lazy" /></div>
+                        <div class="p-5">
+                            <div class="flex items-center justify-between">
+                                <h3 class="font-serif text-lg">Cardamom Cinnamon Roll</h3><span
+                                    class="text-cherry font-medium text-sm">$5.50</span>
+                            </div>
+                            <p class="text-coffee/50 text-sm mt-1">Soft brioche dough, cinnamon-cardamom swirl, cream
+                                cheese glaze</p>
+                        </div>
+                    </div>
+                    <div class="menu-card bg-white rounded-xl overflow-hidden reveal">
+                        <div class="aspect-[16/10] overflow-hidden"><img
+                                src="https://images.unsplash.com/photo-1517433367423-c7e5b0f35086?w=500&q=80&auto=format&fit=crop"
+                                alt="Chocolate pastries" class="w-full h-full object-cover" loading="lazy" /></div>
+                        <div class="p-5">
+                            <div class="flex items-center justify-between">
+                                <h3 class="font-serif text-lg">Pain au Chocolat</h3><span
+                                    class="text-cherry font-medium text-sm">$4.75</span>
+                            </div>
+                            <p class="text-coffee/50 text-sm mt-1">Dark Valrhona chocolate wrapped in buttery croissant
+                                dough</p>
+                        </div>
+                    </div>
+                    <div class="menu-card bg-white rounded-xl overflow-hidden reveal" style="transition-delay:0.1s">
+                        <div class="aspect-[16/10] overflow-hidden"><img
+                                src="https://images.unsplash.com/photo-1486427944544-d2c246c4df4c?w=500&q=80&auto=format&fit=crop"
+                                alt="Fruit tart" class="w-full h-full object-cover" loading="lazy" /></div>
+                        <div class="p-5">
+                            <div class="flex items-center justify-between">
+                                <h3 class="font-serif text-lg">Seasonal Fruit Tart</h3><span
+                                    class="text-cherry font-medium text-sm">$6.50</span>
+                            </div>
+                            <p class="text-coffee/50 text-sm mt-1">Shortcrust pastry, vanilla crème pâtissière,
+                                market-fresh berries</p>
+                        </div>
+                    </div>
+                    <div class="menu-card bg-white rounded-xl overflow-hidden reveal" style="transition-delay:0.15s">
+                        <div class="aspect-[16/10] overflow-hidden"><img
+                                src="https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80&auto=format&fit=crop"
+                                alt="Almond frangipane" class="w-full h-full object-cover" loading="lazy" /></div>
+                        <div class="p-5">
+                            <div class="flex items-center justify-between">
+                                <h3 class="font-serif text-lg">Almond Frangipane</h3><span
+                                    class="text-cherry font-medium text-sm">$5.00</span>
+                            </div>
+                            <p class="text-coffee/50 text-sm mt-1">Flaky puff pastry, almond crème, toasted sliced
+                                almonds, dusted sugar</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Breakfast -->
+                <div x-show="cat==='breakfast'" x-cloak class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="menu-card bg-white rounded-xl overflow-hidden">
+                        <div class="aspect-[16/10] overflow-hidden"><img
+                                src="https://images.unsplash.com/photo-1525351484163-7529414344d8?w=500&q=80&auto=format&fit=crop"
+                                alt="Avocado toast" class="w-full h-full object-cover" loading="lazy" /></div>
+                        <div class="p-5">
+                            <div class="flex items-center justify-between">
+                                <h3 class="font-serif text-lg">Smashed Avo on Sourdough</h3><span
+                                    class="text-cherry font-medium text-sm">$14.00</span>
+                            </div>
+                            <p class="text-coffee/50 text-sm mt-1">House sourdough, Hass avocado, pickled radish, chili
+                                flakes, poached egg</p>
+                        </div>
+                    </div>
+                    <div class="menu-card bg-white rounded-xl overflow-hidden">
+                        <div class="aspect-[16/10] overflow-hidden"><img
+                                src="https://images.unsplash.com/photo-1484723091739-30a097e8f929?w=500&q=80&auto=format&fit=crop"
+                                alt="Pancake stack" class="w-full h-full object-cover" loading="lazy" /></div>
+                        <div class="p-5">
+                            <div class="flex items-center justify-between">
+                                <h3 class="font-serif text-lg">Ricotta Hotcakes</h3><span
+                                    class="text-cherry font-medium text-sm">$16.00</span>
+                            </div>
+                            <p class="text-coffee/50 text-sm mt-1">Fluffy ricotta pancakes, honeycomb butter, maple,
+                                seasonal compote</p>
+                        </div>
+                    </div>
+                    <div class="menu-card bg-white rounded-xl overflow-hidden">
+                        <div class="aspect-[16/10] overflow-hidden"><img
+                                src="https://images.unsplash.com/photo-1482049016688-2d3e1b311543?w=500&q=80&auto=format&fit=crop"
+                                alt="Eggs benedict" class="w-full h-full object-cover" loading="lazy" /></div>
+                        <div class="p-5">
+                            <div class="flex items-center justify-between">
+                                <h3 class="font-serif text-lg">Baker's Eggs Benedict</h3><span
+                                    class="text-cherry font-medium text-sm">$17.00</span>
+                            </div>
+                            <p class="text-coffee/50 text-sm mt-1">House English muffin, smoked salmon, hollandaise,
+                                dill, capers</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Lunch -->
+                <div x-show="cat==='lunch'" x-cloak class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="menu-card bg-white rounded-xl overflow-hidden">
+                        <div class="aspect-[16/10] overflow-hidden"><img
+                                src="https://images.unsplash.com/photo-1550507992-eb63ffee0847?w=500&q=80&auto=format&fit=crop"
+                                alt="Gourmet sandwich" class="w-full h-full object-cover" loading="lazy" /></div>
+                        <div class="p-5">
+                            <div class="flex items-center justify-between">
+                                <h3 class="font-serif text-lg">Brie & Fig Panini</h3><span
+                                    class="text-cherry font-medium text-sm">$15.00</span>
+                            </div>
+                            <p class="text-coffee/50 text-sm mt-1">Sourdough, triple-cream brie, fig jam, arugula,
+                                prosciutto, honey drizzle</p>
+                        </div>
+                    </div>
+                    <div class="menu-card bg-white rounded-xl overflow-hidden">
+                        <div class="aspect-[16/10] overflow-hidden"><img
+                                src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=500&q=80&auto=format&fit=crop"
+                                alt="Grain bowl" class="w-full h-full object-cover" loading="lazy" /></div>
+                        <div class="p-5">
+                            <div class="flex items-center justify-between">
+                                <h3 class="font-serif text-lg">Harvest Grain Bowl</h3><span
+                                    class="text-cherry font-medium text-sm">$16.00</span>
+                            </div>
+                            <p class="text-coffee/50 text-sm mt-1">Farro, roasted sweet potato, kale, goat cheese,
+                                candied pecans, tahini</p>
+                        </div>
+                    </div>
+                    <div class="menu-card bg-white rounded-xl overflow-hidden">
+                        <div class="aspect-[16/10] overflow-hidden"><img
+                                src="https://images.unsplash.com/photo-1547592166-23ac45744acd?w=500&q=80&auto=format&fit=crop"
+                                alt="Soup in bread bowl" class="w-full h-full object-cover" loading="lazy" /></div>
+                        <div class="p-5">
+                            <div class="flex items-center justify-between">
+                                <h3 class="font-serif text-lg">Tomato Bisque in Bread Bowl</h3><span
+                                    class="text-cherry font-medium text-sm">$13.00</span>
+                            </div>
+                            <p class="text-coffee/50 text-sm mt-1">Roasted Roma tomato soup, gruyère croutons, served in
+                                our sourdough boule</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Drinks -->
+                <div x-show="cat==='drinks'" x-cloak class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="menu-card bg-white rounded-xl overflow-hidden">
+                        <div class="aspect-[16/10] overflow-hidden"><img
+                                src="https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=500&q=80&auto=format&fit=crop"
+                                alt="Latte art" class="w-full h-full object-cover" loading="lazy" /></div>
+                        <div class="p-5">
+                            <div class="flex items-center justify-between">
+                                <h3 class="font-serif text-lg">Signature Flat White</h3><span
+                                    class="text-cherry font-medium text-sm">$5.50</span>
+                            </div>
+                            <p class="text-coffee/50 text-sm mt-1">Double ristretto, silky micro-foam, single-origin
+                                Ethiopian beans</p>
+                        </div>
+                    </div>
+                    <div class="menu-card bg-white rounded-xl overflow-hidden">
+                        <div class="aspect-[16/10] overflow-hidden"><img
+                                src="https://images.unsplash.com/photo-1572442388796-11668a67e53d?w=500&q=80&auto=format&fit=crop"
+                                alt="Iced matcha latte" class="w-full h-full object-cover" loading="lazy" /></div>
+                        <div class="p-5">
+                            <div class="flex items-center justify-between">
+                                <h3 class="font-serif text-lg">Iced Oat Matcha</h3><span
+                                    class="text-cherry font-medium text-sm">$6.00</span>
+                            </div>
+                            <p class="text-coffee/50 text-sm mt-1">Ceremonial matcha, oat milk, honey, over ice</p>
+                        </div>
+                    </div>
+                    <div class="menu-card bg-white rounded-xl overflow-hidden">
+                        <div class="aspect-[16/10] overflow-hidden"><img
+                                src="https://images.unsplash.com/photo-1534353473418-4cfa6c56fd38?w=500&q=80&auto=format&fit=crop"
+                                alt="Fresh juice" class="w-full h-full object-cover" loading="lazy" /></div>
+                        <div class="p-5">
+                            <div class="flex items-center justify-between">
+                                <h3 class="font-serif text-lg">Cold-Pressed Juice</h3><span
+                                    class="text-cherry font-medium text-sm">$7.00</span>
+                            </div>
+                            <p class="text-coffee/50 text-sm mt-1">Daily rotation — carrot-ginger, green detox, or
+                                citrus sunrise</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== OUR STORY ====== -->
+    <section id="story" class="py-20 md:py-28 bg-linen">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+                <div class="reveal">
+                    <p class="text-cherry text-xs tracking-[0.3em] uppercase font-medium mb-3">Our Story</p>
+                    <h2 class="font-serif text-4xl md:text-5xl leading-tight mb-6">From a Home Kitchen to <span
+                            class="italic text-cherry">Your Table</span></h2>
+                    <div class="space-y-4 text-coffee/70 leading-relaxed">
+                        <p>
+                            Flour & Flame started in 2019 when Sophie and Marco Chen — a pastry chef and a coffee
+                            roaster — quit their corporate jobs and leased a tiny 400-square-foot space on Elm Street.
+                            The idea was simple: bake the best bread in town and brew coffee worth getting out of bed
+                            for.
+                        </p>
+                        <p>
+                            Within six months, the line stretched around the block every Saturday morning. Neighbors
+                            became regulars, regulars became friends, and that tiny space expanded into three locations
+                            across Portland and Seattle.
+                        </p>
+                        <p>
+                            Our sourdough starter, "Eleanor," is five years old and the heart of everything we bake.
+                            Every loaf is shaped by hand, slow-fermented for 48 hours, and stone-baked in our wood-fired
+                            oven. We source our flour from Cairnspring Mills, our butter from a local creamery, and our
+                            coffee beans are roasted in-house weekly.
+                        </p>
+                    </div>
+                    <div class="grid grid-cols-3 gap-4 mt-8 text-center">
+                        <div>
+                            <p class="font-serif text-2xl text-cherry">3</p>
+                            <p class="text-coffee/50 text-xs">Locations</p>
+                        </div>
+                        <div>
+                            <p class="font-serif text-2xl text-cherry">48hr</p>
+                            <p class="text-coffee/50 text-xs">Dough Ferment</p>
+                        </div>
+                        <div>
+                            <p class="font-serif text-2xl text-cherry">5yr</p>
+                            <p class="text-coffee/50 text-xs">"Eleanor" Starter</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="reveal" style="transition-delay:0.15s">
+                    <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=800&q=80&auto=format&fit=crop"
+                        alt="Baker shaping sourdough bread" class="w-full aspect-[3/4] object-cover rounded-xl"
+                        loading="lazy" />
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== CATERING ====== -->
+    <section id="catering" class="py-20 md:py-28 bg-espresso text-oat">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-14 reveal">
+                <p class="text-cherry text-xs tracking-[0.3em] uppercase font-medium mb-3">Bring Us to You</p>
+                <h2 class="font-serif text-4xl md:text-5xl text-linen">Catering</h2>
+                <p class="text-oat/60 mt-4 max-w-lg mx-auto">From breakfast spreads for your morning meeting to towering
+                    pastry displays for weddings — we bring the warmth of our bakery to your event.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10 reveal">
+                <div class="bg-coffee/30 border border-crust/20 rounded-xl p-6 text-center">
+                    <div class="text-3xl mb-3">☕</div>
+                    <h3 class="font-serif text-xl text-linen mb-2">Office Mornings</h3>
+                    <p class="text-oat/50 text-sm">Fresh pastry boxes, premium coffee urns, and grab-and-go sandwiches
+                        for 10–100 people.</p>
+                    <p class="text-cherry font-medium text-sm mt-3">From $12/person</p>
+                </div>
+                <div class="bg-coffee/30 border border-crust/20 rounded-xl p-6 text-center">
+                    <div class="text-3xl mb-3">🎂</div>
+                    <h3 class="font-serif text-xl text-linen mb-2">Celebrations</h3>
+                    <p class="text-oat/50 text-sm">Custom celebration cakes, dessert tables, and tiered pastry towers
+                        for birthdays, showers, and weddings.</p>
+                    <p class="text-cherry font-medium text-sm mt-3">Custom quote</p>
+                </div>
+                <div class="bg-coffee/30 border border-crust/20 rounded-xl p-6 text-center">
+                    <div class="text-3xl mb-3">🍞</div>
+                    <h3 class="font-serif text-xl text-linen mb-2">Bread Program</h3>
+                    <p class="text-oat/50 text-sm">Weekly sourdough and pastry deliveries for restaurants, hotels, and
+                        cafes. Wholesale pricing available.</p>
+                    <p class="text-cherry font-medium text-sm mt-3">Wholesale rates</p>
+                </div>
+            </div>
+
+            <form class="bg-coffee/20 border border-crust/10 rounded-xl p-6 md:p-10 reveal">
+                <h3 class="font-serif text-2xl text-linen text-center mb-6">Request a Catering Quote</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
+                    <input type="text" placeholder="Your name"
+                        class="w-full px-4 py-3 bg-espresso border border-crust/15 focus:border-cherry outline-none text-sm text-oat placeholder-oat/30 rounded-lg transition" />
+                    <input type="email" placeholder="Email address"
+                        class="w-full px-4 py-3 bg-espresso border border-crust/15 focus:border-cherry outline-none text-sm text-oat placeholder-oat/30 rounded-lg transition" />
+                    <input type="tel" placeholder="Phone number"
+                        class="w-full px-4 py-3 bg-espresso border border-crust/15 focus:border-cherry outline-none text-sm text-oat placeholder-oat/30 rounded-lg transition" />
+                    <input type="date" placeholder="Event date"
+                        class="w-full px-4 py-3 bg-espresso border border-crust/15 focus:border-cherry outline-none text-sm text-oat rounded-lg transition" />
+                </div>
+                <textarea rows="3" placeholder="Tell us about your event — type, guest count, dietary needs..."
+                    class="w-full px-4 py-3 bg-espresso border border-crust/15 focus:border-cherry outline-none text-sm text-oat placeholder-oat/30 rounded-lg resize-none transition mb-5"></textarea>
+                <button type="submit"
+                    class="btn-crust w-full md:w-auto px-10 py-3.5 bg-cherry text-white text-sm tracking-wider uppercase font-medium rounded-full hover:bg-cherry/80 transition">Send
+                    Request</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- ====== LOCATIONS ====== -->
+    <section id="locations" class="py-20 md:py-28 bg-cream">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-14 reveal">
+                <p class="text-cherry text-xs tracking-[0.3em] uppercase font-medium mb-3">Visit Us</p>
+                <h2 class="font-serif text-4xl md:text-5xl">Our Locations</h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="menu-card bg-white rounded-xl overflow-hidden reveal">
+                    <div class="aspect-video overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=600&q=80&auto=format&fit=crop"
+                            alt="Flour & Flame Portland flagship" class="w-full h-full object-cover" loading="lazy" />
+                    </div>
+                    <div class="p-6">
+                        <span class="text-cherry text-[10px] tracking-wider uppercase font-medium">Flagship</span>
+                        <h3 class="font-serif text-xl mt-1">Portland — Elm Street</h3>
+                        <p class="text-coffee/50 text-sm mt-2">247 NW Elm Street<br />Portland, OR 97209</p>
+                        <div class="flex justify-between items-center mt-4 text-xs text-coffee/40">
+                            <span>Daily 6:30am – 4:00pm</span>
+                            <a href="#" class="text-cherry font-medium hover:underline">Directions</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="menu-card bg-white rounded-xl overflow-hidden reveal" style="transition-delay:0.1s">
+                    <div class="aspect-video overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1559925393-8be0ec4767c8?w=600&q=80&auto=format&fit=crop"
+                            alt="Flour & Flame Portland Pearl" class="w-full h-full object-cover" loading="lazy" />
+                    </div>
+                    <div class="p-6">
+                        <h3 class="font-serif text-xl">Portland — Pearl District</h3>
+                        <p class="text-coffee/50 text-sm mt-2">89 NW Glisan Street<br />Portland, OR 97209</p>
+                        <div class="flex justify-between items-center mt-4 text-xs text-coffee/40">
+                            <span>Mon–Sat 7:00am – 3:00pm</span>
+                            <a href="#" class="text-cherry font-medium hover:underline">Directions</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="menu-card bg-white rounded-xl overflow-hidden reveal" style="transition-delay:0.2s">
+                    <div class="aspect-video overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1453614512568-c4024d13c247?w=600&q=80&auto=format&fit=crop"
+                            alt="Flour & Flame Seattle" class="w-full h-full object-cover" loading="lazy" />
+                    </div>
+                    <div class="p-6">
+                        <span class="text-cherry text-[10px] tracking-wider uppercase font-medium">New</span>
+                        <h3 class="font-serif text-xl mt-1">Seattle — Capitol Hill</h3>
+                        <p class="text-coffee/50 text-sm mt-2">1412 E Pine Street<br />Seattle, WA 98122</p>
+                        <div class="flex justify-between items-center mt-4 text-xs text-coffee/40">
+                            <span>Daily 7:00am – 5:00pm</span>
+                            <a href="#" class="text-cherry font-medium hover:underline">Directions</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== FOOTER ====== -->
+    <footer class="bg-espresso py-14">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-10">
+                <div class="col-span-2 md:col-span-1">
+                    <a href="#home" class="font-serif text-2xl text-linen">Flour <span class="text-cherry">&</span>
+                        Flame</a>
+                    <p class="text-oat/40 text-sm mt-3 leading-relaxed">Handcrafted bread, pastries, and specialty
+                        coffee in Portland & Seattle.</p>
+                </div>
+                <div>
+                    <h4 class="text-oat/60 text-xs tracking-wider uppercase mb-4">Menu</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-oat/40 text-sm hover:text-cherry transition">Bakery</a></li>
+                        <li><a href="#" class="text-oat/40 text-sm hover:text-cherry transition">Breakfast</a></li>
+                        <li><a href="#" class="text-oat/40 text-sm hover:text-cherry transition">Lunch</a></li>
+                        <li><a href="#" class="text-oat/40 text-sm hover:text-cherry transition">Drinks</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-oat/60 text-xs tracking-wider uppercase mb-4">About</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-oat/40 text-sm hover:text-cherry transition">Our Story</a></li>
+                        <li><a href="#" class="text-oat/40 text-sm hover:text-cherry transition">Catering</a></li>
+                        <li><a href="#" class="text-oat/40 text-sm hover:text-cherry transition">Careers</a></li>
+                        <li><a href="#" class="text-oat/40 text-sm hover:text-cherry transition">Press</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-oat/60 text-xs tracking-wider uppercase mb-4">Follow Us</h4>
+                    <div class="flex gap-3">
+                        <a href="#" aria-label="Instagram" class="text-oat/40 hover:text-cherry transition"><svg
+                                class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                <path
+                                    d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" />
+                            </svg></a>
+                        <a href="#" aria-label="TikTok" class="text-oat/40 hover:text-cherry transition"><svg
+                                class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                <path
+                                    d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1v-3.5a6.37 6.37 0 00-.79-.05A6.34 6.34 0 003.15 15.2a6.34 6.34 0 0010.86 4.43v-7.15a8.16 8.16 0 005.58 2.17V11.2a4.85 4.85 0 01-3-.45V6.69h3z" />
+                            </svg></a>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-oat/10 pt-6 text-center">
+                <p class="text-oat/30 text-xs">&copy; 2026 Flour & Flame Bakery LLC. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('active'); observer.unobserve(entry.target); } });
+            }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+            document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SCALE WORKS — Hobby Model Shop</title>
+    <meta name="description"
+        content="SCALE WORKS — Model kits, precision paints, and expert tools for scale modellers. Guides, gallery, and a passionate community of builders." />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet" />
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        display: ['"Rajdhani"', 'system-ui', 'sans-serif'],
+                        sans: ['"Inter"', 'system-ui', 'sans-serif'],
+                    },
+                    colors: {
+                        olive: '#65A30D',
+                        oliveDark: '#4D7C0F',
+                        olivePale: '#F7FEE7',
+                        steel: '#64748B',
+                        steelDark: '#475569',
+                        gunmetal: '#1E293B',
+                        navy: '#0F172A',
+                        amber: '#F59E0B',
+                        amberPale: '#FFFBEB',
+                        sky: '#0EA5E9',
+                        skyPale: '#F0F9FF',
+                        red: '#EF4444',
+                        mist: '#E2E8F0',
+                        cloud: '#F1F5F9',
+                        snow: '#FFFFFF',
+                    },
+                },
+            },
+        };
+    </script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            background: #FFFFFF;
+            color: #0F172A;
+            overflow-x: hidden;
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity .7s ease, transform .7s ease;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .card {
+            transition: transform .35s, box-shadow .35s;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 16px 48px rgba(101, 163, 13, .06);
+        }
+
+        .card img {
+            transition: transform .5s ease;
+        }
+
+        .card:hover img {
+            transform: scale(1.04);
+        }
+
+        .btn-olive {
+            transition: transform .25s, box-shadow .25s;
+        }
+
+        .btn-olive:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(101, 163, 13, .25);
+        }
+
+        ::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #FFFFFF;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #65A30D;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+
+<body x-data="{ mobileMenu: false }" class="bg-snow text-navy">
+
+    <!-- ====== NAVIGATION ====== -->
+    <header class="fixed top-0 left-0 w-full z-50 bg-snow/90 backdrop-blur-md border-b border-mist/50">
+        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16 md:h-20">
+                <a href="#home" class="flex items-center gap-2">
+                    <span class="text-xl">✈️</span>
+                    <span class="font-display text-2xl font-bold tracking-tight uppercase">Scale <span
+                            class="text-olive">Works</span></span>
+                </a>
+                <ul class="hidden md:flex items-center space-x-7 text-sm text-steel font-medium">
+                    <li><a href="#models" class="hover:text-olive transition">Shop Models</a></li>
+                    <li><a href="#paints" class="hover:text-olive transition">Paints & Tools</a></li>
+                    <li><a href="#guides" class="hover:text-olive transition">Guides</a></li>
+                    <li><a href="#gallery" class="hover:text-olive transition">Gallery</a></li>
+                    <li><a href="#contact" class="hover:text-olive transition">Contact</a></li>
+                </ul>
+                <a href="#models"
+                    class="hidden md:inline-flex px-6 py-2.5 bg-olive text-white text-xs tracking-wider uppercase font-bold rounded-full btn-olive">Shop
+                    Now</a>
+                <button @click="mobileMenu=!mobileMenu" class="md:hidden p-2" aria-label="Menu">
+                    <svg x-show="!mobileMenu" class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.5"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 9h16.5m-16.5 6.75h16.5" />
+                    </svg>
+                    <svg x-show="mobileMenu" x-cloak class="w-6 h-6" fill="none" stroke="currentColor"
+                        stroke-width="1.5" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+            <div x-show="mobileMenu" x-cloak x-transition class="md:hidden pb-6 border-t border-mist/50">
+                <ul class="flex flex-col space-y-4 pt-4 text-sm font-medium">
+                    <li><a @click="mobileMenu=false" href="#models" class="block py-1 text-steel hover:text-olive">Shop
+                            Models</a></li>
+                    <li><a @click="mobileMenu=false" href="#paints"
+                            class="block py-1 text-steel hover:text-olive">Paints & Tools</a></li>
+                    <li><a @click="mobileMenu=false" href="#guides"
+                            class="block py-1 text-steel hover:text-olive">Guides</a></li>
+                    <li><a @click="mobileMenu=false" href="#gallery"
+                            class="block py-1 text-steel hover:text-olive">Gallery</a></li>
+                    <li><a @click="mobileMenu=false" href="#contact" class="block py-1 text-olive font-bold">Contact</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <!-- ====== HERO ====== -->
+    <section id="home" class="relative min-h-screen flex items-center overflow-hidden bg-gunmetal text-white">
+        <div class="absolute inset-0 opacity-20"><img
+                src="https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=1920&q=80&auto=format&fit=crop"
+                alt="Model workshop background" class="w-full h-full object-cover" /></div>
+        <div class="absolute inset-0 bg-gradient-to-r from-navy via-navy/90 to-navy/60"></div>
+        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-32">
+            <div class="max-w-xl">
+                <span
+                    class="inline-flex items-center px-3 py-1 bg-olive/20 text-olive text-xs font-bold tracking-wider uppercase rounded-full mb-5">🛠️
+                    New Tamiya & Revell Stock Arrived</span>
+                <h1 class="font-display text-5xl sm:text-6xl lg:text-7xl font-bold uppercase leading-[1.05] mb-6">
+                    Build Something <span class="text-olive">Incredible</span>
+                </h1>
+                <p class="text-white/60 text-base sm:text-lg leading-relaxed mb-8">Model kits from 1/72 to 1/24 scale —
+                    aircraft, armor, ships, cars, and sci-fi. Premium paints, precision tools, and expert guides to help
+                    you build your best.</p>
+                <div class="flex flex-col sm:flex-row gap-3">
+                    <a href="#models"
+                        class="btn-olive inline-flex items-center justify-center px-8 py-3.5 bg-olive text-white text-sm tracking-wider uppercase font-bold rounded-full">Shop
+                        Models</a>
+                    <a href="#guides"
+                        class="btn-olive inline-flex items-center justify-center px-8 py-3.5 border border-white/20 text-white text-sm tracking-wider uppercase font-medium rounded-full hover:bg-white hover:text-navy transition">Build
+                        Guides</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== SHOP MODELS ====== -->
+    <section id="models" class="py-20 md:py-28 bg-snow">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 reveal">
+                <div>
+                    <p class="text-olive text-xs tracking-[0.3em] uppercase font-semibold mb-2">Kits</p>
+                    <h2 class="font-display text-4xl md:text-5xl font-bold uppercase">Shop Models</h2>
+                </div>
+                <a href="#" class="text-olive text-sm font-medium mt-3 md:mt-0 hover:text-navy transition">All
+                    Categories →</a>
+            </div>
+
+            <!-- Category Tags -->
+            <div class="flex flex-wrap gap-2 mb-8 reveal">
+                <span
+                    class="bg-olive/10 text-olive text-xs px-3 py-1.5 rounded-full font-bold cursor-pointer hover:bg-olive hover:text-white transition">All</span>
+                <span
+                    class="bg-cloud text-steel text-xs px-3 py-1.5 rounded-full font-medium cursor-pointer hover:bg-olive hover:text-white transition">Aircraft</span>
+                <span
+                    class="bg-cloud text-steel text-xs px-3 py-1.5 rounded-full font-medium cursor-pointer hover:bg-olive hover:text-white transition">Armor</span>
+                <span
+                    class="bg-cloud text-steel text-xs px-3 py-1.5 rounded-full font-medium cursor-pointer hover:bg-olive hover:text-white transition">Cars</span>
+                <span
+                    class="bg-cloud text-steel text-xs px-3 py-1.5 rounded-full font-medium cursor-pointer hover:bg-olive hover:text-white transition">Ships</span>
+                <span
+                    class="bg-cloud text-steel text-xs px-3 py-1.5 rounded-full font-medium cursor-pointer hover:bg-olive hover:text-white transition">Sci-Fi</span>
+            </div>
+
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="card bg-cloud rounded-2xl overflow-hidden reveal">
+                    <div class="aspect-square overflow-hidden bg-mist/30 p-4 flex items-center justify-center"><img
+                            src="https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=400&q=80&auto=format&fit=crop"
+                            alt="P-51 Mustang model" class="w-full h-full object-contain" loading="lazy" /></div>
+                    <div class="p-3"><span class="text-sky text-[10px] tracking-wider uppercase font-bold">Aircraft •
+                            1/48</span>
+                        <h4 class="font-semibold text-sm mt-1">P-51D Mustang</h4>
+                        <p class="text-steel text-xs mt-0.5">Tamiya • 100+ parts</p>
+                        <div class="flex items-center justify-between mt-2"><span
+                                class="font-display font-bold text-lg text-olive">$38</span><a href="#"
+                                class="text-xs bg-olive/10 text-olive px-3 py-1.5 rounded-full font-semibold hover:bg-olive hover:text-white transition">View</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="card bg-cloud rounded-2xl overflow-hidden reveal" style="transition-delay:.1s">
+                    <div class="aspect-square overflow-hidden bg-mist/30 p-4 flex items-center justify-center"><img
+                            src="https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=400&q=80&auto=format&fit=crop"
+                            alt="Tiger I tank model" class="w-full h-full object-contain" loading="lazy" /></div>
+                    <div class="p-3"><span class="text-amber text-[10px] tracking-wider uppercase font-bold">Armor •
+                            1/35</span>
+                        <h4 class="font-semibold text-sm mt-1">Tiger I Late Production</h4>
+                        <p class="text-steel text-xs mt-0.5">Revell • Interior detail</p>
+                        <div class="flex items-center justify-between mt-2"><span
+                                class="font-display font-bold text-lg text-olive">$52</span><a href="#"
+                                class="text-xs bg-olive/10 text-olive px-3 py-1.5 rounded-full font-semibold hover:bg-olive hover:text-white transition">View</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="card bg-cloud rounded-2xl overflow-hidden reveal" style="transition-delay:.15s">
+                    <div class="aspect-square overflow-hidden bg-mist/30 p-4 flex items-center justify-center"><img
+                            src="https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=400&q=80&auto=format&fit=crop"
+                            alt="Porsche 911 model" class="w-full h-full object-contain" loading="lazy" /></div>
+                    <div class="p-3"><span class="text-red text-[10px] tracking-wider uppercase font-bold">Cars •
+                            1/24</span>
+                        <h4 class="font-semibold text-sm mt-1">Porsche 911 GT3 RS</h4>
+                        <p class="text-steel text-xs mt-0.5">Tamiya • Engine detail</p>
+                        <div class="flex items-center justify-between mt-2"><span
+                                class="font-display font-bold text-lg text-olive">$34</span><a href="#"
+                                class="text-xs bg-olive/10 text-olive px-3 py-1.5 rounded-full font-semibold hover:bg-olive hover:text-white transition">View</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="card bg-cloud rounded-2xl overflow-hidden reveal" style="transition-delay:.2s">
+                    <div class="aspect-square overflow-hidden bg-mist/30 p-4 flex items-center justify-center"><img
+                            src="https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=400&q=80&auto=format&fit=crop"
+                            alt="Star Destroyer model" class="w-full h-full object-contain" loading="lazy" /></div>
+                    <div class="p-3"><span class="text-steelDark text-[10px] tracking-wider uppercase font-bold">Sci-Fi
+                            • 1/5000</span>
+                        <h4 class="font-semibold text-sm mt-1">Star Destroyer</h4>
+                        <p class="text-steel text-xs mt-0.5">Bandai • Snap-fit + LED</p>
+                        <div class="flex items-center justify-between mt-2"><span
+                                class="font-display font-bold text-lg text-olive">$65</span><a href="#"
+                                class="text-xs bg-olive/10 text-olive px-3 py-1.5 rounded-full font-semibold hover:bg-olive hover:text-white transition">View</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== PAINTS & TOOLS ====== -->
+    <section id="paints" class="py-20 md:py-28 bg-cloud">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-10 reveal">
+                <p class="text-olive text-xs tracking-[0.3em] uppercase font-semibold mb-3">Essentials</p>
+                <h2 class="font-display text-4xl md:text-5xl font-bold uppercase">Paints & Tools</h2>
+            </div>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="card bg-snow rounded-xl p-4 text-center reveal">
+                    <div class="w-14 h-14 mx-auto rounded-xl bg-sky/10 flex items-center justify-center text-2xl mb-3">
+                        🎨</div>
+                    <h4 class="font-semibold text-sm">Acrylic Paints</h4>
+                    <p class="text-steel text-xs mt-1">Vallejo, Tamiya, AK</p>
+                    <p class="text-olive font-bold text-sm mt-2">From $3.50</p>
+                </div>
+                <div class="card bg-snow rounded-xl p-4 text-center reveal" style="transition-delay:.1s">
+                    <div
+                        class="w-14 h-14 mx-auto rounded-xl bg-amber/10 flex items-center justify-center text-2xl mb-3">
+                        ✂️</div>
+                    <h4 class="font-semibold text-sm">Precision Tools</h4>
+                    <p class="text-steel text-xs mt-1">Nippers, files, sanding</p>
+                    <p class="text-olive font-bold text-sm mt-2">From $8</p>
+                </div>
+                <div class="card bg-snow rounded-xl p-4 text-center reveal" style="transition-delay:.15s">
+                    <div
+                        class="w-14 h-14 mx-auto rounded-xl bg-olive/10 flex items-center justify-center text-2xl mb-3">
+                        🖌️</div>
+                    <h4 class="font-semibold text-sm">Brush Sets</h4>
+                    <p class="text-steel text-xs mt-1">Sable & synthetic</p>
+                    <p class="text-olive font-bold text-sm mt-2">From $12</p>
+                </div>
+                <div class="card bg-snow rounded-xl p-4 text-center reveal" style="transition-delay:.2s">
+                    <div class="w-14 h-14 mx-auto rounded-xl bg-red/10 flex items-center justify-center text-2xl mb-3">
+                        💨</div>
+                    <h4 class="font-semibold text-sm">Airbrush Kits</h4>
+                    <p class="text-steel text-xs mt-1">Iwata, Harder & Steenbeck</p>
+                    <p class="text-olive font-bold text-sm mt-2">From $89</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== GUIDES ====== -->
+    <section id="guides" class="py-20 md:py-28 bg-snow">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 reveal">
+                <div>
+                    <p class="text-olive text-xs tracking-[0.3em] uppercase font-semibold mb-2">Learn</p>
+                    <h2 class="font-display text-4xl md:text-5xl font-bold uppercase">Build Guides</h2>
+                </div>
+                <a href="#" class="text-olive text-sm font-medium mt-3 md:mt-0 hover:text-navy transition">All Guides
+                    →</a>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                <article class="card group rounded-2xl overflow-hidden bg-cloud reveal">
+                    <div class="aspect-[16/10] overflow-hidden"><img
+                            src="https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=600&q=80&auto=format&fit=crop"
+                            alt="Beginner guide" class="w-full h-full object-cover" loading="lazy" /></div>
+                    <div class="p-5"><span
+                            class="text-olive text-[10px] tracking-wider uppercase font-bold">Beginner</span>
+                        <h3 class="font-display text-xl font-bold uppercase mt-1 group-hover:text-olive transition">Your
+                            First Model: A Complete Beginner's Guide</h3>
+                        <p class="text-steel text-sm mt-2">Everything you need — from choosing a kit to applying your
+                            first coat of paint. No experience needed.</p>
+                        <p class="text-steel/50 text-xs mt-3">15 min read</p>
+                    </div>
+                </article>
+                <article class="card group rounded-2xl overflow-hidden bg-cloud reveal" style="transition-delay:.1s">
+                    <div class="aspect-[16/10] overflow-hidden"><img
+                            src="https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=600&q=80&auto=format&fit=crop"
+                            alt="Weathering techniques" class="w-full h-full object-cover" loading="lazy" /></div>
+                    <div class="p-5"><span
+                            class="text-amber text-[10px] tracking-wider uppercase font-bold">Intermediate</span>
+                        <h3 class="font-display text-xl font-bold uppercase mt-1 group-hover:text-olive transition">
+                            Weathering Techniques: Oils, Washes & Pigments</h3>
+                        <p class="text-steel text-sm mt-2">How to make your models look battle-worn and realistic with
+                            simple oil paint washes and dry pigments.</p>
+                        <p class="text-steel/50 text-xs mt-3">12 min read</p>
+                    </div>
+                </article>
+                <article class="card group rounded-2xl overflow-hidden bg-cloud reveal" style="transition-delay:.15s">
+                    <div class="aspect-[16/10] overflow-hidden"><img
+                            src="https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=600&q=80&auto=format&fit=crop"
+                            alt="Airbrush mastery" class="w-full h-full object-cover" loading="lazy" /></div>
+                    <div class="p-5"><span
+                            class="text-red text-[10px] tracking-wider uppercase font-bold">Advanced</span>
+                        <h3 class="font-display text-xl font-bold uppercase mt-1 group-hover:text-olive transition">
+                            Airbrush Mastery: Pre-Shading & Chipping Effects</h3>
+                        <p class="text-steel text-sm mt-2">Advanced techniques for realistic camo schemes, panel-line
+                            pre-shading, and hairspray chipping.</p>
+                        <p class="text-steel/50 text-xs mt-3">20 min read</p>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== GALLERY ====== -->
+    <section id="gallery" class="py-20 md:py-28 bg-gunmetal text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-10 reveal">
+                <p class="text-olive text-xs tracking-[0.3em] uppercase font-bold mb-3">Community Builds</p>
+                <h2 class="font-display text-4xl md:text-5xl font-bold uppercase">Gallery</h2>
+                <p class="text-white/50 mt-4 max-w-lg mx-auto">Completed builds from our community of modellers. Submit
+                    yours for a chance to be featured!</p>
+            </div>
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+                <div class="rounded-2xl overflow-hidden group relative reveal">
+                    <img src="https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=500&q=80&auto=format&fit=crop"
+                        alt="Community build 1"
+                        class="w-full aspect-square object-cover group-hover:scale-105 transition-transform duration-500"
+                        loading="lazy" />
+                    <div
+                        class="absolute inset-0 bg-gradient-to-t from-navy/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
+                        <p class="text-white text-sm font-semibold">1/48 Spitfire by @jakeb</p>
+                    </div>
+                </div>
+                <div class="rounded-2xl overflow-hidden group relative reveal" style="transition-delay:.1s">
+                    <img src="https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=500&q=80&auto=format&fit=crop"
+                        alt="Community build 2"
+                        class="w-full aspect-square object-cover group-hover:scale-105 transition-transform duration-500"
+                        loading="lazy" />
+                    <div
+                        class="absolute inset-0 bg-gradient-to-t from-navy/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
+                        <p class="text-white text-sm font-semibold">1/35 Sherman by @modelkev</p>
+                    </div>
+                </div>
+                <div class="rounded-2xl overflow-hidden group relative reveal" style="transition-delay:.15s">
+                    <img src="https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=500&q=80&auto=format&fit=crop"
+                        alt="Community build 3"
+                        class="w-full aspect-square object-cover group-hover:scale-105 transition-transform duration-500"
+                        loading="lazy" />
+                    <div
+                        class="absolute inset-0 bg-gradient-to-t from-navy/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
+                        <p class="text-white text-sm font-semibold">1/24 RX-78 Gundam by @artisan_Y</p>
+                    </div>
+                </div>
+            </div>
+            <div class="text-center mt-8"><a href="#"
+                    class="text-olive text-sm font-medium hover:text-white transition">Submit Your Build →</a></div>
+        </div>
+    </section>
+
+    <!-- ====== CONTACT ====== -->
+    <section id="contact" class="py-20 md:py-28 bg-snow">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <div class="reveal">
+                    <p class="text-olive text-xs tracking-[0.3em] uppercase font-semibold mb-3">Get In Touch</p>
+                    <h2 class="font-display text-4xl md:text-5xl font-bold uppercase mb-6">Contact</h2>
+                    <div class="space-y-4 text-sm text-steel">
+                        <div class="flex items-center gap-3"><svg class="w-5 h-5 text-olive" fill="none"
+                                stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
+                            </svg><span>5820 N Interstate Ave, Portland, OR 97217</span></div>
+                        <div class="flex items-center gap-3"><svg class="w-5 h-5 text-olive" fill="none"
+                                stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z" />
+                            </svg><span>(503) 555-0671</span></div>
+                        <div class="flex items-center gap-3"><svg class="w-5 h-5 text-olive" fill="none"
+                                stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+                            </svg><span>info@scaleworkspdx.com</span></div>
+                    </div>
+                    <p class="text-steel text-sm mt-6"><strong>Hours:</strong> Tue–Sat 10am–6pm, Sun 11am–5pm</p>
+                </div>
+                <div class="reveal" style="transition-delay:.15s">
+                    <form class="bg-cloud rounded-2xl p-6 md:p-8 space-y-4">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <input type="text" placeholder="Name"
+                                class="w-full px-4 py-3 bg-snow border border-mist focus:border-olive outline-none text-sm rounded-xl transition" />
+                            <input type="email" placeholder="Email"
+                                class="w-full px-4 py-3 bg-snow border border-mist focus:border-olive outline-none text-sm rounded-xl transition" />
+                        </div>
+                        <select
+                            class="w-full px-4 py-3 bg-snow border border-mist focus:border-olive outline-none text-sm text-steel rounded-xl transition">
+                            <option>Subject</option>
+                            <option>Product Inquiry</option>
+                            <option>Special Order</option>
+                            <option>Build Advice</option>
+                            <option>Wholesale</option>
+                            <option>Other</option>
+                        </select>
+                        <textarea rows="4" placeholder="Your message…"
+                            class="w-full px-4 py-3 bg-snow border border-mist focus:border-olive outline-none text-sm rounded-xl resize-none transition"></textarea>
+                        <button type="submit"
+                            class="btn-olive w-full sm:w-auto px-10 py-3.5 bg-olive text-white text-sm tracking-wider uppercase font-bold rounded-full">Send</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== FOOTER ====== -->
+    <footer class="bg-navy py-14">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-10">
+                <div class="col-span-2 md:col-span-1"><a href="#home" class="flex items-center gap-2"><span
+                            class="text-lg">✈️</span><span
+                            class="font-display font-bold text-lg text-white uppercase">Scale <span
+                                class="text-olive">Works</span></span></a>
+                    <p class="text-white/40 text-sm mt-3">Hobby model shop. Portland, OR.</p>
+                </div>
+                <div>
+                    <h4 class="text-white/50 text-xs tracking-wider uppercase mb-4">Models</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-white/40 text-sm hover:text-olive transition">Aircraft</a></li>
+                        <li><a href="#" class="text-white/40 text-sm hover:text-olive transition">Armor</a></li>
+                        <li><a href="#" class="text-white/40 text-sm hover:text-olive transition">Cars</a></li>
+                        <li><a href="#" class="text-white/40 text-sm hover:text-olive transition">Ships</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white/50 text-xs tracking-wider uppercase mb-4">Resources</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-white/40 text-sm hover:text-olive transition">Guides</a></li>
+                        <li><a href="#" class="text-white/40 text-sm hover:text-olive transition">Gallery</a></li>
+                        <li><a href="#" class="text-white/40 text-sm hover:text-olive transition">YouTube</a></li>
+                        <li><a href="#" class="text-white/40 text-sm hover:text-olive transition">Community</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white/50 text-xs tracking-wider uppercase mb-4">Follow</h4>
+                    <div class="flex gap-3"><a href="#" aria-label="YouTube"
+                            class="text-white/40 hover:text-olive transition"><svg class="w-5 h-5" fill="currentColor"
+                                viewBox="0 0 24 24">
+                                <path
+                                    d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+                            </svg></a><a href="#" aria-label="Instagram"
+                            class="text-white/40 hover:text-olive transition"><svg class="w-5 h-5" fill="currentColor"
+                                viewBox="0 0 24 24">
+                                <path
+                                    d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" />
+                            </svg></a></div>
+                </div>
+            </div>
+            <div class="border-t border-white/10 pt-6 text-center">
+                <p class="text-white/30 text-xs">&copy; 2026 Scale Works PDX. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('active'); observer.unobserve(e.target); } });
+            }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+            document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sérenité Spa — Luxury Wellness & Beauty</title>
+    <meta name="description"
+        content="Sérenité Spa — A sanctuary of calm in the heart of the city. Indulge in bespoke treatments, holistic therapies, and restorative beauty rituals." />
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Alpine.js CDN -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Nunito+Sans:wght@300;400;500;600&display=swap"
+        rel="stylesheet" />
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        serif: ['"Cormorant Garamond"', 'Georgia', 'serif'],
+                        sans: ['"Nunito Sans"', 'system-ui', 'sans-serif'],
+                    },
+                    colors: {
+                        ivory: '#FDFAF5',
+                        blush: '#F2E3D5',
+                        softPink: '#E8CFC0',
+                        mauve: '#B8929A',
+                        plum: '#6E4555',
+                        deepPlum: '#4A2E3A',
+                        gold: '#C9A96E',
+                        sage: '#A3B5A0',
+                    },
+                },
+            },
+        };
+    </script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Nunito Sans', system-ui, sans-serif;
+            background: #FDFAF5;
+            color: #4A2E3A;
+            overflow-x: hidden;
+        }
+
+        /* Nav link underline */
+        .nav-link {
+            position: relative;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: #C9A96E;
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        /* Reveal */
+        .reveal {
+            opacity: 0;
+            transform: translateY(25px);
+            transition: opacity 0.7s ease, transform 0.7s ease;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Service card hover */
+        .service-card {
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+        }
+
+        .service-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 40px rgba(110, 69, 85, 0.08);
+        }
+
+        /* Gallery hover */
+        .gallery-item img {
+            transition: transform 0.6s ease;
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.05);
+        }
+
+        /* Btn */
+        .btn-glow {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .btn-glow:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(201, 169, 110, 0.3);
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #FDFAF5;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #C9A96E;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+
+<body x-data="{ mobileMenu: false, bookingModal: false, selectedService: '' }" class="bg-ivory text-deepPlum">
+
+    <!-- ====== NAVIGATION ====== -->
+    <header class="fixed top-0 left-0 w-full z-50 bg-ivory/90 backdrop-blur-md border-b border-blush/50">
+        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16 md:h-20">
+                <a href="#home" class="font-serif text-2xl md:text-3xl font-medium tracking-tight">
+                    Sérenité <span class="text-gold italic font-light">Spa</span>
+                </a>
+
+                <ul
+                    class="hidden md:flex items-center space-x-8 font-sans text-sm tracking-wider uppercase text-deepPlum/60">
+                    <li><a href="#home" class="nav-link hover:text-deepPlum transition">Home</a></li>
+                    <li><a href="#services" class="nav-link hover:text-deepPlum transition">Services</a></li>
+                    <li><a href="#therapists" class="nav-link hover:text-deepPlum transition">Therapists</a></li>
+                    <li><a href="#gallery" class="nav-link hover:text-deepPlum transition">Gallery</a></li>
+                </ul>
+
+                <a href="#booking"
+                    class="hidden md:inline-flex items-center px-6 py-2.5 bg-gold text-white text-xs tracking-wider uppercase font-medium rounded-full btn-glow hover:bg-gold/90 transition">
+                    Book Now
+                </a>
+
+                <button @click="mobileMenu = !mobileMenu" class="md:hidden p-2 text-deepPlum" aria-label="Toggle menu">
+                    <svg x-show="!mobileMenu" class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.5"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 9h16.5m-16.5 6.75h16.5" />
+                    </svg>
+                    <svg x-show="mobileMenu" x-cloak class="w-6 h-6" fill="none" stroke="currentColor"
+                        stroke-width="1.5" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+
+            <div x-show="mobileMenu" x-cloak x-transition class="md:hidden pb-6 border-t border-blush/50">
+                <ul class="flex flex-col space-y-4 pt-4 font-sans text-sm tracking-wider uppercase">
+                    <li><a @click="mobileMenu=false" href="#home"
+                            class="block py-1 text-deepPlum/60 hover:text-deepPlum">Home</a></li>
+                    <li><a @click="mobileMenu=false" href="#services"
+                            class="block py-1 text-deepPlum/60 hover:text-deepPlum">Services</a></li>
+                    <li><a @click="mobileMenu=false" href="#therapists"
+                            class="block py-1 text-deepPlum/60 hover:text-deepPlum">Therapists</a></li>
+                    <li><a @click="mobileMenu=false" href="#gallery"
+                            class="block py-1 text-deepPlum/60 hover:text-deepPlum">Gallery</a></li>
+                    <li><a @click="mobileMenu=false" href="#booking" class="block py-1 text-gold font-medium">Book
+                            Now</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <!-- ====== HERO ====== -->
+    <section id="home" class="relative min-h-screen flex items-center overflow-hidden">
+        <div class="absolute inset-0">
+            <img src="https://images.unsplash.com/photo-1540555700478-4be289fbec6d?w=1920&q=80&auto=format&fit=crop"
+                alt="Serene spa interior with candles, warm stones, and soft towels"
+                class="w-full h-full object-cover" />
+            <div class="absolute inset-0 bg-gradient-to-r from-ivory/90 via-ivory/60 to-transparent"></div>
+        </div>
+
+        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-32">
+            <div class="max-w-xl">
+                <p class="font-sans text-xs tracking-[0.3em] uppercase text-gold mb-4">Luxury Wellness & Beauty</p>
+                <h1 class="font-serif text-5xl sm:text-6xl lg:text-7xl font-medium leading-[1.1] mb-6">
+                    Your Sanctuary <br />of <span class="italic text-mauve">Calm</span>
+                </h1>
+                <p class="font-sans text-base sm:text-lg text-deepPlum/60 leading-relaxed mb-8 max-w-md">
+                    Step away from the ordinary. Our bespoke treatments and expert therapists guide you through a
+                    transformative journey of deep relaxation and radiant renewal.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <a href="#booking"
+                        class="btn-glow inline-flex items-center justify-center px-8 py-3.5 bg-gold text-white text-sm tracking-wider uppercase font-medium rounded-full">
+                        Book Your Experience
+                    </a>
+                    <a href="#services"
+                        class="btn-glow inline-flex items-center justify-center px-8 py-3.5 border border-deepPlum/30 text-deepPlum text-sm tracking-wider uppercase font-medium rounded-full hover:bg-deepPlum hover:text-ivory transition">
+                        Explore Services
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== FEATURE STRIP ====== -->
+    <section class="bg-blush/40 py-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+                <div>
+                    <div class="w-12 h-12 mx-auto bg-gold/15 rounded-full flex items-center justify-center mb-3">
+                        <svg class="w-6 h-6 text-gold" fill="none" stroke="currentColor" stroke-width="1.5"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
+                        </svg>
+                    </div>
+                    <p class="font-serif text-lg">Award Winning</p>
+                    <p class="text-deepPlum/50 text-xs mt-1">Best Spa 2025</p>
+                </div>
+                <div>
+                    <div class="w-12 h-12 mx-auto bg-gold/15 rounded-full flex items-center justify-center mb-3">
+                        <svg class="w-6 h-6 text-gold" fill="none" stroke="currentColor" stroke-width="1.5"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+                        </svg>
+                    </div>
+                    <p class="font-serif text-lg">Expert Therapists</p>
+                    <p class="text-deepPlum/50 text-xs mt-1">15+ years experience</p>
+                </div>
+                <div>
+                    <div class="w-12 h-12 mx-auto bg-gold/15 rounded-full flex items-center justify-center mb-3">
+                        <svg class="w-6 h-6 text-gold" fill="none" stroke="currentColor" stroke-width="1.5"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
+                        </svg>
+                    </div>
+                    <p class="font-serif text-lg">Organic Products</p>
+                    <p class="text-deepPlum/50 text-xs mt-1">100% natural</p>
+                </div>
+                <div>
+                    <div class="w-12 h-12 mx-auto bg-gold/15 rounded-full flex items-center justify-center mb-3">
+                        <svg class="w-6 h-6 text-gold" fill="none" stroke="currentColor" stroke-width="1.5"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                    <p class="font-serif text-lg">Flexible Hours</p>
+                    <p class="text-deepPlum/50 text-xs mt-1">7 days, 8am–9pm</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== SERVICES ====== -->
+    <section id="services" class="py-20 md:py-28 bg-ivory">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-14 reveal">
+                <p class="font-sans text-xs tracking-[0.3em] uppercase text-gold mb-3">Our Treatments</p>
+                <h2 class="font-serif text-4xl md:text-5xl font-medium">Spa Services</h2>
+                <p class="text-deepPlum/50 mt-4 max-w-lg mx-auto">Each treatment is a carefully choreographed ritual
+                    designed to restore balance to your body, mind, and spirit.</p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+                <!-- Service 1 -->
+                <div class="service-card bg-white rounded-2xl overflow-hidden reveal">
+                    <div class="aspect-[16/10] overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=600&q=80&auto=format&fit=crop"
+                            alt="Hot stone massage therapy" class="w-full h-full object-cover" loading="lazy" />
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-2">
+                            <h3 class="font-serif text-xl">Deep Tissue Massage</h3>
+                            <span class="text-gold font-medium text-sm">$120</span>
+                        </div>
+                        <p class="text-deepPlum/50 text-sm leading-relaxed mb-4">Targeted pressure techniques release
+                            chronic tension, improve circulation, and restore flexibility. Ideal for active lifestyles
+                            and stress relief.</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs text-deepPlum/40 tracking-wider uppercase">60 / 90 min</span>
+                            <a href="#booking" class="text-gold text-sm font-medium hover:text-gold/80 transition">Book
+                                →</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Service 2 -->
+                <div class="service-card bg-white rounded-2xl overflow-hidden reveal" style="transition-delay:0.1s">
+                    <div class="aspect-[16/10] overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=600&q=80&auto=format&fit=crop"
+                            alt="Luxury facial treatment" class="w-full h-full object-cover" loading="lazy" />
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-2">
+                            <h3 class="font-serif text-xl">Radiance Facial</h3>
+                            <span class="text-gold font-medium text-sm">$150</span>
+                        </div>
+                        <p class="text-deepPlum/50 text-sm leading-relaxed mb-4">A multi-step facial using organic
+                            botanicals and vitamin-infused serums to deeply hydrate, brighten, and rejuvenate your
+                            complexion.</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs text-deepPlum/40 tracking-wider uppercase">75 min</span>
+                            <a href="#booking" class="text-gold text-sm font-medium hover:text-gold/80 transition">Book
+                                →</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Service 3 -->
+                <div class="service-card bg-white rounded-2xl overflow-hidden reveal" style="transition-delay:0.2s">
+                    <div class="aspect-[16/10] overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1515377905703-c4788e51af15?w=600&q=80&auto=format&fit=crop"
+                            alt="Aromatherapy treatment with essential oils" class="w-full h-full object-cover"
+                            loading="lazy" />
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-2">
+                            <h3 class="font-serif text-xl">Aromatherapy Ritual</h3>
+                            <span class="text-gold font-medium text-sm">$140</span>
+                        </div>
+                        <p class="text-deepPlum/50 text-sm leading-relaxed mb-4">A full-body treatment combining warm
+                            essential oils, gentle strokes, and breathwork to calm the nervous system and elevate your
+                            mood.</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs text-deepPlum/40 tracking-wider uppercase">90 min</span>
+                            <a href="#booking" class="text-gold text-sm font-medium hover:text-gold/80 transition">Book
+                                →</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Service 4 -->
+                <div class="service-card bg-white rounded-2xl overflow-hidden reveal">
+                    <div class="aspect-[16/10] overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1519823551278-64ac92734314?w=600&q=80&auto=format&fit=crop"
+                            alt="Body wrap treatment" class="w-full h-full object-cover" loading="lazy" />
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-2">
+                            <h3 class="font-serif text-xl">Detox Body Wrap</h3>
+                            <span class="text-gold font-medium text-sm">$160</span>
+                        </div>
+                        <p class="text-deepPlum/50 text-sm leading-relaxed mb-4">Mineral-rich seaweed and French green
+                            clay draw out impurities while deeply nourishing and firming the skin. Includes a scalp
+                            massage.</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs text-deepPlum/40 tracking-wider uppercase">90 min</span>
+                            <a href="#booking" class="text-gold text-sm font-medium hover:text-gold/80 transition">Book
+                                →</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Service 5 -->
+                <div class="service-card bg-white rounded-2xl overflow-hidden reveal" style="transition-delay:0.1s">
+                    <div class="aspect-[16/10] overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1487412947147-5cebf100ffc2?w=600&q=80&auto=format&fit=crop"
+                            alt="Manicure and nail treatment" class="w-full h-full object-cover" loading="lazy" />
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-2">
+                            <h3 class="font-serif text-xl">Luxury Mani & Pedi</h3>
+                            <span class="text-gold font-medium text-sm">$95</span>
+                        </div>
+                        <p class="text-deepPlum/50 text-sm leading-relaxed mb-4">A pampering nail ritual featuring
+                            organic exfoliation, hydrating masks, cuticle care, and your choice of artisan polish or a
+                            natural buff.</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs text-deepPlum/40 tracking-wider uppercase">60 min</span>
+                            <a href="#booking" class="text-gold text-sm font-medium hover:text-gold/80 transition">Book
+                                →</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Service 6 -->
+                <div class="service-card bg-white rounded-2xl overflow-hidden reveal" style="transition-delay:0.2s">
+                    <div class="aspect-[16/10] overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1552693673-1bf958298935?w=600&q=80&auto=format&fit=crop"
+                            alt="Couple's spa treatment" class="w-full h-full object-cover" loading="lazy" />
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-2">
+                            <h3 class="font-serif text-xl">Couple's Retreat</h3>
+                            <span class="text-gold font-medium text-sm">$350</span>
+                        </div>
+                        <p class="text-deepPlum/50 text-sm leading-relaxed mb-4">Share a side-by-side massage experience
+                            with champagne, chocolate truffles, and private suite access. The perfect celebration of
+                            togetherness.</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs text-deepPlum/40 tracking-wider uppercase">120 min</span>
+                            <a href="#booking" class="text-gold text-sm font-medium hover:text-gold/80 transition">Book
+                                →</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== THERAPISTS ====== -->
+    <section id="therapists" class="py-20 md:py-28 bg-blush/20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-14 reveal">
+                <p class="font-sans text-xs tracking-[0.3em] uppercase text-gold mb-3">Meet the Team</p>
+                <h2 class="font-serif text-4xl md:text-5xl font-medium">Our Therapists</h2>
+                <p class="text-deepPlum/50 mt-4 max-w-lg mx-auto">Hand-selected for their expertise, empathy, and
+                    dedication to the art of wellness. Each therapist holds internationally recognized certifications.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- Therapist 1 -->
+                <div class="text-center reveal">
+                    <div class="relative mb-4 overflow-hidden rounded-2xl">
+                        <img src="https://images.unsplash.com/photo-1594824476967-48c8b964ac31?w=400&q=80&auto=format&fit=crop"
+                            alt="Elena Moreau" class="w-full aspect-[3/4] object-cover" loading="lazy" />
+                        <div class="absolute inset-0 bg-gradient-to-t from-deepPlum/30 to-transparent"></div>
+                    </div>
+                    <h3 class="font-serif text-xl">Elena Moreau</h3>
+                    <p class="text-gold text-xs tracking-wider uppercase mt-1">Lead Massage Therapist</p>
+                    <p class="text-deepPlum/40 text-sm mt-2">18 years in deep tissue and sports recovery.
+                        CIDESCO-certified.</p>
+                </div>
+
+                <!-- Therapist 2 -->
+                <div class="text-center reveal" style="transition-delay:0.1s">
+                    <div class="relative mb-4 overflow-hidden rounded-2xl">
+                        <img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400&q=80&auto=format&fit=crop"
+                            alt="Aria Patel" class="w-full aspect-[3/4] object-cover" loading="lazy" />
+                        <div class="absolute inset-0 bg-gradient-to-t from-deepPlum/30 to-transparent"></div>
+                    </div>
+                    <h3 class="font-serif text-xl">Aria Patel</h3>
+                    <p class="text-gold text-xs tracking-wider uppercase mt-1">Skincare Specialist</p>
+                    <p class="text-deepPlum/40 text-sm mt-2">Expert in organic facials and holistic dermatology. Trained
+                        in Paris.</p>
+                </div>
+
+                <!-- Therapist 3 -->
+                <div class="text-center reveal" style="transition-delay:0.2s">
+                    <div class="relative mb-4 overflow-hidden rounded-2xl">
+                        <img src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=400&q=80&auto=format&fit=crop"
+                            alt="Maya Torres" class="w-full aspect-[3/4] object-cover" loading="lazy" />
+                        <div class="absolute inset-0 bg-gradient-to-t from-deepPlum/30 to-transparent"></div>
+                    </div>
+                    <h3 class="font-serif text-xl">Maya Torres</h3>
+                    <p class="text-gold text-xs tracking-wider uppercase mt-1">Aromatherapist</p>
+                    <p class="text-deepPlum/40 text-sm mt-2">Master blender with 12 years crafting bespoke essential oil
+                        therapies.</p>
+                </div>
+
+                <!-- Therapist 4 -->
+                <div class="text-center reveal" style="transition-delay:0.3s">
+                    <div class="relative mb-4 overflow-hidden rounded-2xl">
+                        <img src="https://images.unsplash.com/photo-1607990281513-2c110a25bd8c?w=400&q=80&auto=format&fit=crop"
+                            alt="James Lin" class="w-full aspect-[3/4] object-cover" loading="lazy" />
+                        <div class="absolute inset-0 bg-gradient-to-t from-deepPlum/30 to-transparent"></div>
+                    </div>
+                    <h3 class="font-serif text-xl">James Lin</h3>
+                    <p class="text-gold text-xs tracking-wider uppercase mt-1">Wellness Coach</p>
+                    <p class="text-deepPlum/40 text-sm mt-2">Integrative body-mind specialist. Certified in shiatsu and
+                        reflexology.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== GALLERY ====== -->
+    <section id="gallery" class="py-20 md:py-28 bg-ivory">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-14 reveal">
+                <p class="font-sans text-xs tracking-[0.3em] uppercase text-gold mb-3">Explore Our Space</p>
+                <h2 class="font-serif text-4xl md:text-5xl font-medium">Gallery</h2>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
+                <div class="gallery-item overflow-hidden rounded-xl md:col-span-2 md:row-span-2 reveal">
+                    <img src="https://images.unsplash.com/photo-1540555700478-4be289fbec6d?w=800&q=80&auto=format&fit=crop"
+                        alt="Spa lounge with ambient lighting" class="w-full h-full object-cover aspect-square"
+                        loading="lazy" />
+                </div>
+                <div class="gallery-item overflow-hidden rounded-xl reveal" style="transition-delay:0.05s">
+                    <img src="https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=400&q=80&auto=format&fit=crop"
+                        alt="Massage stones and candles" class="w-full h-full object-cover aspect-square"
+                        loading="lazy" />
+                </div>
+                <div class="gallery-item overflow-hidden rounded-xl reveal" style="transition-delay:0.1s">
+                    <img src="https://images.unsplash.com/photo-1507652313519-d4e9174996dd?w=400&q=80&auto=format&fit=crop"
+                        alt="Essential oil bottles" class="w-full h-full object-cover aspect-square" loading="lazy" />
+                </div>
+                <div class="gallery-item overflow-hidden rounded-xl reveal" style="transition-delay:0.15s">
+                    <img src="https://images.unsplash.com/photo-1600334089648-b0d9d3028eb2?w=400&q=80&auto=format&fit=crop"
+                        alt="Spa treatment room" class="w-full h-full object-cover aspect-square" loading="lazy" />
+                </div>
+                <div class="gallery-item overflow-hidden rounded-xl reveal" style="transition-delay:0.2s">
+                    <img src="https://images.unsplash.com/photo-1560750588-73207b1ef5b8?w=400&q=80&auto=format&fit=crop"
+                        alt="Relaxation pool area" class="w-full h-full object-cover aspect-square" loading="lazy" />
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== TESTIMONIALS ====== -->
+    <section class="py-20 md:py-28 bg-deepPlum text-white">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 text-center reveal">
+            <p class="text-gold text-xs tracking-[0.3em] uppercase mb-8">What Our Guests Say</p>
+            <div x-data="{ active: 0, reviews: [
+        { text: 'From the moment I walked in, every detail whispered luxury. The hot stone massage was transcendent — I floated out feeling ten years younger. I now visit monthly and wouldn\\'t dream of going anywhere else.', name: 'Charlotte V.', loc: 'London, UK' },
+        { text: 'My partner surprised me with the Couple\\'s Retreat for our anniversary. The private suite, the champagne, the sheer expertise of the therapists — it was the most memorable experience we\\'ve shared. Absolutely flawless.', name: 'David & Sarah M.', loc: 'New York, US' },
+        { text: 'As a dermatologist, I\\'m extremely particular about skincare treatments. The Radiance Facial exceeded my professional expectations — their product knowledge and technique are genuinely world-class.', name: 'Dr. Priya S.', loc: 'Mumbai, India' }
+      ] }">
+                <template x-for="(r, i) in reviews" :key="i">
+                    <div x-show="active === i" x-transition:enter="transition ease-out duration-500"
+                        x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">
+                        <div class="flex justify-center gap-1 mb-6">
+                            <template x-for="s in 5"><svg class="w-5 h-5 text-gold" fill="currentColor"
+                                    viewBox="0 0 20 20">
+                                    <path
+                                        d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                </svg></template>
+                        </div>
+                        <blockquote class="font-serif text-2xl md:text-3xl italic leading-relaxed text-white/90 mb-8">
+                            "<span x-text="r.text"></span>"</blockquote>
+                        <p class="font-sans text-sm font-medium" x-text="r.name"></p>
+                        <p class="font-sans text-xs text-white/40 mt-1" x-text="r.loc"></p>
+                    </div>
+                </template>
+                <div class="flex justify-center gap-3 mt-10">
+                    <template x-for="(_, i) in reviews" :key="i">
+                        <button @click="active = i" :class="active === i ? 'bg-gold' : 'bg-white/20'"
+                            class="w-2.5 h-2.5 rounded-full transition" :aria-label="'Review ' + (i+1)"></button>
+                    </template>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== BOOKING ====== -->
+    <section id="booking" class="py-20 md:py-28 bg-blush/20">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12 reveal">
+                <p class="font-sans text-xs tracking-[0.3em] uppercase text-gold mb-3">Reserve Your Moment</p>
+                <h2 class="font-serif text-4xl md:text-5xl font-medium">Book Your Visit</h2>
+                <p class="text-deepPlum/50 mt-4 max-w-lg mx-auto">Select your preferred treatment, date, and therapist.
+                    A confirmation and personalized pre-care guide will be sent to your inbox.</p>
+            </div>
+
+            <form class="bg-white rounded-2xl p-6 md:p-10 shadow-sm reveal">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    <div>
+                        <label for="bookName" class="block text-xs tracking-wider uppercase text-deepPlum/50 mb-2">Full
+                            Name</label>
+                        <input type="text" id="bookName" placeholder="Charlotte Voss"
+                            class="w-full px-4 py-3 bg-ivory border border-blush focus:border-gold focus:ring-0 outline-none text-sm rounded-lg transition" />
+                    </div>
+                    <div>
+                        <label for="bookEmail"
+                            class="block text-xs tracking-wider uppercase text-deepPlum/50 mb-2">Email</label>
+                        <input type="email" id="bookEmail" placeholder="charlotte@example.com"
+                            class="w-full px-4 py-3 bg-ivory border border-blush focus:border-gold focus:ring-0 outline-none text-sm rounded-lg transition" />
+                    </div>
+                    <div>
+                        <label for="bookPhone"
+                            class="block text-xs tracking-wider uppercase text-deepPlum/50 mb-2">Phone</label>
+                        <input type="tel" id="bookPhone" placeholder="+44 7700 900000"
+                            class="w-full px-4 py-3 bg-ivory border border-blush focus:border-gold focus:ring-0 outline-none text-sm rounded-lg transition" />
+                    </div>
+                    <div>
+                        <label for="bookService"
+                            class="block text-xs tracking-wider uppercase text-deepPlum/50 mb-2">Treatment</label>
+                        <select id="bookService"
+                            class="w-full px-4 py-3 bg-ivory border border-blush focus:border-gold focus:ring-0 outline-none text-sm text-deepPlum/60 rounded-lg transition">
+                            <option value="">Select a treatment</option>
+                            <option>Deep Tissue Massage — $120</option>
+                            <option>Radiance Facial — $150</option>
+                            <option>Aromatherapy Ritual — $140</option>
+                            <option>Detox Body Wrap — $160</option>
+                            <option>Luxury Mani & Pedi — $95</option>
+                            <option>Couple's Retreat — $350</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="bookDate"
+                            class="block text-xs tracking-wider uppercase text-deepPlum/50 mb-2">Preferred Date</label>
+                        <input type="date" id="bookDate"
+                            class="w-full px-4 py-3 bg-ivory border border-blush focus:border-gold focus:ring-0 outline-none text-sm rounded-lg transition" />
+                    </div>
+                    <div>
+                        <label for="bookTime"
+                            class="block text-xs tracking-wider uppercase text-deepPlum/50 mb-2">Preferred Time</label>
+                        <select id="bookTime"
+                            class="w-full px-4 py-3 bg-ivory border border-blush focus:border-gold focus:ring-0 outline-none text-sm text-deepPlum/60 rounded-lg transition">
+                            <option value="">Select a time</option>
+                            <option>9:00 AM</option>
+                            <option>10:00 AM</option>
+                            <option>11:00 AM</option>
+                            <option>1:00 PM</option>
+                            <option>2:00 PM</option>
+                            <option>3:00 PM</option>
+                            <option>4:00 PM</option>
+                            <option>5:00 PM</option>
+                            <option>6:00 PM</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="mb-6">
+                    <label for="bookNotes" class="block text-xs tracking-wider uppercase text-deepPlum/50 mb-2">Special
+                        Requests</label>
+                    <textarea id="bookNotes" rows="3" placeholder="Allergies, pressure preferences, occasion..."
+                        class="w-full px-4 py-3 bg-ivory border border-blush focus:border-gold focus:ring-0 outline-none text-sm rounded-lg resize-none transition"></textarea>
+                </div>
+                <button type="submit"
+                    class="btn-glow w-full md:w-auto px-10 py-3.5 bg-gold text-white text-sm tracking-wider uppercase font-medium rounded-full hover:bg-gold/90 transition">
+                    Confirm Booking
+                </button>
+            </form>
+        </div>
+    </section>
+
+    <!-- ====== FOOTER ====== -->
+    <footer class="bg-deepPlum py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
+                <div class="col-span-2 md:col-span-1">
+                    <a href="#home" class="font-serif text-2xl text-white">Sérenité <span
+                            class="italic text-gold">Spa</span></a>
+                    <p class="text-white/40 text-sm mt-3 leading-relaxed">A sanctuary of calm in the heart of the city.
+                        Restoring beauty, one soul at a time.</p>
+                </div>
+                <div>
+                    <h4 class="text-white/60 text-xs tracking-wider uppercase mb-4">Services</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-white/40 text-sm hover:text-gold transition">Massages</a></li>
+                        <li><a href="#" class="text-white/40 text-sm hover:text-gold transition">Facials</a></li>
+                        <li><a href="#" class="text-white/40 text-sm hover:text-gold transition">Body Treatments</a>
+                        </li>
+                        <li><a href="#" class="text-white/40 text-sm hover:text-gold transition">Nail Care</a></li>
+                        <li><a href="#" class="text-white/40 text-sm hover:text-gold transition">Packages</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white/60 text-xs tracking-wider uppercase mb-4">Information</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-white/40 text-sm hover:text-gold transition">About Us</a></li>
+                        <li><a href="#" class="text-white/40 text-sm hover:text-gold transition">Gift Cards</a></li>
+                        <li><a href="#" class="text-white/40 text-sm hover:text-gold transition">Membership</a></li>
+                        <li><a href="#" class="text-white/40 text-sm hover:text-gold transition">Careers</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white/60 text-xs tracking-wider uppercase mb-4">Visit Us</h4>
+                    <div class="text-white/40 text-sm space-y-2">
+                        <p>42 Mayfair Lane<br />London W1K 3PA</p>
+                        <p>hello@serenitespa.co.uk</p>
+                        <p>+44 (0)20 7946 0958</p>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-white/10 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
+                <p class="text-white/30 text-xs">&copy; 2026 Sérenité Spa. All rights reserved.</p>
+                <div class="flex items-center gap-4">
+                    <a href="#" aria-label="Instagram" class="text-white/30 hover:text-gold transition"><svg
+                            class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                            <path
+                                d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" />
+                        </svg></a>
+                    <a href="#" aria-label="Facebook" class="text-white/30 hover:text-gold transition"><svg
+                            class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                            <path
+                                d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+                        </svg></a>
+                    <a href="#" aria-label="Twitter" class="text-white/30 hover:text-gold transition"><svg
+                            class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                            <path
+                                d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                        </svg></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ====== SCROLL REVEAL ====== -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) { entry.target.classList.add('active'); observer.unobserve(entry.target); }
+                });
+            }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+            document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+        });
+    </script>
+</body>
+
+</html>

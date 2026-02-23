@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Aurelian — Fine Dining</title>
+    <meta name="description"
+        content="Aurelian — An atmospheric fine dining experience. Seasonal tasting menus, craft cocktails, and private event spaces in the heart of the city." />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Jost:wght@300;400;500&display=swap"
+        rel="stylesheet" />
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        serif: ['"Playfair Display"', 'Georgia', 'serif'],
+                        sans: ['"Jost"', 'system-ui', 'sans-serif'],
+                    },
+                    colors: {
+                        richBlack: '#0C0C0C',
+                        charcoal: '#1A1A1A',
+                        graphite: '#2D2D2D',
+                        ivory: '#F8F5F0',
+                        parchment: '#EDE8DF',
+                        gold: '#C5A55A',
+                        goldLight: '#D4BA7A',
+                        wine: '#722F37',
+                        muted: '#8A8A8A',
+                    },
+                },
+            },
+        };
+    </script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Jost', system-ui, sans-serif;
+            background: #0C0C0C;
+            color: #F8F5F0;
+            overflow-x: hidden;
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(24px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: #C5A55A;
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .nav-link {
+            position: relative;
+        }
+
+        .menu-item {
+            transition: background 0.3s ease;
+        }
+
+        .menu-item:hover {
+            background: rgba(197, 165, 90, 0.05);
+        }
+
+        .gallery-img img {
+            transition: transform 0.7s ease;
+        }
+
+        .gallery-img:hover img {
+            transform: scale(1.06);
+        }
+
+        .btn-gold {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .btn-gold:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(197, 165, 90, 0.25);
+        }
+
+        .separator {
+            width: 60px;
+            height: 1px;
+            background: #C5A55A;
+            margin: 0 auto;
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #0C0C0C;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #C5A55A;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+
+<body x-data="{ mobileMenu: false, reservationModal: false }" class="bg-richBlack text-ivory">
+
+    <!-- ====== NAVIGATION ====== -->
+    <header class="fixed top-0 left-0 w-full z-50 bg-richBlack/90 backdrop-blur-md border-b border-gold/10">
+        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16 md:h-20">
+                <a href="#home" class="font-serif text-2xl md:text-3xl tracking-wider">
+                    <span class="text-gold">A</span>URELIAN
+                </a>
+
+                <ul
+                    class="hidden md:flex items-center space-x-8 font-sans text-sm tracking-[0.15em] uppercase text-muted">
+                    <li><a href="#home" class="nav-link hover:text-gold transition">Home</a></li>
+                    <li><a href="#menu" class="nav-link hover:text-gold transition">Menu</a></li>
+                    <li><a href="#reservations" class="nav-link hover:text-gold transition">Reservations</a></li>
+                    <li><a href="#events" class="nav-link hover:text-gold transition">Private Events</a></li>
+                    <li><a href="#contact" class="nav-link hover:text-gold transition">Contact</a></li>
+                </ul>
+
+                <a href="#reservations"
+                    class="hidden md:inline-flex items-center px-6 py-2.5 border border-gold text-gold text-xs tracking-[0.15em] uppercase font-medium hover:bg-gold hover:text-richBlack transition">
+                    Reserve a Table
+                </a>
+
+                <button @click="mobileMenu = !mobileMenu" class="md:hidden p-2 text-ivory" aria-label="Toggle menu">
+                    <svg x-show="!mobileMenu" class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.5"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 9h16.5m-16.5 6.75h16.5" />
+                    </svg>
+                    <svg x-show="mobileMenu" x-cloak class="w-6 h-6" fill="none" stroke="currentColor"
+                        stroke-width="1.5" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+
+            <div x-show="mobileMenu" x-cloak x-transition class="md:hidden pb-6 border-t border-gold/10">
+                <ul class="flex flex-col space-y-4 pt-4 font-sans text-sm tracking-[0.15em] uppercase">
+                    <li><a @click="mobileMenu=false" href="#home" class="block py-1 text-muted hover:text-gold">Home</a>
+                    </li>
+                    <li><a @click="mobileMenu=false" href="#menu" class="block py-1 text-muted hover:text-gold">Menu</a>
+                    </li>
+                    <li><a @click="mobileMenu=false" href="#reservations"
+                            class="block py-1 text-muted hover:text-gold">Reservations</a></li>
+                    <li><a @click="mobileMenu=false" href="#events"
+                            class="block py-1 text-muted hover:text-gold">Private Events</a></li>
+                    <li><a @click="mobileMenu=false" href="#contact" class="block py-1 text-gold font-medium">Reserve a
+                            Table</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <!-- ====== HERO ====== -->
+    <section id="home" class="relative min-h-screen flex items-center justify-center overflow-hidden">
+        <div class="absolute inset-0">
+            <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1920&q=80&auto=format&fit=crop"
+                alt="Atmospheric fine dining restaurant interior with warm candlelight"
+                class="w-full h-full object-cover" />
+            <div class="absolute inset-0 bg-gradient-to-t from-richBlack via-richBlack/60 to-richBlack/30"></div>
+        </div>
+
+        <div class="relative z-10 text-center max-w-3xl px-4 py-32">
+            <p class="font-sans text-xs tracking-[0.4em] uppercase text-gold mb-6">Est. 2018 &bull; Michelin Recommended
+            </p>
+            <h1 class="font-serif text-5xl sm:text-7xl lg:text-8xl font-medium leading-[1.05] mb-6">
+                A Feast for <br /><span class="italic text-gold">Every Sense</span>
+            </h1>
+            <p class="font-sans text-base sm:text-lg text-ivory/60 max-w-lg mx-auto mb-10 leading-relaxed">
+                Seasonal ingredients. Artful presentation. An intimate atmosphere where every dish tells a story and
+                every evening becomes a memory.
+            </p>
+            <div class="flex flex-col sm:flex-row justify-center gap-4">
+                <a href="#reservations"
+                    class="btn-gold inline-flex items-center justify-center px-10 py-3.5 bg-gold text-richBlack text-sm tracking-[0.15em] uppercase font-medium hover:bg-goldLight transition">
+                    Reserve Your Evening
+                </a>
+                <a href="#menu"
+                    class="btn-gold inline-flex items-center justify-center px-10 py-3.5 border border-ivory/30 text-ivory text-sm tracking-[0.15em] uppercase font-medium hover:bg-ivory hover:text-richBlack transition">
+                    View Menu
+                </a>
+            </div>
+        </div>
+
+        <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-ivory/30">
+            <span class="text-xs tracking-[0.3em] uppercase">Scroll</span>
+            <svg class="w-4 h-4 animate-bounce" fill="none" stroke="currentColor" stroke-width="1.5"
+                viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+            </svg>
+        </div>
+    </section>
+
+    <!-- ====== INTRO STRIP ====== -->
+    <section class="py-16 bg-charcoal">
+        <div class="max-w-5xl mx-auto px-4 text-center">
+            <div class="separator mb-8"></div>
+            <p class="font-serif text-2xl md:text-3xl italic text-ivory/80 leading-relaxed">
+                "Cooking is an act of love — a gift to be shared. Every plate that leaves our kitchen carries the
+                passion of our team and the finest produce the season has to offer."
+            </p>
+            <p class="text-gold text-sm tracking-[0.2em] uppercase mt-6">— Chef Marcus LeBlanc, Executive Chef</p>
+        </div>
+    </section>
+
+    <!-- ====== MENU ====== -->
+    <section id="menu" class="py-20 md:py-28 bg-richBlack">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-14 reveal">
+                <p class="text-gold text-xs tracking-[0.3em] uppercase font-medium mb-3">Seasonal Tasting</p>
+                <h2 class="font-serif text-4xl md:text-5xl font-medium">Our Menu</h2>
+                <p class="text-muted mt-4 max-w-md mx-auto">A curated five-course tasting menu that evolves with the
+                    seasons, highlighting the finest produce from local and European purveyors.</p>
+            </div>
+
+            <!-- Menu Tabs -->
+            <div x-data="{ tab: 'tasting' }" class="reveal">
+                <div class="flex justify-center gap-6 mb-12">
+                    <button @click="tab='tasting'"
+                        :class="tab==='tasting' ? 'text-gold border-gold' : 'text-muted border-transparent'"
+                        class="pb-2 text-sm tracking-[0.2em] uppercase border-b-2 transition">Tasting Menu</button>
+                    <button @click="tab='ala'"
+                        :class="tab==='ala' ? 'text-gold border-gold' : 'text-muted border-transparent'"
+                        class="pb-2 text-sm tracking-[0.2em] uppercase border-b-2 transition">À La Carte</button>
+                    <button @click="tab='drinks'"
+                        :class="tab==='drinks' ? 'text-gold border-gold' : 'text-muted border-transparent'"
+                        class="pb-2 text-sm tracking-[0.2em] uppercase border-b-2 transition">Cocktails & Wine</button>
+                </div>
+
+                <!-- Tasting Menu -->
+                <div x-show="tab==='tasting'" class="space-y-0">
+                    <div
+                        class="menu-item flex items-baseline justify-between py-5 border-b border-gold/10 px-4 rounded-sm">
+                        <div>
+                            <h3 class="font-serif text-lg">Amuse-Bouche</h3>
+                            <p class="text-muted text-sm mt-1">Burrata mousse, heirloom tomato consommé, micro basil,
+                                aged balsamic pearls</p>
+                        </div>
+                    </div>
+                    <div
+                        class="menu-item flex items-baseline justify-between py-5 border-b border-gold/10 px-4 rounded-sm">
+                        <div>
+                            <h3 class="font-serif text-lg">Hokkaido Scallop</h3>
+                            <p class="text-muted text-sm mt-1">Pan-seared diver scallop, cauliflower velouté, truffle
+                                foam, golden raisin, brown butter crumbs</p>
+                        </div>
+                    </div>
+                    <div
+                        class="menu-item flex items-baseline justify-between py-5 border-b border-gold/10 px-4 rounded-sm">
+                        <div>
+                            <h3 class="font-serif text-lg">Seasonal Risotto</h3>
+                            <p class="text-muted text-sm mt-1">Carnaroli rice, wild mushroom medley, Parmigiano Reggiano
+                                36-month, chive oil</p>
+                        </div>
+                    </div>
+                    <div
+                        class="menu-item flex items-baseline justify-between py-5 border-b border-gold/10 px-4 rounded-sm">
+                        <div>
+                            <h3 class="font-serif text-lg">Wagyu Tenderloin A5</h3>
+                            <p class="text-muted text-sm mt-1">Japanese wagyu, red wine jus, pomme purée, roasted
+                                cipollini, bone marrow crust</p>
+                        </div>
+                    </div>
+                    <div
+                        class="menu-item flex items-baseline justify-between py-5 border-b border-gold/10 px-4 rounded-sm">
+                        <div>
+                            <h3 class="font-serif text-lg">Valrhona Chocolate Noir</h3>
+                            <p class="text-muted text-sm mt-1">Dark chocolate fondant, salted caramel, espresso gelato,
+                                gold leaf, hazelnut praline</p>
+                        </div>
+                    </div>
+                    <div class="text-center mt-8">
+                        <p class="text-gold font-serif text-2xl">$185 <span class="text-muted text-sm font-sans">per
+                                person</span></p>
+                        <p class="text-muted text-xs mt-1 tracking-wider">Wine pairing available — $95 supplement</p>
+                    </div>
+                </div>
+
+                <!-- À La Carte -->
+                <div x-show="tab==='ala'" x-cloak class="space-y-0">
+                    <div
+                        class="menu-item flex items-baseline justify-between py-5 border-b border-gold/10 px-4 rounded-sm">
+                        <div>
+                            <h3 class="font-serif text-lg">Yellowfin Tuna Tartare</h3>
+                            <p class="text-muted text-sm mt-1">Avocado, sesame, ponzu, crispy wonton, tobiko</p>
+                        </div>
+                        <span class="text-gold font-serif text-lg ml-4 flex-shrink-0">$28</span>
+                    </div>
+                    <div
+                        class="menu-item flex items-baseline justify-between py-5 border-b border-gold/10 px-4 rounded-sm">
+                        <div>
+                            <h3 class="font-serif text-lg">Lobster Bisque</h3>
+                            <p class="text-muted text-sm mt-1">Maine lobster, saffron cream, cognac reduction, chive oil
+                            </p>
+                        </div>
+                        <span class="text-gold font-serif text-lg ml-4 flex-shrink-0">$22</span>
+                    </div>
+                    <div
+                        class="menu-item flex items-baseline justify-between py-5 border-b border-gold/10 px-4 rounded-sm">
+                        <div>
+                            <h3 class="font-serif text-lg">Roasted Duck Breast</h3>
+                            <p class="text-muted text-sm mt-1">Cherry gastrique, parsnip purée, charred brassica, confit
+                                leg croquette</p>
+                        </div>
+                        <span class="text-gold font-serif text-lg ml-4 flex-shrink-0">$48</span>
+                    </div>
+                    <div
+                        class="menu-item flex items-baseline justify-between py-5 border-b border-gold/10 px-4 rounded-sm">
+                        <div>
+                            <h3 class="font-serif text-lg">Pan-Roasted Sea Bass</h3>
+                            <p class="text-muted text-sm mt-1">Fennel, citrus beurre blanc, capers, olive tapenade,
+                                charred lemon</p>
+                        </div>
+                        <span class="text-gold font-serif text-lg ml-4 flex-shrink-0">$44</span>
+                    </div>
+                    <div
+                        class="menu-item flex items-baseline justify-between py-5 border-b border-gold/10 px-4 rounded-sm">
+                        <div>
+                            <h3 class="font-serif text-lg">Crème Brûlée</h3>
+                            <p class="text-muted text-sm mt-1">Tahitian vanilla, caramelized sugar, seasonal berries,
+                                tuile</p>
+                        </div>
+                        <span class="text-gold font-serif text-lg ml-4 flex-shrink-0">$16</span>
+                    </div>
+                </div>
+
+                <!-- Cocktails & Wine -->
+                <div x-show="tab==='drinks'" x-cloak class="space-y-0">
+                    <div
+                        class="menu-item flex items-baseline justify-between py-5 border-b border-gold/10 px-4 rounded-sm">
+                        <div>
+                            <h3 class="font-serif text-lg">The Aurelian Old Fashioned</h3>
+                            <p class="text-muted text-sm mt-1">Woodford Reserve, demerara, Angostura, smoked orange peel
+                            </p>
+                        </div>
+                        <span class="text-gold font-serif text-lg ml-4 flex-shrink-0">$19</span>
+                    </div>
+                    <div
+                        class="menu-item flex items-baseline justify-between py-5 border-b border-gold/10 px-4 rounded-sm">
+                        <div>
+                            <h3 class="font-serif text-lg">Midnight Garden</h3>
+                            <p class="text-muted text-sm mt-1">Hendrick's gin, elderflower, cucumber, lavender bitters,
+                                prosecco float</p>
+                        </div>
+                        <span class="text-gold font-serif text-lg ml-4 flex-shrink-0">$18</span>
+                    </div>
+                    <div
+                        class="menu-item flex items-baseline justify-between py-5 border-b border-gold/10 px-4 rounded-sm">
+                        <div>
+                            <h3 class="font-serif text-lg">Whispering Rose</h3>
+                            <p class="text-muted text-sm mt-1">Ketel One, Lillet Rosé, grapefruit, rosewater, champagne
+                            </p>
+                        </div>
+                        <span class="text-gold font-serif text-lg ml-4 flex-shrink-0">$20</span>
+                    </div>
+                    <div
+                        class="menu-item flex items-baseline justify-between py-5 border-b border-gold/10 px-4 rounded-sm">
+                        <div>
+                            <h3 class="font-serif text-lg italic">Wine by the Glass</h3>
+                            <p class="text-muted text-sm mt-1">Rotating selection curated by our sommelier — from $14
+                            </p>
+                        </div>
+                        <span class="text-gold font-serif text-lg ml-4 flex-shrink-0">$14+</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-12 reveal">
+                <a href="#"
+                    class="btn-gold inline-flex items-center px-8 py-3.5 border border-gold text-gold text-sm tracking-[0.15em] uppercase font-medium hover:bg-gold hover:text-richBlack transition">
+                    Download Full Menu (PDF)
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== FOOD PHOTOGRAPHY GALLERY ====== -->
+    <section class="py-16 bg-charcoal">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-3">
+                <div class="gallery-img overflow-hidden md:col-span-2 md:row-span-2 reveal">
+                    <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=800&q=80&auto=format&fit=crop"
+                        alt="Exquisitely plated fine dining dish" class="w-full h-full object-cover aspect-square"
+                        loading="lazy" />
+                </div>
+                <div class="gallery-img overflow-hidden reveal" style="transition-delay:0.05s">
+                    <img src="https://images.unsplash.com/photo-1551218808-94e220e084d2?w=400&q=80&auto=format&fit=crop"
+                        alt="Craft cocktail being prepared" class="w-full h-full object-cover aspect-square"
+                        loading="lazy" />
+                </div>
+                <div class="gallery-img overflow-hidden reveal" style="transition-delay:0.1s">
+                    <img src="https://images.unsplash.com/photo-1559339352-11d035aa65de?w=400&q=80&auto=format&fit=crop"
+                        alt="Dessert presentation" class="w-full h-full object-cover aspect-square" loading="lazy" />
+                </div>
+                <div class="gallery-img overflow-hidden reveal" style="transition-delay:0.15s">
+                    <img src="https://images.unsplash.com/photo-1550966871-3ed3cdb51f3a?w=400&q=80&auto=format&fit=crop"
+                        alt="Wine cellar" class="w-full h-full object-cover aspect-square" loading="lazy" />
+                </div>
+                <div class="gallery-img overflow-hidden reveal" style="transition-delay:0.2s">
+                    <img src="https://images.unsplash.com/photo-1424847651672-bf20a4b0982b?w=400&q=80&auto=format&fit=crop"
+                        alt="Elegant table setting" class="w-full h-full object-cover aspect-square" loading="lazy" />
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== RESERVATIONS ====== -->
+    <section id="reservations" class="py-20 md:py-28 bg-richBlack">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12 reveal">
+                <p class="text-gold text-xs tracking-[0.3em] uppercase font-medium mb-3">Your Table Awaits</p>
+                <h2 class="font-serif text-4xl md:text-5xl font-medium">Reservations</h2>
+                <p class="text-muted mt-4 max-w-lg mx-auto">We recommend booking at least one week in advance for
+                    weekend evenings. Walk-ins are welcome at the bar.</p>
+            </div>
+
+            <form class="bg-charcoal rounded-sm p-6 md:p-10 border border-gold/10 reveal">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    <div>
+                        <label for="resName" class="block text-xs tracking-[0.15em] uppercase text-muted mb-2">Full
+                            Name</label>
+                        <input type="text" id="resName" placeholder="James Harrington"
+                            class="w-full px-4 py-3 bg-richBlack border border-gold/15 focus:border-gold focus:ring-0 outline-none text-sm text-ivory rounded transition" />
+                    </div>
+                    <div>
+                        <label for="resEmail"
+                            class="block text-xs tracking-[0.15em] uppercase text-muted mb-2">Email</label>
+                        <input type="email" id="resEmail" placeholder="james@example.com"
+                            class="w-full px-4 py-3 bg-richBlack border border-gold/15 focus:border-gold focus:ring-0 outline-none text-sm text-ivory rounded transition" />
+                    </div>
+                    <div>
+                        <label for="resPhone"
+                            class="block text-xs tracking-[0.15em] uppercase text-muted mb-2">Phone</label>
+                        <input type="tel" id="resPhone" placeholder="+1 (212) 555-0199"
+                            class="w-full px-4 py-3 bg-richBlack border border-gold/15 focus:border-gold focus:ring-0 outline-none text-sm text-ivory rounded transition" />
+                    </div>
+                    <div>
+                        <label for="resGuests"
+                            class="block text-xs tracking-[0.15em] uppercase text-muted mb-2">Guests</label>
+                        <select id="resGuests"
+                            class="w-full px-4 py-3 bg-richBlack border border-gold/15 focus:border-gold focus:ring-0 outline-none text-sm text-muted rounded transition">
+                            <option>2 Guests</option>
+                            <option>3 Guests</option>
+                            <option>4 Guests</option>
+                            <option>5 Guests</option>
+                            <option>6 Guests</option>
+                            <option>7–10 Guests (Private Room)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="resDate"
+                            class="block text-xs tracking-[0.15em] uppercase text-muted mb-2">Date</label>
+                        <input type="date" id="resDate"
+                            class="w-full px-4 py-3 bg-richBlack border border-gold/15 focus:border-gold focus:ring-0 outline-none text-sm text-muted rounded transition" />
+                    </div>
+                    <div>
+                        <label for="resTime"
+                            class="block text-xs tracking-[0.15em] uppercase text-muted mb-2">Time</label>
+                        <select id="resTime"
+                            class="w-full px-4 py-3 bg-richBlack border border-gold/15 focus:border-gold focus:ring-0 outline-none text-sm text-muted rounded transition">
+                            <option>5:30 PM</option>
+                            <option>6:00 PM</option>
+                            <option>6:30 PM</option>
+                            <option>7:00 PM</option>
+                            <option>7:30 PM</option>
+                            <option>8:00 PM</option>
+                            <option>8:30 PM</option>
+                            <option>9:00 PM</option>
+                            <option>9:30 PM</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="mb-6">
+                    <label for="resNotes" class="block text-xs tracking-[0.15em] uppercase text-muted mb-2">Special
+                        Requests</label>
+                    <textarea id="resNotes" rows="3"
+                        placeholder="Allergies, dietary requirements, celebrations, preferred seating..."
+                        class="w-full px-4 py-3 bg-richBlack border border-gold/15 focus:border-gold focus:ring-0 outline-none text-sm text-ivory rounded resize-none transition"></textarea>
+                </div>
+                <button type="submit"
+                    class="btn-gold w-full md:w-auto px-10 py-3.5 bg-gold text-richBlack text-sm tracking-[0.15em] uppercase font-medium hover:bg-goldLight transition">
+                    Confirm Reservation
+                </button>
+            </form>
+        </div>
+    </section>
+
+    <!-- ====== PRIVATE EVENTS ====== -->
+    <section id="events" class="py-20 md:py-28 bg-charcoal">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+                <div class="reveal">
+                    <img src="https://images.unsplash.com/photo-1519671482749-fd09be7ccebf?w=800&q=80&auto=format&fit=crop"
+                        alt="Elegant private dining room with long table and chandelier"
+                        class="w-full aspect-[4/3] object-cover rounded-sm" loading="lazy" />
+                </div>
+                <div class="reveal" style="transition-delay:0.15s">
+                    <p class="text-gold text-xs tracking-[0.3em] uppercase font-medium mb-3">Exclusive Spaces</p>
+                    <h2 class="font-serif text-4xl md:text-5xl font-medium mb-6">Private Events</h2>
+                    <div class="space-y-4 text-muted leading-relaxed">
+                        <p>From intimate anniversaries to corporate soirées, our three private dining spaces offer a
+                            bespoke culinary experience tailored to your occasion.</p>
+                        <p>Each event begins with a personal consultation with Chef LeBlanc to design a custom tasting
+                            menu, wine pairing, and tablescape that reflects your vision. We accommodate groups of 8 to
+                            60 guests.</p>
+                    </div>
+                    <div class="grid grid-cols-3 gap-4 mt-8">
+                        <div class="text-center py-4 border border-gold/15 rounded-sm">
+                            <p class="font-serif text-xl text-gold">The Cellar</p>
+                            <p class="text-muted text-xs mt-1">8–14 guests</p>
+                        </div>
+                        <div class="text-center py-4 border border-gold/15 rounded-sm">
+                            <p class="font-serif text-xl text-gold">The Salon</p>
+                            <p class="text-muted text-xs mt-1">16–30 guests</p>
+                        </div>
+                        <div class="text-center py-4 border border-gold/15 rounded-sm">
+                            <p class="font-serif text-xl text-gold">Full Buyout</p>
+                            <p class="text-muted text-xs mt-1">Up to 60 guests</p>
+                        </div>
+                    </div>
+                    <a href="#contact"
+                        class="btn-gold inline-flex items-center mt-8 px-8 py-3.5 border border-gold text-gold text-sm tracking-[0.15em] uppercase font-medium hover:bg-gold hover:text-richBlack transition">
+                        Inquire About Events
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== CONTACT ====== -->
+    <section id="contact" class="py-20 md:py-28 bg-richBlack">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-12 reveal">
+                <div class="text-center lg:text-left">
+                    <p class="text-gold text-xs tracking-[0.3em] uppercase font-medium mb-3">Location</p>
+                    <h3 class="font-serif text-2xl mb-4">Find Us</h3>
+                    <div class="text-muted text-sm space-y-3 leading-relaxed">
+                        <p>127 East 57th Street<br />New York, NY 10022</p>
+                        <p>reservations@aurelian.com</p>
+                        <p>+1 (212) 555-0199</p>
+                    </div>
+                </div>
+                <div class="text-center lg:text-left">
+                    <p class="text-gold text-xs tracking-[0.3em] uppercase font-medium mb-3">Hours</p>
+                    <h3 class="font-serif text-2xl mb-4">Opening Times</h3>
+                    <div class="text-muted text-sm space-y-2">
+                        <div class="flex justify-between"><span>Tuesday – Thursday</span><span
+                                class="text-ivory/60">5:30 PM – 10:00 PM</span></div>
+                        <div class="flex justify-between"><span>Friday – Saturday</span><span class="text-ivory/60">5:30
+                                PM – 11:00 PM</span></div>
+                        <div class="flex justify-between"><span>Sunday</span><span class="text-ivory/60">5:00 PM – 9:30
+                                PM</span></div>
+                        <div class="flex justify-between"><span>Monday</span><span class="text-ivory/60">Closed</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-center lg:text-left">
+                    <p class="text-gold text-xs tracking-[0.3em] uppercase font-medium mb-3">Dress Code</p>
+                    <h3 class="font-serif text-2xl mb-4">Smart Elegant</h3>
+                    <p class="text-muted text-sm leading-relaxed">We kindly request smart elegant attire. Gentlemen are
+                        welcome without a jacket, though a refined appearance is appreciated. No athletic wear or casual
+                        sneakers, please.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== FOOTER ====== -->
+    <footer class="bg-charcoal py-12 border-t border-gold/10">
+        <div
+            class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-6">
+            <p class="font-serif text-lg tracking-wider"><span class="text-gold">A</span>URELIAN</p>
+            <p class="text-muted text-xs">&copy; 2026 Aurelian Restaurant LLC. All rights reserved.</p>
+            <div class="flex items-center gap-4">
+                <a href="#" aria-label="Instagram" class="text-muted hover:text-gold transition"><svg class="w-5 h-5"
+                        fill="currentColor" viewBox="0 0 24 24">
+                        <path
+                            d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" />
+                    </svg></a>
+                <a href="#" aria-label="Facebook" class="text-muted hover:text-gold transition"><svg class="w-5 h-5"
+                        fill="currentColor" viewBox="0 0 24 24">
+                        <path
+                            d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+                    </svg></a>
+                <a href="#" aria-label="TripAdvisor" class="text-muted hover:text-gold transition"><svg class="w-5 h-5"
+                        fill="currentColor" viewBox="0 0 24 24">
+                        <path
+                            d="M12.006 4.295c-2.67 0-5.138.863-7.15 2.325H1l2.898 2.622A7.157 7.157 0 002.5 13.67a7.167 7.167 0 007.164 7.167c1.51 0 2.907-.47 4.064-1.272l.278.278.278-.278a7.126 7.126 0 004.064 1.272 7.167 7.167 0 004.598-12.648L25.844 5.62h-3.856a12.462 12.462 0 00-7.15-2.325h-2.832z" />
+                    </svg></a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('active'); observer.unobserve(entry.target); } });
+            }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+            document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+        });
+    </script>
+</body>
+
+</html>

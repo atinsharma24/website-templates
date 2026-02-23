@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Maison Élise — Modern Boutique</title>
+  <meta name="description" content="Maison Élise — A curated collection of timeless, elegant fashion pieces for the modern woman. Discover new arrivals, shop by category, and explore our story." />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Alpine.js CDN -->
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind Config -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            serif: ['"Playfair Display"', 'Georgia', 'serif'],
+            sans: ['"Inter"', 'system-ui', 'sans-serif'],
+          },
+          colors: {
+            cream: '#FAF7F2',
+            warmGray: '#8C8379',
+            charcoal: '#2C2824',
+            softBlush: '#E8D5C4',
+            gold: '#C4A265',
+          },
+          keyframes: {
+            fadeInUp: {
+              '0%': { opacity: '0', transform: 'translateY(30px)' },
+              '100%': { opacity: '1', transform: 'translateY(0)' },
+            },
+            fadeIn: {
+              '0%': { opacity: '0' },
+              '100%': { opacity: '1' },
+            },
+            slideDown: {
+              '0%': { opacity: '0', transform: 'translateY(-10px)' },
+              '100%': { opacity: '1', transform: 'translateY(0)' },
+            },
+          },
+          animation: {
+            fadeInUp: 'fadeInUp 0.8s ease-out forwards',
+            fadeIn: 'fadeIn 0.6s ease-out forwards',
+            slideDown: 'slideDown 0.4s ease-out forwards',
+          },
+        },
+      },
+    };
+  </script>
+
+  <style>
+    /* ====== GLOBAL STYLES ====== */
+    * { box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background-color: #FAF7F2;
+      color: #2C2824;
+      overflow-x: hidden;
+    }
+
+    /* Elegant underline animation for nav links */
+    .nav-link {
+      position: relative;
+      padding-bottom: 2px;
+    }
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 1px;
+      background: #2C2824;
+      transition: width 0.3s ease;
+    }
+    .nav-link:hover::after {
+      width: 100%;
+    }
+
+    /* Product card image zoom */
+    .product-img-wrapper {
+      overflow: hidden;
+    }
+    .product-img-wrapper img {
+      transition: transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+    .product-img-wrapper:hover img {
+      transform: scale(1.08);
+    }
+
+    /* Category card overlay */
+    .category-card .category-overlay {
+      transition: background-color 0.4s ease;
+    }
+    .category-card:hover .category-overlay {
+      background-color: rgba(44, 40, 36, 0.45);
+    }
+
+    /* Scroll-triggered animation utility */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+    .reveal.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Btn hover lift */
+    .btn-hover {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .btn-hover:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    }
+
+    /* Horizontal scroll snap for mobile new arrivals */
+    .scroll-snap-x {
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+    }
+    .scroll-snap-x > * {
+      scroll-snap-align: start;
+    }
+
+    /* Custom scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #FAF7F2; }
+    ::-webkit-scrollbar-thumb { background: #C4A265; border-radius: 3px; }
+  </style>
+</head>
+
+<body x-data="{ mobileMenu: false }" class="bg-cream text-charcoal">
+
+  <!-- ============================== -->
+  <!-- NAVIGATION                     -->
+  <!-- ============================== -->
+  <header class="fixed top-0 left-0 w-full z-50 bg-cream/90 backdrop-blur-md border-b border-softBlush/50">
+    <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16 md:h-20">
+
+        <!-- Logo -->
+        <a href="#hero" class="font-serif text-2xl md:text-3xl font-semibold tracking-tight">
+          Maison <span class="italic text-gold">Élise</span>
+        </a>
+
+        <!-- Desktop Nav -->
+        <ul class="hidden md:flex items-center space-x-8 font-sans text-sm tracking-wider uppercase">
+          <li><a href="#hero" class="nav-link text-charcoal/70 hover:text-charcoal">Home</a></li>
+          <li><a href="#new-arrivals" class="nav-link text-charcoal/70 hover:text-charcoal">New Arrivals</a></li>
+          <li><a href="#categories" class="nav-link text-charcoal/70 hover:text-charcoal">Categories</a></li>
+          <li><a href="#about" class="nav-link text-charcoal/70 hover:text-charcoal">About</a></li>
+          <li><a href="#contact" class="nav-link text-charcoal/70 hover:text-charcoal">Contact</a></li>
+        </ul>
+
+        <!-- Desktop Cart / Search -->
+        <div class="hidden md:flex items-center space-x-4">
+          <!-- Search Icon -->
+          <button aria-label="Search" class="p-2 text-charcoal/60 hover:text-charcoal transition">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197M15.803 15.803A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/></svg>
+          </button>
+          <!-- Cart Icon -->
+          <button aria-label="Shopping bag" class="p-2 text-charcoal/60 hover:text-charcoal transition relative">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007z"/></svg>
+            <span class="absolute -top-1 -right-1 bg-gold text-white text-xs w-4 h-4 flex items-center justify-center rounded-full">2</span>
+          </button>
+        </div>
+
+        <!-- Mobile Menu Toggle -->
+        <button @click="mobileMenu = !mobileMenu" class="md:hidden p-2 text-charcoal" aria-label="Toggle menu">
+          <svg x-show="!mobileMenu" class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 9h16.5m-16.5 6.75h16.5"/></svg>
+          <svg x-show="mobileMenu" x-cloak class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+
+      <!-- Mobile Menu Dropdown -->
+      <div x-show="mobileMenu" x-cloak x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 -translate-y-4" x-transition:enter-end="opacity-100 translate-y-0" x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100 translate-y-0" x-transition:leave-end="opacity-0 -translate-y-4" class="md:hidden pb-6 border-t border-softBlush/50">
+        <ul class="flex flex-col space-y-4 pt-4 font-sans text-sm tracking-wider uppercase">
+          <li><a @click="mobileMenu = false" href="#hero" class="block px-2 py-1 text-charcoal/70 hover:text-charcoal">Home</a></li>
+          <li><a @click="mobileMenu = false" href="#new-arrivals" class="block px-2 py-1 text-charcoal/70 hover:text-charcoal">New Arrivals</a></li>
+          <li><a @click="mobileMenu = false" href="#categories" class="block px-2 py-1 text-charcoal/70 hover:text-charcoal">Categories</a></li>
+          <li><a @click="mobileMenu = false" href="#about" class="block px-2 py-1 text-charcoal/70 hover:text-charcoal">About</a></li>
+          <li><a @click="mobileMenu = false" href="#contact" class="block px-2 py-1 text-charcoal/70 hover:text-charcoal">Contact</a></li>
+        </ul>
+      </div>
+    </nav>
+  </header>
+
+  <!-- ============================== -->
+  <!-- HERO SECTION                   -->
+  <!-- ============================== -->
+  <section id="hero" class="relative min-h-screen flex items-center justify-center overflow-hidden">
+
+    <!-- Background Image -->
+    <div class="absolute inset-0">
+      <img src="https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=1920&q=80&auto=format&fit=crop"
+           alt="Elegant woman in a flowing cream dress walking through a sunlit boutique"
+           class="w-full h-full object-cover" />
+      <div class="absolute inset-0 bg-gradient-to-r from-cream/80 via-cream/50 to-transparent"></div>
+    </div>
+
+    <!-- Hero Content -->
+    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+      <div class="max-w-xl">
+        <p class="font-sans text-xs tracking-[0.3em] uppercase text-gold mb-4 animate-fadeIn" style="animation-delay: 0.2s;">Spring / Summer 2026 Collection</p>
+        <h1 class="font-serif text-5xl sm:text-6xl lg:text-7xl font-medium leading-[1.1] mb-6 animate-fadeInUp" style="animation-delay: 0.4s;">
+          Effortless <br/><span class="italic">Elegance</span>
+        </h1>
+        <p class="font-sans text-base sm:text-lg text-charcoal/70 leading-relaxed mb-8 max-w-md animate-fadeInUp" style="animation-delay: 0.6s;">
+          Discover our latest curation of timeless silhouettes, luxurious fabrics, and pieces designed to move with you — from morning coffee to evening cocktails.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 animate-fadeInUp" style="animation-delay: 0.8s;">
+          <a href="#new-arrivals" class="btn-hover inline-flex items-center justify-center px-8 py-3.5 bg-charcoal text-cream text-sm tracking-wider uppercase font-medium rounded-none hover:bg-charcoal/90 transition">
+            Shop New Arrivals
+          </a>
+          <a href="#about" class="btn-hover inline-flex items-center justify-center px-8 py-3.5 border border-charcoal text-charcoal text-sm tracking-wider uppercase font-medium rounded-none hover:bg-charcoal hover:text-cream transition">
+            Our Story
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scroll Indicator -->
+    <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center animate-bounce">
+      <span class="text-xs tracking-widest uppercase text-charcoal/40 mb-2">Scroll</span>
+      <svg class="w-4 h-6 text-charcoal/40" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 13.5L12 21m0 0l-7.5-7.5M12 21V3"/></svg>
+    </div>
+  </section>
+
+  <!-- ============================== -->
+  <!-- NEW ARRIVALS                   -->
+  <!-- ============================== -->
+  <section id="new-arrivals" class="py-20 md:py-28 bg-cream">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+      <!-- Section Header -->
+      <div class="text-center mb-14 reveal">
+        <p class="font-sans text-xs tracking-[0.3em] uppercase text-gold mb-3">Just In</p>
+        <h2 class="font-serif text-4xl md:text-5xl font-medium">New Arrivals</h2>
+        <p class="font-sans text-warmGray mt-4 max-w-lg mx-auto">Freshly curated pieces that blend modern sophistication with timeless charm — handpicked for the season ahead.</p>
+      </div>
+
+      <!-- Products Grid -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
+
+        <!-- Product 1 -->
+        <div class="group reveal" style="transition-delay: 0.1s;">
+          <div class="product-img-wrapper aspect-[3/4] bg-softBlush/30 mb-4">
+            <img src="https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=600&q=80&auto=format&fit=crop"
+                 alt="Linen blend blazer in soft ivory"
+                 class="w-full h-full object-cover" loading="lazy" />
+          </div>
+          <div class="space-y-1">
+            <p class="text-xs tracking-wider uppercase text-warmGray">Outerwear</p>
+            <h3 class="font-serif text-lg">Ivory Linen Blazer</h3>
+            <p class="font-sans text-sm text-charcoal/80">$285.00</p>
+          </div>
+        </div>
+
+        <!-- Product 2 -->
+        <div class="group reveal" style="transition-delay: 0.2s;">
+          <div class="product-img-wrapper aspect-[3/4] bg-softBlush/30 mb-4">
+            <img src="https://images.unsplash.com/photo-1551854838-212c50b4c184?w=600&q=80&auto=format&fit=crop"
+                 alt="Flowing silk midi dress in champagne"
+                 class="w-full h-full object-cover" loading="lazy" />
+          </div>
+          <div class="space-y-1">
+            <p class="text-xs tracking-wider uppercase text-warmGray">Dresses</p>
+            <h3 class="font-serif text-lg">Champagne Silk Midi</h3>
+            <p class="font-sans text-sm text-charcoal/80">$420.00</p>
+          </div>
+        </div>
+
+        <!-- Product 3 -->
+        <div class="group reveal" style="transition-delay: 0.3s;">
+          <div class="product-img-wrapper aspect-[3/4] bg-softBlush/30 mb-4">
+            <img src="https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=600&q=80&auto=format&fit=crop"
+                 alt="Oversized cashmere knit in oatmeal"
+                 class="w-full h-full object-cover" loading="lazy" />
+          </div>
+          <div class="space-y-1">
+            <p class="text-xs tracking-wider uppercase text-warmGray">Knitwear</p>
+            <h3 class="font-serif text-lg">Cashmere Cloud Knit</h3>
+            <p class="font-sans text-sm text-charcoal/80">$340.00</p>
+          </div>
+        </div>
+
+        <!-- Product 4 -->
+        <div class="group reveal" style="transition-delay: 0.4s;">
+          <div class="product-img-wrapper aspect-[3/4] bg-softBlush/30 mb-4">
+            <img src="https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=600&q=80&auto=format&fit=crop"
+                 alt="Structured leather tote bag in cognac"
+                 class="w-full h-full object-cover" loading="lazy" />
+          </div>
+          <div class="space-y-1">
+            <p class="text-xs tracking-wider uppercase text-warmGray">Accessories</p>
+            <h3 class="font-serif text-lg">Cognac Artisan Tote</h3>
+            <p class="font-sans text-sm text-charcoal/80">$195.00</p>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- View All -->
+      <div class="text-center mt-12 reveal">
+        <a href="#" class="btn-hover inline-flex items-center px-8 py-3.5 border border-charcoal text-charcoal text-sm tracking-wider uppercase font-medium hover:bg-charcoal hover:text-cream transition">
+          View All New Arrivals
+          <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3"/></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================== -->
+  <!-- SHOP BY CATEGORY               -->
+  <!-- ============================== -->
+  <section id="categories" class="py-20 md:py-28 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+      <!-- Section Header -->
+      <div class="text-center mb-14 reveal">
+        <p class="font-sans text-xs tracking-[0.3em] uppercase text-gold mb-3">Explore</p>
+        <h2 class="font-serif text-4xl md:text-5xl font-medium">Shop by Category</h2>
+      </div>
+
+      <!-- Category Grid — Asymmetric Layout -->
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-6">
+
+        <!-- Large Feature: Dresses -->
+        <a href="#" class="category-card group relative md:col-span-7 aspect-[4/5] md:aspect-[4/3] overflow-hidden reveal">
+          <img src="https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=900&q=80&auto=format&fit=crop"
+               alt="Woman in an elegant flowing dress" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy" />
+          <div class="category-overlay absolute inset-0 bg-charcoal/30 flex items-end p-6 md:p-10">
+            <div>
+              <h3 class="font-serif text-2xl md:text-3xl text-white mb-1">Dresses</h3>
+              <p class="text-white/70 text-sm">42 pieces</p>
+            </div>
+          </div>
+        </a>
+
+        <!-- Stacked Right: Tops + Outerwear -->
+        <div class="md:col-span-5 grid grid-rows-2 gap-4 md:gap-6">
+          <a href="#" class="category-card group relative overflow-hidden aspect-[4/3] md:aspect-auto reveal" style="transition-delay: 0.1s;">
+            <img src="https://images.unsplash.com/photo-1564584217132-2271feaeb3c5?w=700&q=80&auto=format&fit=crop"
+                 alt="Curated tops collection" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy" />
+            <div class="category-overlay absolute inset-0 bg-charcoal/30 flex items-end p-6">
+              <div>
+                <h3 class="font-serif text-xl md:text-2xl text-white mb-1">Tops & Blouses</h3>
+                <p class="text-white/70 text-sm">56 pieces</p>
+              </div>
+            </div>
+          </a>
+
+          <a href="#" class="category-card group relative overflow-hidden aspect-[4/3] md:aspect-auto reveal" style="transition-delay: 0.2s;">
+            <img src="https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=700&q=80&auto=format&fit=crop"
+                 alt="Luxurious outerwear pieces" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy" />
+            <div class="category-overlay absolute inset-0 bg-charcoal/30 flex items-end p-6">
+              <div>
+                <h3 class="font-serif text-xl md:text-2xl text-white mb-1">Outerwear</h3>
+                <p class="text-white/70 text-sm">28 pieces</p>
+              </div>
+            </div>
+          </a>
+        </div>
+
+        <!-- Bottom Row: Accessories + Knitwear -->
+        <a href="#" class="category-card group relative md:col-span-5 aspect-[4/3] overflow-hidden reveal" style="transition-delay: 0.3s;">
+          <img src="https://images.unsplash.com/photo-1606760227091-3dd870d97f1d?w=700&q=80&auto=format&fit=crop"
+               alt="Luxury handbags and accessories" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy" />
+          <div class="category-overlay absolute inset-0 bg-charcoal/30 flex items-end p-6">
+            <div>
+              <h3 class="font-serif text-xl md:text-2xl text-white mb-1">Accessories</h3>
+              <p class="text-white/70 text-sm">73 pieces</p>
+            </div>
+          </div>
+        </a>
+
+        <a href="#" class="category-card group relative md:col-span-7 aspect-[4/3] overflow-hidden reveal" style="transition-delay: 0.4s;">
+          <img src="https://images.unsplash.com/photo-1434389677669-e08b4cda3a78?w=900&q=80&auto=format&fit=crop"
+               alt="Soft knitwear collection" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy" />
+          <div class="category-overlay absolute inset-0 bg-charcoal/30 flex items-end p-6 md:p-10">
+            <div>
+              <h3 class="font-serif text-2xl md:text-3xl text-white mb-1">Knitwear</h3>
+              <p class="text-white/70 text-sm">35 pieces</p>
+            </div>
+          </div>
+        </a>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================== -->
+  <!-- EDITORIAL BANNER               -->
+  <!-- ============================== -->
+  <section class="relative py-32 md:py-44 overflow-hidden">
+    <div class="absolute inset-0">
+      <img src="https://images.unsplash.com/photo-1509631179647-0177331693ae?w=1920&q=80&auto=format&fit=crop"
+           alt="Fashion editorial — model on a golden-hour rooftop" class="w-full h-full object-cover" loading="lazy" />
+      <div class="absolute inset-0 bg-charcoal/40"></div>
+    </div>
+    <div class="relative z-10 max-w-3xl mx-auto px-4 text-center text-white reveal">
+      <p class="font-sans text-xs tracking-[0.3em] uppercase text-gold mb-4">The Edit</p>
+      <h2 class="font-serif text-4xl md:text-6xl font-medium italic leading-tight mb-6">"Fashion is the armor to survive the reality of everyday life."</h2>
+      <p class="font-sans text-white/70 mb-8">— Bill Cunningham</p>
+      <a href="#" class="btn-hover inline-flex items-center px-8 py-3.5 border border-white text-white text-sm tracking-wider uppercase font-medium hover:bg-white hover:text-charcoal transition">
+        Explore The Edit
+      </a>
+    </div>
+  </section>
+
+  <!-- ============================== -->
+  <!-- ABOUT SECTION                  -->
+  <!-- ============================== -->
+  <section id="about" class="py-20 md:py-28 bg-cream">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+
+        <!-- Image -->
+        <div class="reveal">
+          <div class="relative">
+            <img src="https://images.unsplash.com/photo-1558171813-4c088753af8f?w=800&q=80&auto=format&fit=crop"
+                 alt="Behind the scenes at Maison Élise atelier" class="w-full aspect-[4/5] object-cover" loading="lazy" />
+            <!-- Decorative accent -->
+            <div class="absolute -bottom-4 -right-4 w-32 h-32 border border-gold/30 -z-10"></div>
+          </div>
+        </div>
+
+        <!-- Text Content -->
+        <div class="reveal" style="transition-delay: 0.2s;">
+          <p class="font-sans text-xs tracking-[0.3em] uppercase text-gold mb-4">Our Story</p>
+          <h2 class="font-serif text-4xl md:text-5xl font-medium leading-tight mb-6">
+            Where Timeless <br/><span class="italic">Meets Modern</span>
+          </h2>
+          <div class="space-y-4 text-warmGray leading-relaxed">
+            <p>
+              Founded in 2018, Maison Élise was born from a simple belief: that every woman deserves a wardrobe that feels as effortless as it looks. We design for the woman who moves through the world with quiet confidence — who sees fashion not as a statement, but as an extension of self.
+            </p>
+            <p>
+              Each collection is thoughtfully developed in our Paris atelier, where we source the finest European linens, Japanese silks, and Italian cashmere. We believe in slow fashion — creating fewer, better pieces that stand the test of time and grow more beautiful with every wear.
+            </p>
+            <p>
+              Our artisans bring over three decades of couture experience to every stitch, ensuring that each garment meets the highest standards of craftsmanship while remaining accessible for everyday life.
+            </p>
+          </div>
+          <div class="mt-8 flex flex-col sm:flex-row gap-6">
+            <div>
+              <p class="font-serif text-3xl text-charcoal">150+</p>
+              <p class="text-xs tracking-wider uppercase text-warmGray mt-1">Artisan Partners</p>
+            </div>
+            <div>
+              <p class="font-serif text-3xl text-charcoal">28</p>
+              <p class="text-xs tracking-wider uppercase text-warmGray mt-1">Countries Shipped</p>
+            </div>
+            <div>
+              <p class="font-serif text-3xl text-charcoal">100%</p>
+              <p class="text-xs tracking-wider uppercase text-warmGray mt-1">Natural Fabrics</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================== -->
+  <!-- TESTIMONIALS                   -->
+  <!-- ============================== -->
+  <section class="py-20 md:py-28 bg-softBlush/20">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 text-center reveal">
+      <p class="font-sans text-xs tracking-[0.3em] uppercase text-gold mb-8">What Our Clients Say</p>
+      <div x-data="{ active: 0, testimonials: [
+        { text: 'Every piece I own from Maison Élise feels like it was made specifically for me. The fabrics are unparalleled, and the cuts are incredibly flattering. This is the only brand I trust for work-to-dinner transitions.', name: 'Margaux D.', title: 'Creative Director, Paris' },
+        { text: 'I discovered this boutique through a friend and have since replaced half my closet. The attention to detail — from the hand-stitched hems to the mother-of-pearl buttons — is something I&apos;ve never found anywhere else.', name: 'Sophia L.', title: 'Architect, London' },
+        { text: 'As someone who travels constantly, I need versatile pieces that pack well and look polished on arrival. Maison Élise has become my go-to for exactly that. Effortlessly chic, every single time.', name: 'Amara N.', title: 'Consultant, New York' }
+      ] }" class="relative">
+        <template x-for="(t, i) in testimonials" :key="i">
+          <div x-show="active === i" x-transition:enter="transition ease-out duration-500" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">
+            <blockquote class="font-serif text-2xl md:text-3xl italic leading-relaxed text-charcoal/80 mb-8">"<span x-text="t.text"></span>"</blockquote>
+            <p class="font-sans text-sm font-medium text-charcoal" x-text="t.name"></p>
+            <p class="font-sans text-xs text-warmGray mt-1" x-text="t.title"></p>
+          </div>
+        </template>
+        <!-- Dots -->
+        <div class="flex justify-center gap-3 mt-10">
+          <template x-for="(_, i) in testimonials" :key="i">
+            <button @click="active = i" :class="active === i ? 'bg-gold' : 'bg-charcoal/20'" class="w-2 h-2 rounded-full transition-colors duration-300" :aria-label="'Testimonial ' + (i+1)"></button>
+          </template>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================== -->
+  <!-- CONTACT SECTION                -->
+  <!-- ============================== -->
+  <section id="contact" class="py-20 md:py-28 bg-cream">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">
+
+        <!-- Contact Info -->
+        <div class="reveal">
+          <p class="font-sans text-xs tracking-[0.3em] uppercase text-gold mb-4">Get In Touch</p>
+          <h2 class="font-serif text-4xl md:text-5xl font-medium mb-6">We'd Love to <span class="italic">Hear From You</span></h2>
+          <p class="text-warmGray leading-relaxed mb-10 max-w-md">
+            Whether you're looking for styling advice, have a question about an order, or simply want to say hello — our team is here for you.
+          </p>
+
+          <div class="space-y-6">
+            <div class="flex items-start gap-4">
+              <div class="w-10 h-10 bg-softBlush/50 flex items-center justify-center flex-shrink-0 mt-0.5">
+                <svg class="w-5 h-5 text-gold" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/></svg>
+              </div>
+              <div>
+                <p class="font-sans text-sm font-medium mb-0.5">Visit Our Boutique</p>
+                <p class="text-warmGray text-sm">24 Rue du Faubourg Saint-Honoré<br/>75008 Paris, France</p>
+              </div>
+            </div>
+            <div class="flex items-start gap-4">
+              <div class="w-10 h-10 bg-softBlush/50 flex items-center justify-center flex-shrink-0 mt-0.5">
+                <svg class="w-5 h-5 text-gold" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"/></svg>
+              </div>
+              <div>
+                <p class="font-sans text-sm font-medium mb-0.5">Email Us</p>
+                <p class="text-warmGray text-sm">hello@maisonelise.com</p>
+              </div>
+            </div>
+            <div class="flex items-start gap-4">
+              <div class="w-10 h-10 bg-softBlush/50 flex items-center justify-center flex-shrink-0 mt-0.5">
+                <svg class="w-5 h-5 text-gold" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z"/></svg>
+              </div>
+              <div>
+                <p class="font-sans text-sm font-medium mb-0.5">Call Us</p>
+                <p class="text-warmGray text-sm">+33 1 42 68 53 00</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Contact Form -->
+        <div class="reveal" style="transition-delay: 0.2s;">
+          <form class="space-y-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <div>
+                <label for="firstName" class="block text-xs tracking-wider uppercase text-warmGray mb-2">First Name</label>
+                <input type="text" id="firstName" placeholder="Margaux" class="w-full px-4 py-3 bg-white border border-softBlush focus:border-gold focus:ring-0 outline-none text-sm transition" />
+              </div>
+              <div>
+                <label for="lastName" class="block text-xs tracking-wider uppercase text-warmGray mb-2">Last Name</label>
+                <input type="text" id="lastName" placeholder="Dupont" class="w-full px-4 py-3 bg-white border border-softBlush focus:border-gold focus:ring-0 outline-none text-sm transition" />
+              </div>
+            </div>
+            <div>
+              <label for="email" class="block text-xs tracking-wider uppercase text-warmGray mb-2">Email</label>
+              <input type="email" id="email" placeholder="margaux@example.com" class="w-full px-4 py-3 bg-white border border-softBlush focus:border-gold focus:ring-0 outline-none text-sm transition" />
+            </div>
+            <div>
+              <label for="subject" class="block text-xs tracking-wider uppercase text-warmGray mb-2">Subject</label>
+              <select id="subject" class="w-full px-4 py-3 bg-white border border-softBlush focus:border-gold focus:ring-0 outline-none text-sm text-warmGray transition">
+                <option value="">Select a topic</option>
+                <option>Styling Advice</option>
+                <option>Order Inquiry</option>
+                <option>Wholesale & Partnerships</option>
+                <option>General Question</option>
+              </select>
+            </div>
+            <div>
+              <label for="message" class="block text-xs tracking-wider uppercase text-warmGray mb-2">Message</label>
+              <textarea id="message" rows="5" placeholder="Tell us how we can help..." class="w-full px-4 py-3 bg-white border border-softBlush focus:border-gold focus:ring-0 outline-none text-sm resize-none transition"></textarea>
+            </div>
+            <button type="submit" class="btn-hover w-full sm:w-auto px-10 py-3.5 bg-charcoal text-cream text-sm tracking-wider uppercase font-medium hover:bg-charcoal/90 transition">
+              Send Message
+            </button>
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================== -->
+  <!-- NEWSLETTER BANNER              -->
+  <!-- ============================== -->
+  <section class="bg-charcoal py-16 md:py-20">
+    <div class="max-w-3xl mx-auto px-4 text-center">
+      <h2 class="font-serif text-3xl md:text-4xl text-cream mb-3">Join the <span class="italic">Inner Circle</span></h2>
+      <p class="text-cream/50 text-sm mb-8 max-w-md mx-auto">Be the first to access new collections, exclusive styling tips, and member-only previews — delivered to your inbox weekly.</p>
+      <form class="flex flex-col sm:flex-row gap-3 max-w-lg mx-auto">
+        <input type="email" placeholder="Your email address" class="flex-1 px-5 py-3.5 bg-white/10 border border-white/20 text-cream placeholder-cream/40 text-sm focus:border-gold focus:ring-0 outline-none transition" />
+        <button type="submit" class="btn-hover px-8 py-3.5 bg-gold text-white text-sm tracking-wider uppercase font-medium hover:bg-gold/90 transition">
+          Subscribe
+        </button>
+      </form>
+      <p class="text-cream/30 text-xs mt-4">Unsubscribe anytime. We respect your privacy.</p>
+    </div>
+  </section>
+
+  <!-- ============================== -->
+  <!-- FOOTER                         -->
+  <!-- ============================== -->
+  <footer class="bg-charcoal border-t border-white/5 py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
+
+        <div class="col-span-2 md:col-span-1">
+          <a href="#hero" class="font-serif text-2xl text-cream">Maison <span class="italic text-gold">Élise</span></a>
+          <p class="text-cream/40 text-sm mt-3 leading-relaxed">Timeless elegance for the modern woman. Crafted with intention, designed for life.</p>
+        </div>
+
+        <div>
+          <h4 class="text-cream/60 text-xs tracking-wider uppercase mb-4">Shop</h4>
+          <ul class="space-y-2">
+            <li><a href="#" class="text-cream/40 text-sm hover:text-cream transition">New Arrivals</a></li>
+            <li><a href="#" class="text-cream/40 text-sm hover:text-cream transition">Dresses</a></li>
+            <li><a href="#" class="text-cream/40 text-sm hover:text-cream transition">Tops & Blouses</a></li>
+            <li><a href="#" class="text-cream/40 text-sm hover:text-cream transition">Outerwear</a></li>
+            <li><a href="#" class="text-cream/40 text-sm hover:text-cream transition">Accessories</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="text-cream/60 text-xs tracking-wider uppercase mb-4">Company</h4>
+          <ul class="space-y-2">
+            <li><a href="#" class="text-cream/40 text-sm hover:text-cream transition">Our Story</a></li>
+            <li><a href="#" class="text-cream/40 text-sm hover:text-cream transition">Sustainability</a></li>
+            <li><a href="#" class="text-cream/40 text-sm hover:text-cream transition">Careers</a></li>
+            <li><a href="#" class="text-cream/40 text-sm hover:text-cream transition">Press</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="text-cream/60 text-xs tracking-wider uppercase mb-4">Support</h4>
+          <ul class="space-y-2">
+            <li><a href="#" class="text-cream/40 text-sm hover:text-cream transition">Contact Us</a></li>
+            <li><a href="#" class="text-cream/40 text-sm hover:text-cream transition">Shipping & Returns</a></li>
+            <li><a href="#" class="text-cream/40 text-sm hover:text-cream transition">Size Guide</a></li>
+            <li><a href="#" class="text-cream/40 text-sm hover:text-cream transition">FAQ</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="border-t border-white/10 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
+        <p class="text-cream/30 text-xs">&copy; 2026 Maison Élise. All rights reserved.</p>
+        <div class="flex items-center gap-4">
+          <!-- Instagram -->
+          <a href="#" aria-label="Instagram" class="text-cream/30 hover:text-gold transition">
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+          </a>
+          <!-- Pinterest -->
+          <a href="#" aria-label="Pinterest" class="text-cream/30 hover:text-gold transition">
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12.017 0C5.396 0 .029 5.367.029 11.987c0 5.079 3.158 9.417 7.618 11.162-.105-.949-.199-2.403.041-3.439.219-.937 1.406-5.957 1.406-5.957s-.359-.72-.359-1.781c0-1.668.967-2.914 2.171-2.914 1.023 0 1.518.769 1.518 1.69 0 1.029-.655 2.568-.994 3.995-.283 1.194.599 2.169 1.777 2.169 2.133 0 3.772-2.249 3.772-5.495 0-2.873-2.064-4.882-5.012-4.882-3.414 0-5.418 2.561-5.418 5.207 0 1.031.397 2.138.893 2.738a.36.36 0 01.083.345l-.333 1.36c-.053.22-.174.267-.402.161-1.499-.698-2.436-2.889-2.436-4.649 0-3.785 2.75-7.262 7.929-7.262 4.163 0 7.398 2.967 7.398 6.931 0 4.136-2.607 7.464-6.227 7.464-1.216 0-2.359-.631-2.75-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24 12.017 24c6.624 0 11.99-5.367 11.99-11.988C24.007 5.367 18.641.001 12.017.001z"/></svg>
+          </a>
+          <!-- Twitter / X -->
+          <a href="#" aria-label="Twitter" class="text-cream/30 hover:text-gold transition">
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ============================== -->
+  <!-- SCROLL REVEAL SCRIPT           -->
+  <!-- ============================== -->
+  <script>
+    // Intersection Observer for scroll-triggered reveal animations
+    document.addEventListener('DOMContentLoaded', () => {
+      const reveals = document.querySelectorAll('.reveal');
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('active');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, {
+        threshold: 0.15,
+        rootMargin: '0px 0px -50px 0px',
+      });
+
+      reveals.forEach(el => observer.observe(el));
+    });
+  </script>
+
+</body>
+</html>

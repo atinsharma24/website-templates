@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>IRONCLAD — Auto Repair Shop</title>
+    <meta name="description"
+        content="IRONCLAD — Trusted auto repair and maintenance. ASE-certified technicians, honest pricing, and same-day service. Book your appointment online." />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800;900&family=Barlow+Condensed:wght@400;500;600;700&display=swap"
+        rel="stylesheet" />
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Barlow"', 'system-ui', 'sans-serif'],
+                        condensed: ['"Barlow Condensed"', 'system-ui', 'sans-serif'],
+                    },
+                    colors: {
+                        forge: '#DC2626',
+                        forgeDark: '#B91C1C',
+                        forgePale: '#FEF2F2',
+                        steel: '#3B82F6',
+                        steelPale: '#EFF6FF',
+                        graphite: '#1E293B',
+                        charcoal: '#0F172A',
+                        slate: '#64748B',
+                        ash: '#94A3B8',
+                        mist: '#E2E8F0',
+                        cloud: '#F1F5F9',
+                        snow: '#FFFFFF',
+                        amber: '#F59E0B',
+                    },
+                },
+            },
+        };
+    </script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Barlow', system-ui, sans-serif;
+            background: #FFFFFF;
+            color: #0F172A;
+            overflow-x: hidden;
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity .7s ease, transform .7s ease;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .card {
+            transition: transform .35s, box-shadow .35s;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 16px 48px rgba(220, 38, 38, .06);
+        }
+
+        .btn-forge {
+            transition: transform .25s, box-shadow .25s;
+        }
+
+        .btn-forge:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(220, 38, 38, .25);
+        }
+
+        ::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #FFFFFF;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #DC2626;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+
+<body x-data="{ mobileMenu: false }" class="bg-snow text-charcoal">
+
+    <!-- ====== NAVIGATION ====== -->
+    <header class="fixed top-0 left-0 w-full z-50 bg-snow/90 backdrop-blur-md border-b border-mist/50">
+        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16 md:h-20">
+                <a href="#home" class="flex items-center gap-2">
+                    <span class="text-xl">🔧</span>
+                    <span class="font-condensed text-2xl font-bold tracking-wide uppercase">Iron<span
+                            class="text-forge">clad</span></span>
+                </a>
+                <ul class="hidden md:flex items-center space-x-7 text-sm text-slate font-semibold">
+                    <li><a href="#services" class="hover:text-forge transition">Services</a></li>
+                    <li><a href="#about" class="hover:text-forge transition">About Us</a></li>
+                    <li><a href="#schedule" class="hover:text-forge transition">Schedule</a></li>
+                    <li><a href="#offers" class="hover:text-forge transition">Offers</a></li>
+                    <li><a href="#contact" class="hover:text-forge transition">Contact</a></li>
+                </ul>
+                <a href="#schedule"
+                    class="hidden md:inline-flex px-6 py-2.5 bg-forge text-white text-xs tracking-wider uppercase font-bold rounded-full btn-forge">Book
+                    Now</a>
+                <button @click="mobileMenu=!mobileMenu" class="md:hidden p-2" aria-label="Menu">
+                    <svg x-show="!mobileMenu" class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.5"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 9h16.5m-16.5 6.75h16.5" />
+                    </svg>
+                    <svg x-show="mobileMenu" x-cloak class="w-6 h-6" fill="none" stroke="currentColor"
+                        stroke-width="1.5" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+            <div x-show="mobileMenu" x-cloak x-transition class="md:hidden pb-6 border-t border-mist/50">
+                <ul class="flex flex-col space-y-4 pt-4 text-sm font-semibold">
+                    <li><a @click="mobileMenu=false" href="#services"
+                            class="block py-1 text-slate hover:text-forge">Services</a></li>
+                    <li><a @click="mobileMenu=false" href="#about" class="block py-1 text-slate hover:text-forge">About
+                            Us</a></li>
+                    <li><a @click="mobileMenu=false" href="#schedule"
+                            class="block py-1 text-slate hover:text-forge">Schedule</a></li>
+                    <li><a @click="mobileMenu=false" href="#offers"
+                            class="block py-1 text-slate hover:text-forge">Offers</a></li>
+                    <li><a @click="mobileMenu=false" href="#contact" class="block py-1 text-forge font-bold">Contact</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <!-- ====== HERO ====== -->
+    <section id="home" class="relative min-h-screen flex items-center overflow-hidden bg-charcoal text-white">
+        <div class="absolute inset-0 opacity-30"><img
+                src="https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=1920&q=80&auto=format&fit=crop"
+                alt="Mechanic working under car" class="w-full h-full object-cover" /></div>
+        <div class="absolute inset-0 bg-gradient-to-r from-charcoal via-charcoal/90 to-charcoal/50"></div>
+        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-32">
+            <div class="max-w-xl">
+                <span
+                    class="inline-flex items-center px-3 py-1 bg-forge/20 text-forge text-xs font-bold tracking-wider uppercase rounded-full mb-5">🏆
+                    ASE-Certified • Since 2008</span>
+                <h1 class="font-condensed text-5xl sm:text-6xl lg:text-7xl font-bold uppercase leading-[1.05] mb-6">
+                    Honest <span class="text-forge">Repairs.</span> Fair Prices.
+                </h1>
+                <p class="text-white/60 text-base sm:text-lg leading-relaxed mb-8">Portland's most trusted auto shop.
+                    From oil changes to engine rebuilds — ASE-certified techs, upfront estimates, and a lifetime
+                    warranty on labor.</p>
+                <div class="flex flex-col sm:flex-row gap-3">
+                    <a href="#schedule"
+                        class="btn-forge inline-flex items-center justify-center px-8 py-3.5 bg-forge text-white text-sm tracking-wider uppercase font-bold rounded-full">Schedule
+                        Service</a>
+                    <a href="tel:5035550812"
+                        class="btn-forge inline-flex items-center justify-center px-8 py-3.5 border border-white/20 text-white text-sm tracking-wider uppercase font-medium rounded-full hover:bg-white hover:text-charcoal transition">📞
+                        (503) 555-0812</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== SERVICES ====== -->
+    <section id="services" class="py-20 md:py-28 bg-snow">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-14 reveal">
+                <p class="text-forge text-xs tracking-[0.3em] uppercase font-bold mb-3">What We Do</p>
+                <h2 class="font-condensed text-4xl md:text-5xl font-bold uppercase">Services</h2>
+                <p class="text-slate mt-4 max-w-lg mx-auto">Full-service auto repair for all makes and models.
+                    Factory-scheduled maintenance, diagnostics, and everything in between.</p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                <div class="card bg-cloud border border-mist/50 rounded-2xl p-6 reveal">
+                    <div class="w-12 h-12 bg-forge/10 rounded-xl flex items-center justify-center text-2xl mb-4">🔧
+                    </div>
+                    <h3 class="font-bold text-lg">General Repair</h3>
+                    <p class="text-slate text-sm mt-2 leading-relaxed">Brakes, suspension, steering, exhaust, electrical
+                        — if it's broken, we fix it. All repairs backed by our lifetime labor warranty.</p>
+                    <p class="text-forge text-sm font-bold mt-3">From $89</p>
+                </div>
+                <div class="card bg-cloud border border-mist/50 rounded-2xl p-6 reveal" style="transition-delay:.1s">
+                    <div class="w-12 h-12 bg-steel/10 rounded-xl flex items-center justify-center text-2xl mb-4">🛢️
+                    </div>
+                    <h3 class="font-bold text-lg">Oil & Maintenance</h3>
+                    <p class="text-slate text-sm mt-2 leading-relaxed">Synthetic oil change, filter replacement, fluids
+                        top-off, tire rotation, and 27-point inspection included.</p>
+                    <p class="text-forge text-sm font-bold mt-3">From $49</p>
+                </div>
+                <div class="card bg-cloud border border-mist/50 rounded-2xl p-6 reveal" style="transition-delay:.15s">
+                    <div class="w-12 h-12 bg-amber/10 rounded-xl flex items-center justify-center text-2xl mb-4">🔍
+                    </div>
+                    <h3 class="font-bold text-lg">Diagnostics</h3>
+                    <p class="text-slate text-sm mt-2 leading-relaxed">Check engine light? We use factory-level scan
+                        tools to pinpoint the issue. Diagnostic fee waived with repair.</p>
+                    <p class="text-forge text-sm font-bold mt-3">$75 (waived w/ repair)</p>
+                </div>
+                <div class="card bg-cloud border border-mist/50 rounded-2xl p-6 reveal">
+                    <div class="w-12 h-12 bg-forge/10 rounded-xl flex items-center justify-center text-2xl mb-4">🏎️
+                    </div>
+                    <h3 class="font-bold text-lg">Engine & Transmission</h3>
+                    <p class="text-slate text-sm mt-2 leading-relaxed">Complete engine rebuilds, timing belts,
+                        transmission repair and replacement. We handle the big jobs right.</p>
+                    <p class="text-forge text-sm font-bold mt-3">Estimate on inspection</p>
+                </div>
+                <div class="card bg-cloud border border-mist/50 rounded-2xl p-6 reveal" style="transition-delay:.1s">
+                    <div class="w-12 h-12 bg-steel/10 rounded-xl flex items-center justify-center text-2xl mb-4">❄️
+                    </div>
+                    <h3 class="font-bold text-lg">AC & Heating</h3>
+                    <p class="text-slate text-sm mt-2 leading-relaxed">AC recharge, compressor replacement, heater core
+                        repairs. Stay comfortable year-round.</p>
+                    <p class="text-forge text-sm font-bold mt-3">From $120</p>
+                </div>
+                <div class="card bg-cloud border border-mist/50 rounded-2xl p-6 reveal" style="transition-delay:.15s">
+                    <div class="w-12 h-12 bg-amber/10 rounded-xl flex items-center justify-center text-2xl mb-4">🔋
+                    </div>
+                    <h3 class="font-bold text-lg">Tires & Alignment</h3>
+                    <p class="text-slate text-sm mt-2 leading-relaxed">New tires, mounting, balancing, and 4-wheel
+                        alignment. We carry all major brands at competitive prices.</p>
+                    <p class="text-forge text-sm font-bold mt-3">From $99/tire installed</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== ABOUT US ====== -->
+    <section id="about" class="py-20 md:py-28 bg-cloud">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div class="reveal"><img
+                        src="https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=800&q=80&auto=format&fit=crop"
+                        alt="Ironclad shop team" class="w-full aspect-[4/3] object-cover rounded-2xl" loading="lazy" />
+                </div>
+                <div class="reveal" style="transition-delay:.15s">
+                    <p class="text-forge text-xs tracking-[0.3em] uppercase font-bold mb-3">Since 2008</p>
+                    <h2 class="font-condensed text-4xl md:text-5xl font-bold uppercase mb-6">About <span
+                            class="text-forge">Ironclad</span></h2>
+                    <div class="space-y-4 text-slate leading-relaxed">
+                        <p>Ironclad was founded on a simple idea: auto repair shouldn't feel like a gamble. We give you
+                            an honest diagnosis, a written estimate, and we don't start work until you say go.</p>
+                        <p>16 years later, we've built a team of 8 ASE-certified techs, serviced over 40,000 vehicles,
+                            and earned a 4.9-star reputation — the old-fashioned way.</p>
+                    </div>
+                    <div class="grid grid-cols-3 gap-4 mt-8 text-center">
+                        <div class="bg-forgePale rounded-xl p-3">
+                            <p class="font-condensed text-3xl font-bold text-forge">16</p>
+                            <p class="text-slate text-xs mt-1">Years</p>
+                        </div>
+                        <div class="bg-steelPale rounded-xl p-3">
+                            <p class="font-condensed text-3xl font-bold text-steel">40K+</p>
+                            <p class="text-slate text-xs mt-1">Cars Fixed</p>
+                        </div>
+                        <div class="bg-cloud border border-mist rounded-xl p-3">
+                            <p class="font-condensed text-3xl font-bold text-amber">4.9★</p>
+                            <p class="text-slate text-xs mt-1">Google</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== TESTIMONIALS ====== -->
+    <section class="py-20 md:py-28 bg-charcoal text-white">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-10 reveal">
+                <p class="text-forge text-xs tracking-[0.3em] uppercase font-bold mb-3">4.9 Stars on Google</p>
+                <h2 class="font-condensed text-4xl md:text-5xl font-bold uppercase">What Customers Say</h2>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                <div class="bg-white/5 backdrop-blur rounded-2xl p-5 reveal">
+                    <div class="flex gap-0.5 mb-3 text-amber text-sm">⭐⭐⭐⭐⭐</div>
+                    <p class="text-white/70 text-sm leading-relaxed">"Told me my brake pads still had 40% life and
+                        didn't try to upsell me. That's rare. I've brought both our cars here ever since."</p>
+                    <div class="flex items-center gap-3 mt-4">
+                        <div class="w-8 h-8 rounded-full bg-forge flex items-center justify-center text-xs font-bold">RM
+                        </div>
+                        <div>
+                            <p class="text-sm font-semibold">Rachel M.</p>
+                            <p class="text-white/40 text-xs">2019 Subaru Outback</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white/5 backdrop-blur rounded-2xl p-5 reveal" style="transition-delay:.1s">
+                    <div class="flex gap-0.5 mb-3 text-amber text-sm">⭐⭐⭐⭐⭐</div>
+                    <p class="text-white/70 text-sm leading-relaxed">"Transmission rebuild on my F-150. $2,800 less than
+                        the dealer quoted. Done in 3 days with a 3-year warranty. Incredible."</p>
+                    <div class="flex items-center gap-3 mt-4">
+                        <div class="w-8 h-8 rounded-full bg-steel flex items-center justify-center text-xs font-bold">JP
+                        </div>
+                        <div>
+                            <p class="text-sm font-semibold">James P.</p>
+                            <p class="text-white/40 text-xs">2017 Ford F-150</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white/5 backdrop-blur rounded-2xl p-5 reveal" style="transition-delay:.15s">
+                    <div class="flex gap-0.5 mb-3 text-amber text-sm">⭐⭐⭐⭐⭐</div>
+                    <p class="text-white/70 text-sm leading-relaxed">"Same-day oil change, tire rotation, and they
+                        caught a leaking coolant hose. Saved me a tow. These guys are the real deal."</p>
+                    <div class="flex items-center gap-3 mt-4">
+                        <div
+                            class="w-8 h-8 rounded-full bg-amber flex items-center justify-center text-charcoal text-xs font-bold">
+                            KL</div>
+                        <div>
+                            <p class="text-sm font-semibold">Karen L.</p>
+                            <p class="text-white/40 text-xs">2021 Toyota Camry</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== SCHEDULE SERVICE ====== -->
+    <section id="schedule" class="py-20 md:py-28 bg-snow">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <div class="reveal">
+                    <p class="text-forge text-xs tracking-[0.3em] uppercase font-bold mb-3">Online Booking</p>
+                    <h2 class="font-condensed text-4xl md:text-5xl font-bold uppercase mb-6">Schedule <span
+                            class="text-forge">Service</span></h2>
+                    <p class="text-slate leading-relaxed mb-6">Pick a date and time, tell us about your vehicle, and
+                        we'll confirm your appointment within the hour. Drop-off service available.</p>
+                    <div class="space-y-3 text-sm text-slate">
+                        <div class="flex items-start gap-3"><span class="text-forge font-bold">✓</span><span>Free
+                                27-point inspection with every service</span></div>
+                        <div class="flex items-start gap-3"><span class="text-forge font-bold">✓</span><span>Lifetime
+                                warranty on all labor</span></div>
+                        <div class="flex items-start gap-3"><span class="text-forge font-bold">✓</span><span>Loaner
+                                vehicles available</span></div>
+                        <div class="flex items-start gap-3"><span class="text-forge font-bold">✓</span><span>Shuttle
+                                service within 10 miles</span></div>
+                    </div>
+                </div>
+                <div class="reveal" style="transition-delay:.15s">
+                    <form class="bg-cloud border border-mist/50 rounded-2xl p-6 md:p-8 space-y-4">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <input type="text" placeholder="Your name"
+                                class="w-full px-4 py-3 bg-snow border border-mist focus:border-forge outline-none text-sm rounded-xl transition" />
+                            <input type="tel" placeholder="Phone"
+                                class="w-full px-4 py-3 bg-snow border border-mist focus:border-forge outline-none text-sm rounded-xl transition" />
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                            <input type="text" placeholder="Year"
+                                class="w-full px-4 py-3 bg-snow border border-mist focus:border-forge outline-none text-sm rounded-xl transition" />
+                            <input type="text" placeholder="Make"
+                                class="w-full px-4 py-3 bg-snow border border-mist focus:border-forge outline-none text-sm rounded-xl transition" />
+                            <input type="text" placeholder="Model"
+                                class="w-full px-4 py-3 bg-snow border border-mist focus:border-forge outline-none text-sm rounded-xl transition" />
+                        </div>
+                        <select
+                            class="w-full px-4 py-3 bg-snow border border-mist focus:border-forge outline-none text-sm text-slate rounded-xl transition">
+                            <option>Service Needed</option>
+                            <option>Oil Change / Maintenance</option>
+                            <option>Brakes</option>
+                            <option>Engine / Transmission</option>
+                            <option>Diagnostics</option>
+                            <option>Tires / Alignment</option>
+                            <option>AC / Heating</option>
+                            <option>Other</option>
+                        </select>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <input type="date"
+                                class="w-full px-4 py-3 bg-snow border border-mist focus:border-forge outline-none text-sm text-slate rounded-xl transition" />
+                            <select
+                                class="w-full px-4 py-3 bg-snow border border-mist focus:border-forge outline-none text-sm text-slate rounded-xl transition">
+                                <option>Preferred Time</option>
+                                <option>8:00 AM</option>
+                                <option>9:00 AM</option>
+                                <option>10:00 AM</option>
+                                <option>11:00 AM</option>
+                                <option>1:00 PM</option>
+                                <option>2:00 PM</option>
+                                <option>3:00 PM</option>
+                            </select>
+                        </div>
+                        <textarea rows="3" placeholder="Describe the issue…"
+                            class="w-full px-4 py-3 bg-snow border border-mist focus:border-forge outline-none text-sm rounded-xl resize-none transition"></textarea>
+                        <button type="submit"
+                            class="btn-forge w-full sm:w-auto px-10 py-3.5 bg-forge text-white text-sm tracking-wider uppercase font-bold rounded-full">Request
+                            Appointment</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== SPECIAL OFFERS ====== -->
+    <section id="offers" class="py-20 md:py-28 bg-forge text-white">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-10 reveal">
+                <p class="text-forgePale text-xs tracking-[0.3em] uppercase font-bold mb-3">Save Money</p>
+                <h2 class="font-condensed text-4xl md:text-5xl font-bold uppercase">Special Offers</h2>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                <div class="bg-white/10 backdrop-blur rounded-2xl p-6 text-center border border-white/10 reveal">
+                    <p class="font-condensed text-5xl font-bold text-amber">$39</p>
+                    <h3 class="font-bold text-lg mt-2">Synthetic Oil Change</h3>
+                    <p class="text-white/60 text-sm mt-2">Up to 5 qts synthetic, filter, and 27-pt inspection. Reg. $59.
+                    </p>
+                    <p class="text-white/40 text-xs mt-3">*Most vehicles. Exp 3/31/26</p>
+                </div>
+                <div class="bg-white/10 backdrop-blur rounded-2xl p-6 text-center border border-white/10 reveal"
+                    style="transition-delay:.1s">
+                    <p class="font-condensed text-5xl font-bold text-amber">15%</p>
+                    <h3 class="font-bold text-lg mt-2">First-Time Customer</h3>
+                    <p class="text-white/60 text-sm mt-2">15% off any service over $200 for new customers. Mention this
+                        ad.</p>
+                    <p class="text-white/40 text-xs mt-3">*Cannot combine. Exp 3/31/26</p>
+                </div>
+                <div class="bg-white/10 backdrop-blur rounded-2xl p-6 text-center border border-white/10 reveal"
+                    style="transition-delay:.15s">
+                    <p class="font-condensed text-5xl font-bold text-amber">FREE</p>
+                    <h3 class="font-bold text-lg mt-2">Brake Inspection</h3>
+                    <p class="text-white/60 text-sm mt-2">Complete brake system check — pads, rotors, fluid, calipers.
+                        No strings.</p>
+                    <p class="text-white/40 text-xs mt-3">*By appointment. Exp 3/31/26</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== CONTACT ====== -->
+    <section id="contact" class="py-20 md:py-28 bg-snow">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center reveal">
+            <p class="text-forge text-xs tracking-[0.3em] uppercase font-bold mb-3">Visit Us</p>
+            <h2 class="font-condensed text-4xl md:text-5xl font-bold uppercase mb-8">Contact</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+                <div class="bg-cloud rounded-2xl p-6"><svg class="w-6 h-6 text-forge mx-auto mb-3" fill="none"
+                        stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
+                    </svg>
+                    <h4 class="font-bold">Address</h4>
+                    <p class="text-slate text-sm mt-1">7340 SE Foster Rd<br />Portland, OR 97206</p>
+                </div>
+                <div class="bg-cloud rounded-2xl p-6"><svg class="w-6 h-6 text-forge mx-auto mb-3" fill="none"
+                        stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z" />
+                    </svg>
+                    <h4 class="font-bold">Phone</h4>
+                    <p class="text-slate text-sm mt-1">(503) 555-0812</p>
+                </div>
+                <div class="bg-cloud rounded-2xl p-6"><svg class="w-6 h-6 text-forge mx-auto mb-3" fill="none"
+                        stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <h4 class="font-bold">Hours</h4>
+                    <p class="text-slate text-sm mt-1">Mon–Fri 7am–6pm<br />Sat 8am–4pm</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== FOOTER ====== -->
+    <footer class="bg-charcoal py-14">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-10">
+                <div class="col-span-2 md:col-span-1"><a href="#home" class="flex items-center gap-2"><span
+                            class="text-lg">🔧</span><span
+                            class="font-condensed font-bold text-lg text-white uppercase">Iron<span
+                                class="text-forge">clad</span></span></a>
+                    <p class="text-white/40 text-sm mt-3">Auto repair. Portland, OR.</p>
+                </div>
+                <div>
+                    <h4 class="text-white/50 text-xs tracking-wider uppercase mb-4">Services</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-white/40 text-sm hover:text-forge transition">Oil Change</a></li>
+                        <li><a href="#" class="text-white/40 text-sm hover:text-forge transition">Brakes</a></li>
+                        <li><a href="#" class="text-white/40 text-sm hover:text-forge transition">Engine</a></li>
+                        <li><a href="#" class="text-white/40 text-sm hover:text-forge transition">Tires</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white/50 text-xs tracking-wider uppercase mb-4">Company</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-white/40 text-sm hover:text-forge transition">About</a></li>
+                        <li><a href="#" class="text-white/40 text-sm hover:text-forge transition">Careers</a></li>
+                        <li><a href="#" class="text-white/40 text-sm hover:text-forge transition">Reviews</a></li>
+                        <li><a href="#" class="text-white/40 text-sm hover:text-forge transition">Contact</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white/50 text-xs tracking-wider uppercase mb-4">Follow</h4>
+                    <div class="flex gap-3"><a href="#" aria-label="Google"
+                            class="text-white/40 hover:text-forge transition"><svg class="w-5 h-5" fill="currentColor"
+                                viewBox="0 0 24 24">
+                                <path
+                                    d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" />
+                                <path
+                                    d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+                                <path
+                                    d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
+                                <path
+                                    d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
+                            </svg></a><a href="#" aria-label="Facebook"
+                            class="text-white/40 hover:text-forge transition"><svg class="w-5 h-5" fill="currentColor"
+                                viewBox="0 0 24 24">
+                                <path
+                                    d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+                            </svg></a></div>
+                </div>
+            </div>
+            <div class="border-t border-white/10 pt-6 text-center">
+                <p class="text-white/30 text-xs">&copy; 2026 Ironclad Auto Repair. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('active'); observer.unobserve(e.target); } });
+            }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+            document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+        });
+    </script>
+</body>
+
+</html>

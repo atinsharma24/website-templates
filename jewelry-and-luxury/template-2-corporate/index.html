@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CHRONOS & CO — Luxury Watch Retailer</title>
+    <meta name="description"
+        content="CHRONOS & CO — Authorized dealer for the world's finest timepieces. Rolex, Omega, Patek Philippe, and more. Service center with certified watchmakers." />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet" />
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        serif: ['"Playfair Display"', 'Georgia', 'serif'],
+                        sans: ['"Inter"', 'system-ui', 'sans-serif'],
+                    },
+                    colors: {
+                        navy: '#0C1220',
+                        navyLight: '#1A2332',
+                        steel: '#2A3A50',
+                        gold: '#C5A55A',
+                        goldLight: '#D4B876',
+                        goldPale: '#F9F5EA',
+                        silver: '#94A3B8',
+                        ash: '#64748B',
+                        mist: '#E2E8F0',
+                        cloud: '#F1F5F9',
+                        ivory: '#FAFAF8',
+                        snow: '#FFFFFF',
+                    },
+                },
+            },
+        };
+    </script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            background: #FAFAF8;
+            color: #0C1220;
+            overflow-x: hidden;
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity .7s ease, transform .7s ease;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .card {
+            transition: transform .35s, box-shadow .35s;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 16px 48px rgba(197, 165, 90, .06);
+        }
+
+        .card img {
+            transition: transform .5s ease;
+        }
+
+        .card:hover img {
+            transform: scale(1.04);
+        }
+
+        .btn-gold {
+            transition: all .3s ease;
+        }
+
+        .btn-gold:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 24px rgba(197, 165, 90, .2);
+        }
+
+        ::-webkit-scrollbar {
+            width: 3px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #FAFAF8;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #C5A55A;
+            border-radius: 2px;
+        }
+    </style>
+</head>
+
+<body x-data="{ mobileMenu: false }" class="bg-ivory text-navy">
+
+    <!-- ====== NAVIGATION ====== -->
+    <header class="fixed top-0 left-0 w-full z-50 bg-navy/95 backdrop-blur-md border-b border-white/5">
+        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16 md:h-20">
+                <a href="#home" class="flex items-center gap-1.5">
+                    <span class="text-lg">⌚</span>
+                    <span class="font-serif text-xl font-semibold text-white tracking-wider">CHRONOS <span
+                            class="text-gold">&</span> CO</span>
+                </a>
+                <ul
+                    class="hidden md:flex items-center space-x-7 text-[11px] text-white/50 tracking-[0.15em] uppercase font-medium">
+                    <li><a href="#brands" class="hover:text-gold transition">Brands</a></li>
+                    <li><a href="#arrivals" class="hover:text-gold transition">New Arrivals</a></li>
+                    <li><a href="#service" class="hover:text-gold transition">Service</a></li>
+                    <li><a href="#about" class="hover:text-gold transition">About</a></li>
+                    <li><a href="#contact" class="hover:text-gold transition">Contact</a></li>
+                </ul>
+                <button @click="mobileMenu=!mobileMenu" class="md:hidden p-2 text-white" aria-label="Menu">
+                    <svg x-show="!mobileMenu" class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.5"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 9h16.5m-16.5 6.75h16.5" />
+                    </svg>
+                    <svg x-show="mobileMenu" x-cloak class="w-6 h-6" fill="none" stroke="currentColor"
+                        stroke-width="1.5" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+            <div x-show="mobileMenu" x-cloak x-transition class="md:hidden pb-6 border-t border-white/5">
+                <ul class="flex flex-col space-y-4 pt-4 text-[11px] tracking-[0.15em] uppercase font-medium">
+                    <li><a @click="mobileMenu=false" href="#brands"
+                            class="block py-1 text-white/50 hover:text-gold">Brands</a></li>
+                    <li><a @click="mobileMenu=false" href="#arrivals"
+                            class="block py-1 text-white/50 hover:text-gold">New Arrivals</a></li>
+                    <li><a @click="mobileMenu=false" href="#service"
+                            class="block py-1 text-white/50 hover:text-gold">Service</a></li>
+                    <li><a @click="mobileMenu=false" href="#about"
+                            class="block py-1 text-white/50 hover:text-gold">About</a></li>
+                    <li><a @click="mobileMenu=false" href="#contact"
+                            class="block py-1 text-gold font-semibold">Contact</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <!-- ====== HERO ====== -->
+    <section id="home" class="relative min-h-screen flex items-center overflow-hidden bg-navy">
+        <div class="absolute inset-0"><img
+                src="https://images.unsplash.com/photo-1524592094714-0f0654e20314?w=1920&q=80&auto=format&fit=crop"
+                alt="Luxury watch dial close-up" class="w-full h-full object-cover opacity-30" /></div>
+        <div class="absolute inset-0 bg-gradient-to-r from-navy via-navy/80 to-navy/40"></div>
+        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-32">
+            <div class="max-w-lg">
+                <p class="text-gold text-[11px] tracking-[0.3em] uppercase font-medium mb-5">Authorized Dealer</p>
+                <h1
+                    class="font-serif text-5xl sm:text-6xl lg:text-7xl font-medium italic leading-[1.1] text-white mb-6">
+                    Time, <span class="text-gold">Perfected</span>
+                </h1>
+                <p class="text-white/40 text-sm leading-relaxed tracking-wide mb-8">The world's finest timepieces under
+                    one roof. Authorized dealer for Rolex, Omega, Patek Philippe, Jaeger-LeCoultre, and IWC.</p>
+                <div class="flex flex-col sm:flex-row gap-3">
+                    <a href="#brands"
+                        class="btn-gold inline-flex items-center justify-center px-8 py-3.5 bg-gold text-navy text-[11px] tracking-[0.2em] uppercase font-semibold">Explore
+                        Brands</a>
+                    <a href="#arrivals"
+                        class="inline-flex items-center justify-center px-8 py-3.5 border border-white/20 text-white text-[11px] tracking-[0.2em] uppercase font-medium hover:bg-white hover:text-navy transition">New
+                        Arrivals</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== BRANDS ====== -->
+    <section id="brands" class="py-20 md:py-28 bg-ivory">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-14 reveal">
+                <p class="text-gold text-[11px] tracking-[0.3em] uppercase font-medium mb-3">Authorized Dealers</p>
+                <h2 class="font-serif text-4xl md:text-5xl font-medium italic">Our Brands</h2>
+            </div>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+                <div class="card bg-snow border border-mist/30 p-6 text-center reveal">
+                    <p class="font-serif text-2xl italic text-navy">Rolex</p>
+                    <p class="text-ash text-[10px] tracking-wider uppercase mt-2">Swiss • Est. 1905</p>
+                </div>
+                <div class="card bg-snow border border-mist/30 p-6 text-center reveal" style="transition-delay:.05s">
+                    <p class="font-serif text-2xl italic text-navy">Omega</p>
+                    <p class="text-ash text-[10px] tracking-wider uppercase mt-2">Swiss • Est. 1848</p>
+                </div>
+                <div class="card bg-snow border border-mist/30 p-6 text-center reveal" style="transition-delay:.1s">
+                    <p class="font-serif text-2xl italic text-navy">Patek Philippe</p>
+                    <p class="text-ash text-[10px] tracking-wider uppercase mt-2">Swiss • Est. 1839</p>
+                </div>
+                <div class="card bg-snow border border-mist/30 p-6 text-center reveal" style="transition-delay:.15s">
+                    <p class="font-serif text-2xl italic text-navy">JLC</p>
+                    <p class="text-ash text-[10px] tracking-wider uppercase mt-2">Swiss • Est. 1833</p>
+                </div>
+                <div class="card bg-snow border border-mist/30 p-6 text-center reveal" style="transition-delay:.2s">
+                    <p class="font-serif text-2xl italic text-navy">IWC</p>
+                    <p class="text-ash text-[10px] tracking-wider uppercase mt-2">Swiss • Est. 1868</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== NEW ARRIVALS ====== -->
+    <section id="arrivals" class="py-20 md:py-28 bg-snow">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 reveal">
+                <div>
+                    <p class="text-gold text-[11px] tracking-[0.3em] uppercase font-medium mb-2">Just Arrived</p>
+                    <h2 class="font-serif text-4xl md:text-5xl font-medium italic">New Arrivals</h2>
+                </div>
+                <a href="#" class="text-gold text-sm font-medium mt-3 md:mt-0 hover:text-navy transition">View All →</a>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                <div class="card bg-ivory border border-mist/30 overflow-hidden reveal">
+                    <div class="aspect-square overflow-hidden bg-goldPale p-6 flex items-center justify-center"><img
+                            src="https://images.unsplash.com/photo-1524592094714-0f0654e20314?w=500&q=80&auto=format&fit=crop"
+                            alt="Rolex Submariner" class="w-full h-full object-contain" loading="lazy" /></div>
+                    <div class="p-5">
+                        <p class="text-gold text-[10px] tracking-[0.2em] uppercase font-medium">Rolex</p>
+                        <h3 class="font-serif text-xl italic mt-1">Submariner Date</h3>
+                        <p class="text-ash text-xs mt-1">41mm • Oystersteel • Cerachrom bezel</p>
+                        <p class="font-serif text-lg text-navy mt-3 font-medium">$10,250</p><a href="#"
+                            class="text-gold text-xs font-medium mt-2 inline-block hover:text-navy transition">View
+                            Details →</a>
+                    </div>
+                </div>
+                <div class="card bg-ivory border border-mist/30 overflow-hidden reveal" style="transition-delay:.1s">
+                    <div class="aspect-square overflow-hidden bg-goldPale p-6 flex items-center justify-center"><img
+                            src="https://images.unsplash.com/photo-1524592094714-0f0654e20314?w=500&q=80&auto=format&fit=crop"
+                            alt="Omega Speedmaster" class="w-full h-full object-contain" loading="lazy" /></div>
+                    <div class="p-5">
+                        <p class="text-gold text-[10px] tracking-[0.2em] uppercase font-medium">Omega</p>
+                        <h3 class="font-serif text-xl italic mt-1">Speedmaster Moonwatch</h3>
+                        <p class="text-ash text-xs mt-1">42mm • Hesalite crystal • Cal. 3861</p>
+                        <p class="font-serif text-lg text-navy mt-3 font-medium">$7,100</p><a href="#"
+                            class="text-gold text-xs font-medium mt-2 inline-block hover:text-navy transition">View
+                            Details →</a>
+                    </div>
+                </div>
+                <div class="card bg-ivory border border-mist/30 overflow-hidden reveal" style="transition-delay:.15s">
+                    <div class="aspect-square overflow-hidden bg-goldPale p-6 flex items-center justify-center"><img
+                            src="https://images.unsplash.com/photo-1524592094714-0f0654e20314?w=500&q=80&auto=format&fit=crop"
+                            alt="IWC Portugieser" class="w-full h-full object-contain" loading="lazy" /></div>
+                    <div class="p-5">
+                        <p class="text-gold text-[10px] tracking-[0.2em] uppercase font-medium">IWC</p>
+                        <h3 class="font-serif text-xl italic mt-1">Portugieser Chronograph</h3>
+                        <p class="text-ash text-xs mt-1">41mm • 18K rose gold • Cal. 69355</p>
+                        <p class="font-serif text-lg text-navy mt-3 font-medium">$14,800</p><a href="#"
+                            class="text-gold text-xs font-medium mt-2 inline-block hover:text-navy transition">View
+                            Details →</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== SERVICE & REPAIR ====== -->
+    <section id="service" class="py-20 md:py-28 bg-navy text-white">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-14 reveal">
+                <p class="text-gold text-[11px] tracking-[0.3em] uppercase font-medium mb-3">In-House Expertise</p>
+                <h2 class="font-serif text-4xl md:text-5xl font-medium italic">Service & Repair</h2>
+                <p class="text-white/40 text-sm mt-4 max-w-md mx-auto tracking-wide">Our WOSTEP-certified watchmakers
+                    provide factory-level service for all major Swiss brands.</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                <div class="bg-white/5 border border-white/5 p-6 text-center reveal">
+                    <div
+                        class="w-14 h-14 mx-auto border border-gold/30 rounded-full flex items-center justify-center text-xl mb-4">
+                        🔧</div>
+                    <h3 class="font-serif text-lg italic">Complete Service</h3>
+                    <p class="text-white/40 text-xs mt-2 leading-relaxed">Full movement overhaul, case refinishing,
+                        crystal replacement, water-resistance testing.</p>
+                    <p class="text-gold text-sm font-medium mt-3">From $450</p>
+                </div>
+                <div class="bg-white/5 border border-white/5 p-6 text-center reveal" style="transition-delay:.1s">
+                    <div
+                        class="w-14 h-14 mx-auto border border-gold/30 rounded-full flex items-center justify-center text-xl mb-4">
+                        🔋</div>
+                    <h3 class="font-serif text-lg italic">Battery & Seal</h3>
+                    <p class="text-white/40 text-xs mt-2 leading-relaxed">Battery replacement with gasket renewal and
+                        pressure test. While-you-wait available.</p>
+                    <p class="text-gold text-sm font-medium mt-3">From $45</p>
+                </div>
+                <div class="bg-white/5 border border-white/5 p-6 text-center reveal" style="transition-delay:.15s">
+                    <div
+                        class="w-14 h-14 mx-auto border border-gold/30 rounded-full flex items-center justify-center text-xl mb-4">
+                        ✨</div>
+                    <h3 class="font-serif text-lg italic">Polish & Restore</h3>
+                    <p class="text-white/40 text-xs mt-2 leading-relaxed">Expert case and bracelet polishing to restore
+                        your watch's original lustre.</p>
+                    <p class="text-gold text-sm font-medium mt-3">From $120</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== ABOUT ====== -->
+    <section id="about" class="py-20 md:py-28 bg-ivory">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div class="reveal"><img
+                        src="https://images.unsplash.com/photo-1524592094714-0f0654e20314?w=800&q=80&auto=format&fit=crop"
+                        alt="Chronos & Co boutique" class="w-full aspect-[4/3] object-cover rounded-sm"
+                        loading="lazy" /></div>
+                <div class="reveal" style="transition-delay:.15s">
+                    <p class="text-gold text-[11px] tracking-[0.3em] uppercase font-medium mb-3">Since 1997</p>
+                    <h2 class="font-serif text-4xl md:text-5xl font-medium italic mb-6">About Us</h2>
+                    <div class="space-y-4 text-ash text-sm leading-relaxed tracking-wide">
+                        <p>Chronos & Co has been Portland's premier horological destination for over 25 years. Founded
+                            by second-generation watchmaker Erik Lindberg, the boutique combines the intimacy of a
+                            family business with the authority of an authorized dealer.</p>
+                        <p>Every timepiece we sell receives a complimentary inspection and a 5-year service guarantee.
+                            Our in-house workshop handles everything from routine servicing to complex restoration.</p>
+                    </div>
+                    <div class="grid grid-cols-3 gap-4 mt-8 text-center">
+                        <div class="border border-mist/30 p-3">
+                            <p class="font-serif text-2xl italic text-gold">27</p>
+                            <p class="text-ash text-[10px] tracking-wider uppercase mt-1">Years</p>
+                        </div>
+                        <div class="border border-mist/30 p-3">
+                            <p class="font-serif text-2xl italic text-gold">5</p>
+                            <p class="text-ash text-[10px] tracking-wider uppercase mt-1">Brands</p>
+                        </div>
+                        <div class="border border-mist/30 p-3">
+                            <p class="font-serif text-2xl italic text-gold">3</p>
+                            <p class="text-ash text-[10px] tracking-wider uppercase mt-1">Watchmakers</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== CONTACT ====== -->
+    <section id="contact" class="py-20 md:py-28 bg-snow">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <div class="reveal">
+                    <p class="text-gold text-[11px] tracking-[0.3em] uppercase font-medium mb-3">Visit the Boutique</p>
+                    <h2 class="font-serif text-4xl md:text-5xl font-medium italic mb-6">Contact</h2>
+                    <div class="space-y-4 text-sm text-ash tracking-wide">
+                        <div>
+                            <h4 class="text-navy font-medium mb-1">Address</h4>
+                            <p>621 SW Alder St, Portland, OR 97205</p>
+                        </div>
+                        <div>
+                            <h4 class="text-navy font-medium mb-1">Phone</h4>
+                            <p>(503) 555-0198</p>
+                        </div>
+                        <div>
+                            <h4 class="text-navy font-medium mb-1">Email</h4>
+                            <p>boutique@chronosandco.com</p>
+                        </div>
+                        <div>
+                            <h4 class="text-navy font-medium mb-1">Hours</h4>
+                            <p>Mon–Sat 10am–6pm • Sun by appointment</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="reveal" style="transition-delay:.15s">
+                    <form class="bg-ivory border border-mist/30 p-6 md:p-8 space-y-4">
+                        <input type="text" placeholder="Name"
+                            class="w-full px-4 py-3 bg-snow border border-mist/30 focus:border-gold outline-none text-sm rounded-none transition" />
+                        <input type="email" placeholder="Email"
+                            class="w-full px-4 py-3 bg-snow border border-mist/30 focus:border-gold outline-none text-sm rounded-none transition" />
+                        <select
+                            class="w-full px-4 py-3 bg-snow border border-mist/30 focus:border-gold outline-none text-sm text-ash rounded-none transition">
+                            <option>Interest</option>
+                            <option>Purchase Inquiry</option>
+                            <option>Service Request</option>
+                            <option>Private Viewing</option>
+                            <option>Pre-Owned</option>
+                            <option>General</option>
+                        </select>
+                        <textarea rows="4" placeholder="Your message…"
+                            class="w-full px-4 py-3 bg-snow border border-mist/30 focus:border-gold outline-none text-sm rounded-none resize-none transition"></textarea>
+                        <button type="submit"
+                            class="btn-gold w-full sm:w-auto px-10 py-3.5 bg-gold text-navy text-[11px] tracking-[0.2em] uppercase font-semibold rounded-none">Send</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== FOOTER ====== -->
+    <footer class="bg-navy py-14">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-10">
+                <div class="col-span-2 md:col-span-1"><a href="#home" class="font-serif text-lg text-white">CHRONOS
+                        <span class="text-gold">&</span> CO</a>
+                    <p class="text-white/30 text-xs mt-3 tracking-wide">Fine timepieces. Portland, OR.</p>
+                </div>
+                <div>
+                    <h4 class="text-white/40 text-[10px] tracking-[0.2em] uppercase mb-4">Brands</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-white/30 text-xs hover:text-gold transition">Rolex</a></li>
+                        <li><a href="#" class="text-white/30 text-xs hover:text-gold transition">Omega</a></li>
+                        <li><a href="#" class="text-white/30 text-xs hover:text-gold transition">Patek Philippe</a></li>
+                        <li><a href="#" class="text-white/30 text-xs hover:text-gold transition">IWC</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white/40 text-[10px] tracking-[0.2em] uppercase mb-4">Services</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-white/30 text-xs hover:text-gold transition">Full Service</a></li>
+                        <li><a href="#" class="text-white/30 text-xs hover:text-gold transition">Battery</a></li>
+                        <li><a href="#" class="text-white/30 text-xs hover:text-gold transition">Restoration</a></li>
+                        <li><a href="#" class="text-white/30 text-xs hover:text-gold transition">Appraisal</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white/40 text-[10px] tracking-[0.2em] uppercase mb-4">Follow</h4>
+                    <div class="flex gap-3"><a href="#" aria-label="Instagram"
+                            class="text-white/30 hover:text-gold transition"><svg class="w-4 h-4" fill="currentColor"
+                                viewBox="0 0 24 24">
+                                <path
+                                    d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" />
+                            </svg></a></div>
+                </div>
+            </div>
+            <div class="border-t border-white/5 pt-6 text-center">
+                <p class="text-white/20 text-[10px] tracking-wider">&copy; 2026 Chronos & Co. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('active'); observer.unobserve(e.target); } });
+            }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+            document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>INKWELL — Custom Stationery & Personalized Goods</title>
+    <meta name="description"
+        content="INKWELL — Letterpress stationery, custom invitations, personalized gifts, and branded goods. Designed in Portland, printed with love." />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Source+Sans+3:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet" />
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        serif: ['"Playfair Display"', 'Georgia', 'serif'],
+                        sans: ['"Source Sans 3"', 'system-ui', 'sans-serif'],
+                    },
+                    colors: {
+                        ink: '#1B1B1B',
+                        terracotta: '#C2410C',
+                        terraPale: '#FFF7ED',
+                        terra: '#EA580C',
+                        indigo: '#4338CA',
+                        indigoPale: '#EEF2FF',
+                        sage: '#15803D',
+                        sagePale: '#F0FDF4',
+                        honey: '#D97706',
+                        honeyPale: '#FFFBEB',
+                        slate: '#64748B',
+                        stone: '#A8A29E',
+                        sand: '#F5F5F4',
+                        cloud: '#FAFAF9',
+                        snow: '#FFFFFF',
+                    },
+                },
+            },
+        };
+    </script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Source Sans 3', system-ui, sans-serif;
+            background: #FFFFFF;
+            color: #1B1B1B;
+            overflow-x: hidden;
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity .7s ease, transform .7s ease;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .card {
+            transition: transform .35s, box-shadow .35s;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 16px 48px rgba(194, 65, 12, .06);
+        }
+
+        .card img {
+            transition: transform .5s ease;
+        }
+
+        .card:hover img {
+            transform: scale(1.04);
+        }
+
+        .btn-terra {
+            transition: transform .25s, box-shadow .25s;
+        }
+
+        .btn-terra:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(194, 65, 12, .2);
+        }
+
+        ::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #FFFFFF;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #C2410C;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+
+<body x-data="{ mobileMenu: false }" class="bg-snow text-ink">
+
+    <!-- ====== NAVIGATION ====== -->
+    <header class="fixed top-0 left-0 w-full z-50 bg-snow/90 backdrop-blur-md border-b border-sand">
+        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16 md:h-20">
+                <a href="#home" class="flex items-center gap-2"><span class="text-xl">🖋️</span><span
+                        class="font-serif text-2xl font-semibold italic">Inkwell</span></a>
+                <ul class="hidden md:flex items-center space-x-7 text-sm text-slate font-medium">
+                    <li><a href="#shop" class="hover:text-terracotta transition">Shop Stationery</a></li>
+                    <li><a href="#custom" class="hover:text-terracotta transition">Custom Design</a></li>
+                    <li><a href="#story" class="hover:text-terracotta transition">Our Story</a></li>
+                    <li><a href="#blog" class="hover:text-terracotta transition">Blog</a></li>
+                    <li><a href="#contact" class="hover:text-terracotta transition">Contact</a></li>
+                </ul>
+                <a href="#custom"
+                    class="hidden md:inline-flex px-6 py-2.5 bg-terracotta text-white text-xs tracking-wider uppercase font-bold rounded-full btn-terra">Start
+                    Designing</a>
+                <button @click="mobileMenu=!mobileMenu" class="md:hidden p-2" aria-label="Menu">
+                    <svg x-show="!mobileMenu" class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.5"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 9h16.5m-16.5 6.75h16.5" />
+                    </svg>
+                    <svg x-show="mobileMenu" x-cloak class="w-6 h-6" fill="none" stroke="currentColor"
+                        stroke-width="1.5" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+            <div x-show="mobileMenu" x-cloak x-transition class="md:hidden pb-6 border-t border-sand">
+                <ul class="flex flex-col space-y-4 pt-4 text-sm font-medium">
+                    <li><a @click="mobileMenu=false" href="#shop"
+                            class="block py-1 text-slate hover:text-terracotta">Shop Stationery</a></li>
+                    <li><a @click="mobileMenu=false" href="#custom"
+                            class="block py-1 text-slate hover:text-terracotta">Custom Design</a></li>
+                    <li><a @click="mobileMenu=false" href="#story"
+                            class="block py-1 text-slate hover:text-terracotta">Our Story</a></li>
+                    <li><a @click="mobileMenu=false" href="#blog"
+                            class="block py-1 text-slate hover:text-terracotta">Blog</a></li>
+                    <li><a @click="mobileMenu=false" href="#contact"
+                            class="block py-1 text-terracotta font-bold">Contact</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <!-- ====== HERO ====== -->
+    <section id="home" class="relative min-h-screen flex items-center overflow-hidden bg-terraPale">
+        <div class="absolute top-20 right-10 w-80 h-80 bg-terracotta/5 rounded-full blur-3xl"></div>
+        <div class="absolute bottom-20 left-0 w-64 h-64 bg-indigo/5 rounded-full blur-3xl"></div>
+        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-32">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+                <div>
+                    <span
+                        class="inline-flex items-center px-3 py-1 bg-terracotta/10 text-terracotta text-xs font-bold tracking-wider uppercase rounded-full mb-5">✨
+                        Custom Wedding Suite — Now Booking 2026</span>
+                    <h1 class="font-serif text-5xl sm:text-6xl lg:text-7xl font-semibold leading-[1.1] mb-6">
+                        Paper That <span class="italic text-terracotta">Tells</span> Your Story
+                    </h1>
+                    <p class="text-slate text-base sm:text-lg leading-relaxed mb-8 max-w-md">Letterpress stationery,
+                        custom invitations, and personalized gifts — designed in our Portland studio and printed on
+                        heritage presses.</p>
+                    <div class="flex flex-col sm:flex-row gap-3">
+                        <a href="#shop"
+                            class="btn-terra inline-flex items-center justify-center px-8 py-3.5 bg-terracotta text-white text-sm tracking-wider uppercase font-bold rounded-full">Shop
+                            Collection</a>
+                        <a href="#custom"
+                            class="btn-terra inline-flex items-center justify-center px-8 py-3.5 border border-stone/30 text-ink text-sm tracking-wider uppercase font-medium rounded-full hover:bg-ink hover:text-white transition">Custom
+                            Design</a>
+                    </div>
+                </div>
+                <div class="relative flex justify-center">
+                    <img src="https://images.unsplash.com/photo-1549465220-1a8b9238f760?w=700&q=80&auto=format&fit=crop"
+                        alt="Letterpress stationery collection"
+                        class="w-full max-w-lg rounded-3xl shadow-xl shadow-terracotta/5" />
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== SHOP STATIONERY ====== -->
+    <section id="shop" class="py-20 md:py-28 bg-snow">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 reveal">
+                <div>
+                    <p class="text-terracotta text-xs tracking-[0.3em] uppercase font-semibold mb-2">The Collection</p>
+                    <h2 class="font-serif text-4xl md:text-5xl">Shop Stationery</h2>
+                </div>
+                <a href="#" class="text-terracotta text-sm font-medium mt-3 md:mt-0 hover:text-ink transition">View All
+                    →</a>
+            </div>
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="card bg-sand rounded-2xl overflow-hidden reveal">
+                    <div class="aspect-square overflow-hidden bg-terraPale/50 p-4 flex items-center justify-center"><img
+                            src="https://images.unsplash.com/photo-1549465220-1a8b9238f760?w=400&q=80&auto=format&fit=crop"
+                            alt="Letterpress note cards" class="w-full h-full object-contain" loading="lazy" /></div>
+                    <div class="p-3"><span
+                            class="text-terracotta text-[10px] tracking-wider uppercase font-bold">Cards</span>
+                        <h4 class="font-medium text-sm mt-1">Letterpress Note Cards</h4>
+                        <p class="text-slate text-xs mt-0.5">Set of 12 • Cotton paper</p>
+                        <p class="font-semibold text-terracotta mt-2">$32</p>
+                    </div>
+                </div>
+                <div class="card bg-sand rounded-2xl overflow-hidden reveal" style="transition-delay:.1s">
+                    <div class="aspect-square overflow-hidden bg-indigoPale/50 p-4 flex items-center justify-center">
+                        <img src="https://images.unsplash.com/photo-1513885535751-8b9238bd345a?w=400&q=80&auto=format&fit=crop"
+                            alt="Monogram seals" class="w-full h-full object-contain" loading="lazy" /></div>
+                    <div class="p-3"><span
+                            class="text-indigo text-[10px] tracking-wider uppercase font-bold">Seals</span>
+                        <h4 class="font-medium text-sm mt-1">Wax Monogram Seals</h4>
+                        <p class="text-slate text-xs mt-0.5">Custom brass die • 50 sticks</p>
+                        <p class="font-semibold text-terracotta mt-2">$68</p>
+                    </div>
+                </div>
+                <div class="card bg-sand rounded-2xl overflow-hidden reveal" style="transition-delay:.15s">
+                    <div class="aspect-square overflow-hidden bg-honeyPale/50 p-4 flex items-center justify-center"><img
+                            src="https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=400&q=80&auto=format&fit=crop"
+                            alt="Personalized notebook" class="w-full h-full object-contain" loading="lazy" /></div>
+                    <div class="p-3"><span
+                            class="text-honey text-[10px] tracking-wider uppercase font-bold">Journals</span>
+                        <h4 class="font-medium text-sm mt-1">Foil-Stamped Notebook</h4>
+                        <p class="text-slate text-xs mt-0.5">A5 • 160 pages • Initials</p>
+                        <p class="font-semibold text-terracotta mt-2">$28</p>
+                    </div>
+                </div>
+                <div class="card bg-sand rounded-2xl overflow-hidden reveal" style="transition-delay:.2s">
+                    <div class="aspect-square overflow-hidden bg-sagePale/50 p-4 flex items-center justify-center"><img
+                            src="https://images.unsplash.com/photo-1549465220-1a8b9238f760?w=400&q=80&auto=format&fit=crop"
+                            alt="Art prints" class="w-full h-full object-contain" loading="lazy" /></div>
+                    <div class="p-3"><span
+                            class="text-sage text-[10px] tracking-wider uppercase font-bold">Prints</span>
+                        <h4 class="font-medium text-sm mt-1">Botanical Art Prints</h4>
+                        <p class="text-slate text-xs mt-0.5">8×10 • Giclée on rag paper</p>
+                        <p class="font-semibold text-terracotta mt-2">$24</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== CUSTOM DESIGN ====== -->
+    <section id="custom" class="py-20 md:py-28 bg-terracotta text-white">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div class="reveal">
+                    <p class="text-terraPale text-xs tracking-[0.3em] uppercase font-semibold mb-3">Bespoke</p>
+                    <h2 class="font-serif text-4xl md:text-5xl mb-6">Custom <span class="italic">Design</span> Studio
+                    </h2>
+                    <p class="text-white/70 leading-relaxed mb-8">Work directly with our design team to create
+                        one-of-a-kind pieces. From wedding suites to corporate brand packages — every detail is yours to
+                        define.</p>
+
+                    <div class="space-y-5" x-data="{ activeStep: 1 }">
+                        <div @click="activeStep=1"
+                            class="cursor-pointer border border-white/20 rounded-xl p-4 transition"
+                            :class="activeStep===1 ? 'bg-white/10' : 'bg-transparent'">
+                            <div class="flex items-center gap-3">
+                                <div class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold"
+                                    :class="activeStep===1 ? 'bg-white text-terracotta' : 'bg-white/20'">1</div>
+                                <h4 class="font-semibold">Choose Your Product</h4>
+                            </div>
+                            <p x-show="activeStep===1" class="text-white/60 text-sm mt-2 ml-11">Wedding invitations,
+                                business cards, note sets, event menus, gift tags, or custom packaging.</p>
+                        </div>
+                        <div @click="activeStep=2"
+                            class="cursor-pointer border border-white/20 rounded-xl p-4 transition"
+                            :class="activeStep===2 ? 'bg-white/10' : 'bg-transparent'">
+                            <div class="flex items-center gap-3">
+                                <div class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold"
+                                    :class="activeStep===2 ? 'bg-white text-terracotta' : 'bg-white/20'">2</div>
+                                <h4 class="font-semibold">Design Consultation</h4>
+                            </div>
+                            <p x-show="activeStep===2" class="text-white/60 text-sm mt-2 ml-11">30-minute video call to
+                                review your vision, colors, typography, and paper options. Free of charge.</p>
+                        </div>
+                        <div @click="activeStep=3"
+                            class="cursor-pointer border border-white/20 rounded-xl p-4 transition"
+                            :class="activeStep===3 ? 'bg-white/10' : 'bg-transparent'">
+                            <div class="flex items-center gap-3">
+                                <div class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold"
+                                    :class="activeStep===3 ? 'bg-white text-terracotta' : 'bg-white/20'">3</div>
+                                <h4 class="font-semibold">Proofs & Production</h4>
+                            </div>
+                            <p x-show="activeStep===3" class="text-white/60 text-sm mt-2 ml-11">We send digital proofs
+                                within 5 days. After approval, letterpress printing takes 10–14 business days.</p>
+                        </div>
+                    </div>
+                    <a href="#contact"
+                        class="btn-terra inline-flex items-center justify-center px-8 py-3.5 bg-white text-terracotta text-sm tracking-wider uppercase font-bold rounded-full mt-8">Start
+                        Your Project</a>
+                </div>
+                <div class="reveal" style="transition-delay:.15s">
+                    <img src="https://images.unsplash.com/photo-1513885535751-8b9238bd345a?w=600&q=80&auto=format&fit=crop"
+                        alt="Custom letterpress printing" class="w-full rounded-2xl shadow-2xl" loading="lazy" />
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== GALLERY ====== -->
+    <section class="py-20 md:py-28 bg-cloud">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-10 reveal">
+                <p class="text-terracotta text-xs tracking-[0.3em] uppercase font-semibold mb-3">Recent Work</p>
+                <h2 class="font-serif text-4xl md:text-5xl">Design Gallery</h2>
+            </div>
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+                <div class="card rounded-2xl overflow-hidden reveal"><img
+                        src="https://images.unsplash.com/photo-1549465220-1a8b9238f760?w=500&q=80&auto=format&fit=crop"
+                        alt="Wedding invitation suite" class="w-full aspect-square object-cover" loading="lazy" /></div>
+                <div class="card rounded-2xl overflow-hidden reveal" style="transition-delay:.1s"><img
+                        src="https://images.unsplash.com/photo-1513885535751-8b9238bd345a?w=500&q=80&auto=format&fit=crop"
+                        alt="Business cards" class="w-full aspect-square object-cover" loading="lazy" /></div>
+                <div class="card rounded-2xl overflow-hidden reveal" style="transition-delay:.15s"><img
+                        src="https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=500&q=80&auto=format&fit=crop"
+                        alt="Custom stationery" class="w-full aspect-square object-cover" loading="lazy" /></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== OUR STORY ====== -->
+    <section id="story" class="py-20 md:py-28 bg-snow">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div class="reveal"><img
+                        src="https://images.unsplash.com/photo-1549465220-1a8b9238f760?w=800&q=80&auto=format&fit=crop"
+                        alt="Inkwell studio and letterpress" class="w-full aspect-[4/3] object-cover rounded-2xl"
+                        loading="lazy" /></div>
+                <div class="reveal" style="transition-delay:.15s">
+                    <p class="text-terracotta text-xs tracking-[0.3em] uppercase font-semibold mb-3">Est. 2016</p>
+                    <h2 class="font-serif text-4xl md:text-5xl mb-6">Our <span
+                            class="italic text-terracotta">Story</span></h2>
+                    <div class="space-y-4 text-slate leading-relaxed">
+                        <p>Inkwell was founded by two printmakers who fell in love with vintage Vandercook and
+                            Heidelberg presses. We believe there's nothing digital can replicate — the deep impression
+                            of letterpress, the texture of cotton paper, the weight of a well-made card in your hand.
+                        </p>
+                        <p>Today, our Portland studio houses four heritage presses, a foil-stamping station, and a
+                            small-batch paper workshop. Every piece is printed, trimmed, and packed by our team of six.
+                        </p>
+                    </div>
+                    <div class="grid grid-cols-3 gap-4 mt-8 text-center">
+                        <div>
+                            <p class="font-serif text-3xl text-terracotta">4</p>
+                            <p class="text-slate text-xs mt-1">Heritage Presses</p>
+                        </div>
+                        <div>
+                            <p class="font-serif text-3xl text-indigo">800+</p>
+                            <p class="text-slate text-xs mt-1">Wedding Suites</p>
+                        </div>
+                        <div>
+                            <p class="font-serif text-3xl text-honey">100%</p>
+                            <p class="text-slate text-xs mt-1">Cotton Paper</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== BLOG ====== -->
+    <section id="blog" class="py-20 md:py-28 bg-cloud">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 reveal">
+                <div>
+                    <p class="text-terracotta text-xs tracking-[0.3em] uppercase font-semibold mb-2">From the Press</p>
+                    <h2 class="font-serif text-4xl md:text-5xl">Blog</h2>
+                </div>
+                <a href="#" class="text-terracotta text-sm font-medium mt-3 md:mt-0 hover:text-ink transition">All
+                    Articles →</a>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                <article class="card group rounded-2xl overflow-hidden bg-snow reveal">
+                    <div class="aspect-[16/10] overflow-hidden"><img
+                            src="https://images.unsplash.com/photo-1549465220-1a8b9238f760?w=600&q=80&auto=format&fit=crop"
+                            alt="Wedding stationery timeline" class="w-full h-full object-cover" loading="lazy" /></div>
+                    <div class="p-5"><span
+                            class="text-terracotta text-[10px] tracking-wider uppercase font-bold">Weddings</span>
+                        <h3 class="font-serif text-xl mt-1 group-hover:text-terracotta transition">The Complete Wedding
+                            Stationery Timeline</h3>
+                        <p class="text-slate text-sm mt-2">When to order save-the-dates, invitations, day-of menus, and
+                            thank-you cards — with no stress.</p>
+                        <p class="text-stone text-xs mt-3">8 min read</p>
+                    </div>
+                </article>
+                <article class="card group rounded-2xl overflow-hidden bg-snow reveal" style="transition-delay:.1s">
+                    <div class="aspect-[16/10] overflow-hidden"><img
+                            src="https://images.unsplash.com/photo-1513885535751-8b9238bd345a?w=600&q=80&auto=format&fit=crop"
+                            alt="Paper types guide" class="w-full h-full object-cover" loading="lazy" /></div>
+                    <div class="p-5"><span
+                            class="text-indigo text-[10px] tracking-wider uppercase font-bold">Guide</span>
+                        <h3 class="font-serif text-xl mt-1 group-hover:text-terracotta transition">Cotton vs. Recycled
+                            vs. Handmade: A Paper Guide</h3>
+                        <p class="text-slate text-sm mt-2">Understanding weight, texture, and printability — and which
+                            paper is right for your project.</p>
+                        <p class="text-stone text-xs mt-3">6 min read</p>
+                    </div>
+                </article>
+                <article class="card group rounded-2xl overflow-hidden bg-snow reveal" style="transition-delay:.15s">
+                    <div class="aspect-[16/10] overflow-hidden"><img
+                            src="https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=600&q=80&auto=format&fit=crop"
+                            alt="Letterpress process" class="w-full h-full object-cover" loading="lazy" /></div>
+                    <div class="p-5"><span
+                            class="text-honey text-[10px] tracking-wider uppercase font-bold">Process</span>
+                        <h3 class="font-serif text-xl mt-1 group-hover:text-terracotta transition">Inside Our Studio:
+                            How Letterpress Actually Works</h3>
+                        <p class="text-slate text-sm mt-2">From metal type to polymer plates — a behind-the-scenes look
+                            at our printing process.</p>
+                        <p class="text-stone text-xs mt-3">10 min read</p>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== CONTACT ====== -->
+    <section id="contact" class="py-20 md:py-28 bg-snow">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <div class="reveal">
+                    <p class="text-terracotta text-xs tracking-[0.3em] uppercase font-semibold mb-3">Say Hello</p>
+                    <h2 class="font-serif text-4xl md:text-5xl mb-6">Contact</h2>
+                    <div class="space-y-4 text-sm text-slate">
+                        <div class="flex items-center gap-3"><svg class="w-5 h-5 text-terracotta" fill="none"
+                                stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
+                            </svg><span>1240 SE Division St, Portland, OR 97202</span></div>
+                        <div class="flex items-center gap-3"><svg class="w-5 h-5 text-terracotta" fill="none"
+                                stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z" />
+                            </svg><span>(503) 555-0493</span></div>
+                        <div class="flex items-center gap-3"><svg class="w-5 h-5 text-terracotta" fill="none"
+                                stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+                            </svg><span>hello@inkwellstudio.com</span></div>
+                    </div>
+                    <p class="text-slate text-sm mt-6"><strong>Studio Hours:</strong> Tue–Sat 10am–5pm</p>
+                    <p class="text-slate text-xs mt-1"><strong>Tours:</strong> By appointment — come see the presses!
+                    </p>
+                </div>
+                <div class="reveal" style="transition-delay:.15s">
+                    <form class="bg-sand rounded-2xl p-6 md:p-8 space-y-4">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <input type="text" placeholder="Name"
+                                class="w-full px-4 py-3 bg-snow border border-stone/10 focus:border-terracotta outline-none text-sm rounded-xl transition" />
+                            <input type="email" placeholder="Email"
+                                class="w-full px-4 py-3 bg-snow border border-stone/10 focus:border-terracotta outline-none text-sm rounded-xl transition" />
+                        </div>
+                        <select
+                            class="w-full px-4 py-3 bg-snow border border-stone/10 focus:border-terracotta outline-none text-sm text-slate rounded-xl transition">
+                            <option>I'm interested in…</option>
+                            <option>Wedding Invitations</option>
+                            <option>Business Stationery</option>
+                            <option>Custom Gift Items</option>
+                            <option>Event Menus / Programs</option>
+                            <option>Wholesale</option>
+                            <option>Other</option>
+                        </select>
+                        <textarea rows="4" placeholder="Tell us about your project…"
+                            class="w-full px-4 py-3 bg-snow border border-stone/10 focus:border-terracotta outline-none text-sm rounded-xl resize-none transition"></textarea>
+                        <button type="submit"
+                            class="btn-terra w-full sm:w-auto px-10 py-3.5 bg-terracotta text-white text-sm tracking-wider uppercase font-bold rounded-full">Send</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== FOOTER ====== -->
+    <footer class="bg-ink py-14">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-10">
+                <div class="col-span-2 md:col-span-1"><a href="#home" class="flex items-center gap-2"><span
+                            class="text-lg">🖋️</span><span
+                            class="font-serif text-lg italic text-white">Inkwell</span></a>
+                    <p class="text-white/40 text-sm mt-3">Letterpress studio. Portland, OR.</p>
+                </div>
+                <div>
+                    <h4 class="text-white/50 text-xs tracking-wider uppercase mb-4">Shop</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-white/40 text-sm hover:text-terracotta transition">Cards</a></li>
+                        <li><a href="#" class="text-white/40 text-sm hover:text-terracotta transition">Journals</a></li>
+                        <li><a href="#" class="text-white/40 text-sm hover:text-terracotta transition">Prints</a></li>
+                        <li><a href="#" class="text-white/40 text-sm hover:text-terracotta transition">Seals</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white/50 text-xs tracking-wider uppercase mb-4">Custom</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-white/40 text-sm hover:text-terracotta transition">Weddings</a></li>
+                        <li><a href="#" class="text-white/40 text-sm hover:text-terracotta transition">Business</a></li>
+                        <li><a href="#" class="text-white/40 text-sm hover:text-terracotta transition">Events</a></li>
+                        <li><a href="#" class="text-white/40 text-sm hover:text-terracotta transition">Wholesale</a>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white/50 text-xs tracking-wider uppercase mb-4">Follow</h4>
+                    <div class="flex gap-3"><a href="#" aria-label="Instagram"
+                            class="text-white/40 hover:text-terracotta transition"><svg class="w-5 h-5"
+                                fill="currentColor" viewBox="0 0 24 24">
+                                <path
+                                    d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" />
+                            </svg></a><a href="#" aria-label="Pinterest"
+                            class="text-white/40 hover:text-terracotta transition"><svg class="w-5 h-5"
+                                fill="currentColor" viewBox="0 0 24 24">
+                                <path
+                                    d="M12 0C5.373 0 0 5.372 0 12c0 5.084 3.163 9.426 7.627 11.174-.105-.949-.2-2.405.042-3.441.218-.937 1.407-5.965 1.407-5.965s-.359-.719-.359-1.782c0-1.668.967-2.914 2.171-2.914 1.023 0 1.518.769 1.518 1.69 0 1.029-.655 2.568-.994 3.995-.283 1.194.599 2.169 1.777 2.169 2.133 0 3.772-2.249 3.772-5.495 0-2.873-2.064-4.882-5.012-4.882-3.414 0-5.418 2.561-5.418 5.207 0 1.031.397 2.138.893 2.738a.36.36 0 01.083.345l-.333 1.36c-.053.22-.174.267-.402.161-1.499-.698-2.436-2.889-2.436-4.649 0-3.785 2.75-7.262 7.929-7.262 4.163 0 7.398 2.967 7.398 6.931 0 4.136-2.607 7.464-6.227 7.464-1.216 0-2.359-.631-2.75-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24 12 24c6.627 0 12-5.373 12-12 0-6.628-5.373-12-12-12z" />
+                            </svg></a></div>
+                </div>
+            </div>
+            <div class="border-t border-white/10 pt-6 text-center">
+                <p class="text-white/30 text-xs">&copy; 2026 Inkwell Studio. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('active'); observer.unobserve(e.target); } });
+            }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+            document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+        });
+    </script>
+</body>
+
+</html>

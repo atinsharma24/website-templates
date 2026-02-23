@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CHAPTER — Independent Bookstore</title>
+    <meta name="description"
+        content="CHAPTER — Portland's favorite indie bookstore. Staff picks, author events, rare finds, and a cozy reading nook. Shop in-store or online." />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Source+Sans+3:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet" />
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        serif: ['"Libre Baskerville"', 'Georgia', 'serif'],
+                        sans: ['"Source Sans 3"', 'system-ui', 'sans-serif'],
+                    },
+                    colors: {
+                        ink: '#1C1917',
+                        sepia: '#92400E',
+                        sepiaDark: '#78350F',
+                        sepiaPale: '#FFFBEB',
+                        forest: '#166534',
+                        forestPale: '#F0FDF4',
+                        wine: '#881337',
+                        winePale: '#FFF1F2',
+                        parchment: '#FAF7F2',
+                        stone: '#78716C',
+                        sand: '#F5F5F4',
+                        mist: '#E7E5E4',
+                        snow: '#FFFFFF',
+                    },
+                },
+            },
+        };
+    </script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Source Sans 3', system-ui, sans-serif;
+            background: #FAF7F2;
+            color: #1C1917;
+            overflow-x: hidden;
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity .7s ease, transform .7s ease;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .card {
+            transition: transform .35s, box-shadow .35s;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 16px 48px rgba(146, 64, 14, .06);
+        }
+
+        .card img {
+            transition: transform .5s ease;
+        }
+
+        .card:hover img {
+            transform: scale(1.04);
+        }
+
+        .btn-sepia {
+            transition: transform .25s, box-shadow .25s;
+        }
+
+        .btn-sepia:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(146, 64, 14, .2);
+        }
+
+        ::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #FAF7F2;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #92400E;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+
+<body x-data="{ mobileMenu: false }" class="bg-parchment text-ink">
+
+    <!-- ====== NAVIGATION ====== -->
+    <header class="fixed top-0 left-0 w-full z-50 bg-parchment/90 backdrop-blur-md border-b border-mist/50">
+        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16 md:h-20">
+                <a href="#home" class="flex items-center gap-2">
+                    <span class="text-xl">📖</span>
+                    <span class="font-serif text-2xl font-bold italic">Chapter</span>
+                </a>
+                <ul class="hidden md:flex items-center space-x-7 text-sm text-stone font-medium">
+                    <li><a href="#books" class="hover:text-sepia transition">Shop Books</a></li>
+                    <li><a href="#picks" class="hover:text-sepia transition">Staff Picks</a></li>
+                    <li><a href="#events" class="hover:text-sepia transition">Events</a></li>
+                    <li><a href="#story" class="hover:text-sepia transition">Our Story</a></li>
+                    <li><a href="#contact" class="hover:text-sepia transition">Contact</a></li>
+                </ul>
+                <a href="#books"
+                    class="hidden md:inline-flex px-6 py-2.5 bg-sepia text-white text-xs tracking-wider uppercase font-bold rounded-full btn-sepia">Shop
+                    Now</a>
+                <button @click="mobileMenu=!mobileMenu" class="md:hidden p-2" aria-label="Menu">
+                    <svg x-show="!mobileMenu" class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.5"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 9h16.5m-16.5 6.75h16.5" />
+                    </svg>
+                    <svg x-show="mobileMenu" x-cloak class="w-6 h-6" fill="none" stroke="currentColor"
+                        stroke-width="1.5" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+            <div x-show="mobileMenu" x-cloak x-transition class="md:hidden pb-6 border-t border-mist/50">
+                <ul class="flex flex-col space-y-4 pt-4 text-sm font-medium">
+                    <li><a @click="mobileMenu=false" href="#books" class="block py-1 text-stone hover:text-sepia">Shop
+                            Books</a></li>
+                    <li><a @click="mobileMenu=false" href="#picks" class="block py-1 text-stone hover:text-sepia">Staff
+                            Picks</a></li>
+                    <li><a @click="mobileMenu=false" href="#events"
+                            class="block py-1 text-stone hover:text-sepia">Events</a></li>
+                    <li><a @click="mobileMenu=false" href="#story" class="block py-1 text-stone hover:text-sepia">Our
+                            Story</a></li>
+                    <li><a @click="mobileMenu=false" href="#contact" class="block py-1 text-sepia font-bold">Contact</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <!-- ====== HERO ====== -->
+    <section id="home" class="relative min-h-screen flex items-center overflow-hidden">
+        <div class="absolute inset-0"><img
+                src="https://images.unsplash.com/photo-1507842217343-583bb7270b66?w=1920&q=80&auto=format&fit=crop"
+                alt="Warm library shelves" class="w-full h-full object-cover" />
+            <div class="absolute inset-0 bg-gradient-to-r from-parchment via-parchment/80 to-parchment/30"></div>
+        </div>
+        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-32">
+            <div class="max-w-xl">
+                <span
+                    class="inline-flex items-center px-3 py-1 bg-sepia/10 text-sepia text-xs font-bold tracking-wider uppercase rounded-full mb-5">📚
+                    Independent Since 2011</span>
+                <h1 class="font-serif text-5xl sm:text-6xl lg:text-7xl font-bold italic leading-[1.1] mb-6">
+                    Every Book a <span class="text-sepia">New World</span>
+                </h1>
+                <p class="text-stone text-base sm:text-lg leading-relaxed mb-8 max-w-md">An independent bookstore with
+                    hand-picked shelves, live author readings, and the city's best reading nook. Discover your next
+                    favorite here.</p>
+                <div class="flex flex-col sm:flex-row gap-3">
+                    <a href="#books"
+                        class="btn-sepia inline-flex items-center justify-center px-8 py-3.5 bg-sepia text-white text-sm tracking-wider uppercase font-bold rounded-full">Browse
+                        Collection</a>
+                    <a href="#events"
+                        class="btn-sepia inline-flex items-center justify-center px-8 py-3.5 border border-mist text-ink text-sm tracking-wider uppercase font-medium rounded-full hover:bg-ink hover:text-white transition">Upcoming
+                        Events</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== SHOP BOOKS ====== -->
+    <section id="books" class="py-20 md:py-28 bg-parchment">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 reveal">
+                <div>
+                    <p class="text-sepia text-xs tracking-[0.3em] uppercase font-semibold mb-2">Browse</p>
+                    <h2 class="font-serif text-4xl md:text-5xl font-bold italic">Shop Books</h2>
+                </div>
+                <a href="#" class="text-sepia text-sm font-medium mt-3 md:mt-0 hover:text-ink transition">View All →</a>
+            </div>
+
+            <!-- Category Tags -->
+            <div class="flex flex-wrap gap-2 mb-8 reveal">
+                <span
+                    class="bg-sepia/10 text-sepia text-xs px-3 py-1.5 rounded-full font-bold cursor-pointer hover:bg-sepia hover:text-white transition">All</span>
+                <span
+                    class="bg-sand text-stone text-xs px-3 py-1.5 rounded-full font-medium cursor-pointer hover:bg-sepia hover:text-white transition">Fiction</span>
+                <span
+                    class="bg-sand text-stone text-xs px-3 py-1.5 rounded-full font-medium cursor-pointer hover:bg-sepia hover:text-white transition">Non-Fiction</span>
+                <span
+                    class="bg-sand text-stone text-xs px-3 py-1.5 rounded-full font-medium cursor-pointer hover:bg-sepia hover:text-white transition">Poetry</span>
+                <span
+                    class="bg-sand text-stone text-xs px-3 py-1.5 rounded-full font-medium cursor-pointer hover:bg-sepia hover:text-white transition">Children's</span>
+                <span
+                    class="bg-sand text-stone text-xs px-3 py-1.5 rounded-full font-medium cursor-pointer hover:bg-sepia hover:text-white transition">Rare
+                    & Vintage</span>
+            </div>
+
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-5">
+                <div class="card bg-snow rounded-2xl overflow-hidden reveal">
+                    <div class="aspect-[2/3] overflow-hidden bg-sepiaPale"><img
+                            src="https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=400&q=80&auto=format&fit=crop"
+                            alt="Fiction novel" class="w-full h-full object-cover" loading="lazy" /></div>
+                    <div class="p-4"><span
+                            class="text-sepia text-[10px] tracking-wider uppercase font-bold">Fiction</span>
+                        <h4 class="font-serif font-bold text-sm mt-1 italic">The Midnight Library</h4>
+                        <p class="text-stone text-xs mt-0.5">Matt Haig</p>
+                        <p class="font-semibold text-sepia mt-2">$16.99</p>
+                    </div>
+                </div>
+                <div class="card bg-snow rounded-2xl overflow-hidden reveal" style="transition-delay:.1s">
+                    <div class="aspect-[2/3] overflow-hidden bg-forestPale"><img
+                            src="https://images.unsplash.com/photo-1512820790803-83ca734da794?w=400&q=80&auto=format&fit=crop"
+                            alt="Non-fiction book" class="w-full h-full object-cover" loading="lazy" /></div>
+                    <div class="p-4"><span
+                            class="text-forest text-[10px] tracking-wider uppercase font-bold">Non-Fiction</span>
+                        <h4 class="font-serif font-bold text-sm mt-1 italic">Braiding Sweetgrass</h4>
+                        <p class="text-stone text-xs mt-0.5">Robin Wall Kimmerer</p>
+                        <p class="font-semibold text-sepia mt-2">$18.99</p>
+                    </div>
+                </div>
+                <div class="card bg-snow rounded-2xl overflow-hidden reveal" style="transition-delay:.15s">
+                    <div class="aspect-[2/3] overflow-hidden bg-winePale"><img
+                            src="https://images.unsplash.com/photo-1543002588-bfa74002ed7e?w=400&q=80&auto=format&fit=crop"
+                            alt="Poetry collection" class="w-full h-full object-cover" loading="lazy" /></div>
+                    <div class="p-4"><span
+                            class="text-wine text-[10px] tracking-wider uppercase font-bold">Poetry</span>
+                        <h4 class="font-serif font-bold text-sm mt-1 italic">Devotions</h4>
+                        <p class="text-stone text-xs mt-0.5">Mary Oliver</p>
+                        <p class="font-semibold text-sepia mt-2">$22.00</p>
+                    </div>
+                </div>
+                <div class="card bg-snow rounded-2xl overflow-hidden reveal" style="transition-delay:.2s">
+                    <div class="aspect-[2/3] overflow-hidden bg-sepiaPale"><img
+                            src="https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=400&q=80&auto=format&fit=crop"
+                            alt="Children's picture book" class="w-full h-full object-cover" loading="lazy" /></div>
+                    <div class="p-4"><span
+                            class="text-sepia text-[10px] tracking-wider uppercase font-bold">Children's</span>
+                        <h4 class="font-serif font-bold text-sm mt-1 italic">The Wild Robot</h4>
+                        <p class="text-stone text-xs mt-0.5">Peter Brown</p>
+                        <p class="font-semibold text-sepia mt-2">$12.99</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== STAFF PICKS ====== -->
+    <section id="picks" class="py-20 md:py-28 bg-sepia text-white">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-10 reveal">
+                <p class="text-sepiaPale text-xs tracking-[0.3em] uppercase font-bold mb-3">Recommended</p>
+                <h2 class="font-serif text-4xl md:text-5xl font-bold italic">Staff Picks</h2>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                <div class="bg-white/10 backdrop-blur rounded-2xl p-5 reveal">
+                    <div class="w-full aspect-[2/3] rounded-xl overflow-hidden mb-4 bg-white/5"><img
+                            src="https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=400&q=80&auto=format&fit=crop"
+                            alt="Sarah's pick" class="w-full h-full object-cover" loading="lazy" /></div>
+                    <h3 class="font-serif font-bold italic">Tomorrow, and Tomorrow, and Tomorrow</h3>
+                    <p class="text-white/50 text-xs mt-1">Gabrielle Zevin</p>
+                    <p class="text-white/70 text-sm mt-3">"A love letter to creativity, collaboration, and the games we
+                        play. I couldn't put it down."</p>
+                    <div class="flex items-center gap-2 mt-4">
+                        <div
+                            class="w-7 h-7 rounded-full bg-white/20 flex items-center justify-center text-[10px] font-bold">
+                            S</div>
+                        <p class="text-white/50 text-xs">— Sarah, fiction buyer</p>
+                    </div>
+                </div>
+                <div class="bg-white/10 backdrop-blur rounded-2xl p-5 reveal" style="transition-delay:.1s">
+                    <div class="w-full aspect-[2/3] rounded-xl overflow-hidden mb-4 bg-white/5"><img
+                            src="https://images.unsplash.com/photo-1512820790803-83ca734da794?w=400&q=80&auto=format&fit=crop"
+                            alt="Marcus's pick" class="w-full h-full object-cover" loading="lazy" /></div>
+                    <h3 class="font-serif font-bold italic">Entangled Life</h3>
+                    <p class="text-white/50 text-xs mt-1">Merlin Sheldrake</p>
+                    <p class="text-white/70 text-sm mt-3">"Fungi are stranger and more fascinating than any sci-fi. This
+                        book changed how I see the forest floor."</p>
+                    <div class="flex items-center gap-2 mt-4">
+                        <div
+                            class="w-7 h-7 rounded-full bg-white/20 flex items-center justify-center text-[10px] font-bold">
+                            M</div>
+                        <p class="text-white/50 text-xs">— Marcus, non-fiction</p>
+                    </div>
+                </div>
+                <div class="bg-white/10 backdrop-blur rounded-2xl p-5 reveal" style="transition-delay:.15s">
+                    <div class="w-full aspect-[2/3] rounded-xl overflow-hidden mb-4 bg-white/5"><img
+                            src="https://images.unsplash.com/photo-1543002588-bfa74002ed7e?w=400&q=80&auto=format&fit=crop"
+                            alt="Lin's pick" class="w-full h-full object-cover" loading="lazy" /></div>
+                    <h3 class="font-serif font-bold italic">Piranesi</h3>
+                    <p class="text-white/50 text-xs mt-1">Susanna Clarke</p>
+                    <p class="text-white/70 text-sm mt-3">"Dreamy, mysterious, and achingly beautiful. A book that feels
+                        like stepping into another world entirely."</p>
+                    <div class="flex items-center gap-2 mt-4">
+                        <div
+                            class="w-7 h-7 rounded-full bg-white/20 flex items-center justify-center text-[10px] font-bold">
+                            L</div>
+                        <p class="text-white/50 text-xs">— Lin, kids & YA</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== EVENTS ====== -->
+    <section id="events" class="py-20 md:py-28 bg-parchment">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-10 reveal">
+                <p class="text-sepia text-xs tracking-[0.3em] uppercase font-bold mb-3">In Store</p>
+                <h2 class="font-serif text-4xl md:text-5xl font-bold italic">Events</h2>
+            </div>
+            <div class="space-y-4">
+                <div
+                    class="card bg-snow border border-mist/50 rounded-2xl p-5 flex flex-col md:flex-row md:items-center gap-4 reveal">
+                    <div class="bg-sepiaPale rounded-xl p-3 text-center md:w-20 flex-shrink-0">
+                        <p class="font-serif text-2xl font-bold text-sepia">MAR</p>
+                        <p class="text-sepia text-xs">6th</p>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="font-bold text-lg">Author Reading: Carmen Maria Machado</h3>
+                        <p class="text-stone text-sm">Reading + signing for her new essay collection. Wine & cheese
+                            reception. Free & open to all.</p>
+                    </div>
+                    <span
+                        class="bg-forest text-white text-xs px-3 py-1.5 rounded-full font-bold flex-shrink-0">Free</span>
+                </div>
+                <div class="card bg-snow border border-mist/50 rounded-2xl p-5 flex flex-col md:flex-row md:items-center gap-4 reveal"
+                    style="transition-delay:.1s">
+                    <div class="bg-forestPale rounded-xl p-3 text-center md:w-20 flex-shrink-0">
+                        <p class="font-serif text-2xl font-bold text-forest">MAR</p>
+                        <p class="text-forest text-xs">14th</p>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="font-bold text-lg">Poetry Open Mic Night</h3>
+                        <p class="text-stone text-sm">Bring your own work or come to listen. 5-minute slots, sign up at
+                            the counter. Cider provided.</p>
+                    </div>
+                    <span
+                        class="bg-forest text-white text-xs px-3 py-1.5 rounded-full font-bold flex-shrink-0">Free</span>
+                </div>
+                <div class="card bg-snow border border-mist/50 rounded-2xl p-5 flex flex-col md:flex-row md:items-center gap-4 reveal"
+                    style="transition-delay:.15s">
+                    <div class="bg-winePale rounded-xl p-3 text-center md:w-20 flex-shrink-0">
+                        <p class="font-serif text-2xl font-bold text-wine">MAR</p>
+                        <p class="text-wine text-xs">22nd</p>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="font-bold text-lg">Kids Storytime: Spring Edition</h3>
+                        <p class="text-stone text-sm">Stories, crafts, and cookies for ages 3–8. Every Saturday at
+                            10:30am through April.</p>
+                    </div>
+                    <span
+                        class="bg-forest text-white text-xs px-3 py-1.5 rounded-full font-bold flex-shrink-0">Free</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== OUR STORY ====== -->
+    <section id="story" class="py-20 md:py-28 bg-snow">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div class="reveal"><img
+                        src="https://images.unsplash.com/photo-1507842217343-583bb7270b66?w=800&q=80&auto=format&fit=crop"
+                        alt="Chapter bookstore interior" class="w-full aspect-[4/3] object-cover rounded-2xl"
+                        loading="lazy" /></div>
+                <div class="reveal" style="transition-delay:.15s">
+                    <p class="text-sepia text-xs tracking-[0.3em] uppercase font-semibold mb-3">Est. 2011</p>
+                    <h2 class="font-serif text-4xl md:text-5xl font-bold italic mb-6">Our <span
+                            class="text-sepia">Story</span></h2>
+                    <div class="space-y-4 text-stone leading-relaxed">
+                        <p>Chapter started as a single shelf in a coffee shop. Thirteen years and four expansions later,
+                            we're home to 12,000 titles across two floors — plus Portland's coziest reading nook (the
+                            green velvet chair by the window, obviously).</p>
+                        <p>We believe bookstores are civic infrastructure. A place to think, argue, wonder, and belong.
+                            Every purchase here supports a local, independent business and keeps the shelves weird.</p>
+                    </div>
+                    <div class="grid grid-cols-3 gap-4 mt-8 text-center">
+                        <div>
+                            <p class="font-serif text-3xl font-bold text-sepia">12K</p>
+                            <p class="text-stone text-xs mt-1">Titles</p>
+                        </div>
+                        <div>
+                            <p class="font-serif text-3xl font-bold text-forest">200+</p>
+                            <p class="text-stone text-xs mt-1">Events/Year</p>
+                        </div>
+                        <div>
+                            <p class="font-serif text-3xl font-bold text-wine">13</p>
+                            <p class="text-stone text-xs mt-1">Years</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== CONTACT ====== -->
+    <section id="contact" class="py-20 md:py-28 bg-parchment">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <div class="reveal">
+                    <p class="text-sepia text-xs tracking-[0.3em] uppercase font-semibold mb-3">Visit</p>
+                    <h2 class="font-serif text-4xl md:text-5xl font-bold italic mb-6">Contact</h2>
+                    <div class="space-y-4 text-sm text-stone">
+                        <div class="flex items-center gap-3"><svg class="w-5 h-5 text-sepia" fill="none"
+                                stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
+                            </svg><span>1234 SE Hawthorne Blvd, Portland, OR 97214</span></div>
+                        <div class="flex items-center gap-3"><svg class="w-5 h-5 text-sepia" fill="none"
+                                stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z" />
+                            </svg><span>(503) 555-0342</span></div>
+                        <div class="flex items-center gap-3"><svg class="w-5 h-5 text-sepia" fill="none"
+                                stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+                            </svg><span>hello@chapterpdx.com</span></div>
+                    </div>
+                    <p class="text-stone text-sm mt-6"><strong>Hours:</strong> Mon–Sat 10am–8pm, Sun 10am–6pm</p>
+                </div>
+                <div class="reveal" style="transition-delay:.15s">
+                    <form class="bg-snow border border-mist/50 rounded-2xl p-6 md:p-8 space-y-4">
+                        <input type="text" placeholder="Name"
+                            class="w-full px-4 py-3 bg-parchment border border-mist focus:border-sepia outline-none text-sm rounded-xl transition" />
+                        <input type="email" placeholder="Email"
+                            class="w-full px-4 py-3 bg-parchment border border-mist focus:border-sepia outline-none text-sm rounded-xl transition" />
+                        <select
+                            class="w-full px-4 py-3 bg-parchment border border-mist focus:border-sepia outline-none text-sm text-stone rounded-xl transition">
+                            <option>I'd like to…</option>
+                            <option>Order a Book</option>
+                            <option>Host an Event</option>
+                            <option>Join the Book Club</option>
+                            <option>Just Say Hi</option>
+                        </select>
+                        <textarea rows="4" placeholder="Your message…"
+                            class="w-full px-4 py-3 bg-parchment border border-mist focus:border-sepia outline-none text-sm rounded-xl resize-none transition"></textarea>
+                        <button type="submit"
+                            class="btn-sepia w-full sm:w-auto px-10 py-3.5 bg-sepia text-white text-sm tracking-wider uppercase font-bold rounded-full">Send</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== FOOTER ====== -->
+    <footer class="bg-ink py-14">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-10">
+                <div class="col-span-2 md:col-span-1"><a href="#home" class="flex items-center gap-2"><span
+                            class="text-lg">📖</span><span
+                            class="font-serif text-lg italic text-white">Chapter</span></a>
+                    <p class="text-white/40 text-sm mt-3">Indie bookstore. Portland, OR.</p>
+                </div>
+                <div>
+                    <h4 class="text-white/50 text-xs tracking-wider uppercase mb-4">Browse</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-white/40 text-sm hover:text-sepia transition">Fiction</a></li>
+                        <li><a href="#" class="text-white/40 text-sm hover:text-sepia transition">Non-Fiction</a></li>
+                        <li><a href="#" class="text-white/40 text-sm hover:text-sepia transition">Poetry</a></li>
+                        <li><a href="#" class="text-white/40 text-sm hover:text-sepia transition">Children's</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white/50 text-xs tracking-wider uppercase mb-4">Visit</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-white/40 text-sm hover:text-sepia transition">Events</a></li>
+                        <li><a href="#" class="text-white/40 text-sm hover:text-sepia transition">Book Club</a></li>
+                        <li><a href="#" class="text-white/40 text-sm hover:text-sepia transition">Blog</a></li>
+                        <li><a href="#" class="text-white/40 text-sm hover:text-sepia transition">Gift Cards</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white/50 text-xs tracking-wider uppercase mb-4">Follow</h4>
+                    <div class="flex gap-3"><a href="#" aria-label="Instagram"
+                            class="text-white/40 hover:text-sepia transition"><svg class="w-5 h-5" fill="currentColor"
+                                viewBox="0 0 24 24">
+                                <path
+                                    d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" />
+                            </svg></a></div>
+                </div>
+            </div>
+            <div class="border-t border-white/10 pt-6 text-center">
+                <p class="text-white/30 text-xs">&copy; 2026 Chapter Bookstore. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('active'); observer.unobserve(e.target); } });
+            }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+            document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+        });
+    </script>
+</body>
+
+</html>

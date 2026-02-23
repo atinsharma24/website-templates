@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Terra & Thread — Sustainable Fashion</title>
+    <meta name="description"
+        content="Terra & Thread — Ethically made, earth-conscious clothing. Discover our story, shop the collection, and learn about our commitment to sustainable materials." />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Work+Sans:wght@300;400;500;600&display=swap"
+        rel="stylesheet" />
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        serif: ['"DM Serif Display"', 'Georgia', 'serif'],
+                        sans: ['"Work Sans"', 'system-ui', 'sans-serif'],
+                    },
+                    colors: {
+                        sage: '#8B9E7C',
+                        sageDark: '#6B7E5C',
+                        sand: '#F5F0E8',
+                        sandDark: '#E8DFD0',
+                        terracotta: '#C17D56',
+                        forest: '#2D3A2D',
+                        warmBrown: '#6B5B4E',
+                        parchment: '#FDFBF7',
+                    },
+                },
+            },
+        };
+    </script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Work Sans', system-ui, sans-serif;
+            background: #FDFBF7;
+            color: #2D3A2D;
+            overflow-x: hidden;
+        }
+
+        /* Organic blob shape for decorative elements */
+        .organic-shape {
+            border-radius: 60% 40% 50% 50% / 50% 60% 40% 50%;
+        }
+
+        /* Product hover */
+        .product-card-img {
+            overflow: hidden;
+        }
+
+        .product-card-img img {
+            transition: transform 0.6s ease;
+        }
+
+        .product-card-img:hover img {
+            transform: scale(1.05);
+        }
+
+        /* Reveal animation */
+        .reveal {
+            opacity: 0;
+            transform: translateY(25px);
+            transition: opacity 0.7s ease, transform 0.7s ease;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Parallax-like offset */
+        .parallax-offset {
+            transition: transform 0.3s ease;
+        }
+
+        /* Btn */
+        .btn-earth {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .btn-earth:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(139, 158, 124, 0.25);
+        }
+
+        /* Leaf badge */
+        .leaf-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 10px;
+            border-radius: 999px;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: 500;
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #FDFBF7;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #8B9E7C;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+
+<body x-data="{ mobileMenu: false }" class="bg-parchment text-forest">
+
+    <!-- ====== NAVIGATION ====== -->
+    <header class="fixed top-0 left-0 w-full z-50 bg-parchment/90 backdrop-blur-md border-b border-sandDark/40">
+        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16 md:h-20">
+                <a href="#story" class="font-serif text-2xl md:text-3xl">
+                    Terra <span class="text-sage">&</span> Thread
+                </a>
+
+                <ul
+                    class="hidden md:flex items-center space-x-8 font-sans text-sm tracking-wider uppercase text-warmBrown">
+                    <li><a href="#story" class="hover:text-sage transition">Our Story</a></li>
+                    <li><a href="#collection" class="hover:text-sage transition">Shop</a></li>
+                    <li><a href="#materials" class="hover:text-sage transition">Materials</a></li>
+                    <li><a href="#journal" class="hover:text-sage transition">Journal</a></li>
+                </ul>
+
+                <div class="hidden md:flex items-center gap-3">
+                    <button aria-label="Search" class="p-2 text-warmBrown hover:text-sage transition">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M21 21l-5.197-5.197M15.803 15.803A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+                        </svg>
+                    </button>
+                    <button aria-label="Cart" class="p-2 text-warmBrown hover:text-sage transition relative">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007z" />
+                        </svg>
+                        <span
+                            class="absolute -top-1 -right-1 bg-sage text-white text-xs w-4 h-4 flex items-center justify-center rounded-full">1</span>
+                    </button>
+                </div>
+
+                <button @click="mobileMenu = !mobileMenu" class="md:hidden p-2 text-forest" aria-label="Toggle menu">
+                    <svg x-show="!mobileMenu" class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.5"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 9h16.5m-16.5 6.75h16.5" />
+                    </svg>
+                    <svg x-show="mobileMenu" x-cloak class="w-6 h-6" fill="none" stroke="currentColor"
+                        stroke-width="1.5" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+
+            <div x-show="mobileMenu" x-cloak x-transition class="md:hidden pb-6 border-t border-sandDark/40">
+                <ul class="flex flex-col space-y-4 pt-4 font-sans text-sm tracking-wider uppercase">
+                    <li><a @click="mobileMenu=false" href="#story" class="block py-1 text-warmBrown hover:text-sage">Our
+                            Story</a></li>
+                    <li><a @click="mobileMenu=false" href="#collection"
+                            class="block py-1 text-warmBrown hover:text-sage">Shop</a></li>
+                    <li><a @click="mobileMenu=false" href="#materials"
+                            class="block py-1 text-warmBrown hover:text-sage">Materials</a></li>
+                    <li><a @click="mobileMenu=false" href="#journal"
+                            class="block py-1 text-warmBrown hover:text-sage">Journal</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <!-- ====== HERO / OUR STORY ====== -->
+    <section id="story" class="relative min-h-screen flex items-center overflow-hidden">
+        <div class="absolute inset-0">
+            <img src="https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=1920&q=80&auto=format&fit=crop"
+                alt="Sustainable linen clothing on a wooden rack in golden light" class="w-full h-full object-cover" />
+            <div class="absolute inset-0 bg-gradient-to-r from-parchment/85 via-parchment/60 to-transparent"></div>
+        </div>
+
+        <!-- Decorative organic shape -->
+        <div class="absolute top-20 right-10 w-64 h-64 bg-sage/10 organic-shape blur-3xl hidden lg:block"></div>
+
+        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-32">
+            <div class="max-w-xl">
+                <span class="leaf-badge bg-sage/15 text-sage mb-6">
+                    <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
+                        <path
+                            d="M17 8C8 10 5.9 16.17 3.82 21.34l1.89.66.95-2.3c.48.17.98.3 1.34.3C19 20 22 3 22 3c-1 2-8 2.25-13 3.25S2 11.5 2 13.5s1.75 3.75 1.75 3.75C7 8 17 8 17 8z" />
+                    </svg>
+                    Ethically Made
+                </span>
+                <h1 class="font-serif text-5xl sm:text-6xl lg:text-7xl leading-[1.1] mb-6">
+                    Fashion That <br /><span class="italic text-sage">Gives Back</span>
+                </h1>
+                <p class="font-sans text-base sm:text-lg text-warmBrown leading-relaxed mb-8 max-w-lg">
+                    Every thread tells a story of ethical sourcing, artisan craftsmanship, and a deep reverence for the
+                    planet. We don't just make clothes — we make a difference.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <a href="#collection"
+                        class="btn-earth inline-flex items-center justify-center px-8 py-3.5 bg-sage text-white text-sm tracking-wider uppercase font-medium rounded-full hover:bg-sageDark transition">
+                        Shop Collection
+                    </a>
+                    <a href="#story-detail"
+                        class="btn-earth inline-flex items-center justify-center px-8 py-3.5 border border-forest/30 text-forest text-sm tracking-wider uppercase font-medium rounded-full hover:bg-forest hover:text-white transition">
+                        Read Our Story
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== IMPACT STATS BAR ====== -->
+    <section class="bg-sage py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center text-white">
+                <div>
+                    <p class="font-serif text-3xl md:text-4xl">12k+</p>
+                    <p class="text-white/70 text-xs tracking-wider uppercase mt-1">Trees Planted</p>
+                </div>
+                <div>
+                    <p class="font-serif text-3xl md:text-4xl">100%</p>
+                    <p class="text-white/70 text-xs tracking-wider uppercase mt-1">Organic Fabrics</p>
+                </div>
+                <div>
+                    <p class="font-serif text-3xl md:text-4xl">Zero</p>
+                    <p class="text-white/70 text-xs tracking-wider uppercase mt-1">Plastic Packaging</p>
+                </div>
+                <div>
+                    <p class="font-serif text-3xl md:text-4xl">85</p>
+                    <p class="text-white/70 text-xs tracking-wider uppercase mt-1">Artisan Partners</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== OUR STORY DETAIL ====== -->
+    <section id="story-detail" class="py-20 md:py-28 bg-parchment">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+                <div class="reveal order-2 lg:order-1">
+                    <p class="text-sage text-xs tracking-[0.3em] uppercase mb-3 font-medium">Our Story</p>
+                    <h2 class="font-serif text-4xl md:text-5xl leading-tight mb-6">Born From the <span
+                            class="italic">Earth</span></h2>
+                    <div class="space-y-4 text-warmBrown leading-relaxed">
+                        <p>
+                            Terra & Thread began in a small workshop in Portugal, where founder Ana Ferreira watched the
+                            fast fashion industry devastate local textile communities. She envisioned a different path —
+                            one where garments are created slowly, with intention, using only materials that honor the
+                            land they come from.
+                        </p>
+                        <p>
+                            Today, every piece in our collection is crafted from certified organic cotton, TENCEL™
+                            lyocell, or reclaimed deadstock fabrics. We work exclusively with Fair Trade certified
+                            workshops across Portugal, India, and Peru, ensuring living wages and safe working
+                            conditions for every hand that touches your clothes.
+                        </p>
+                        <p>
+                            We believe transparency isn't a marketing tactic — it's a responsibility. That's why every
+                            product page tells you exactly where your garment was made, what it's made from, and the
+                            true cost of production.
+                        </p>
+                    </div>
+                    <a href="#"
+                        class="btn-earth inline-flex items-center mt-8 px-6 py-3 bg-forest text-white text-sm tracking-wider uppercase font-medium rounded-full hover:bg-forest/90 transition">
+                        Our Full Story
+                        <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.5"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" />
+                        </svg>
+                    </a>
+                </div>
+
+                <div class="reveal order-1 lg:order-2" style="transition-delay:0.15s">
+                    <div class="relative">
+                        <img src="https://images.unsplash.com/photo-1558171813-4c088753af8f?w=800&q=80&auto=format&fit=crop"
+                            alt="Artisan working with natural fabrics in a sunlit workshop"
+                            class="w-full aspect-[4/5] object-cover rounded-2xl" loading="lazy" />
+                        <div class="absolute -bottom-5 -left-5 w-40 h-40 bg-sage/15 organic-shape -z-10"></div>
+                        <div class="absolute -top-5 -right-5 w-24 h-24 bg-terracotta/10 organic-shape -z-10"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== SHOP COLLECTION ====== -->
+    <section id="collection" class="py-20 md:py-28 bg-sand">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-14 reveal">
+                <p class="text-sage text-xs tracking-[0.3em] uppercase mb-3 font-medium">Curated With Care</p>
+                <h2 class="font-serif text-4xl md:text-5xl">Shop Collection</h2>
+                <p class="text-warmBrown mt-4 max-w-lg mx-auto">Every piece is designed to be timeless, versatile, and
+                    kind to the planet. Made to wear for years — not seasons.</p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Product 1 -->
+                <div class="group reveal">
+                    <div class="product-card-img aspect-[3/4] bg-sandDark/30 rounded-xl mb-4 relative">
+                        <img src="https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=600&q=80&auto=format&fit=crop"
+                            alt="Organic linen shirt dress" class="w-full h-full object-cover rounded-xl"
+                            loading="lazy" />
+                        <span class="leaf-badge bg-white/90 text-sage absolute top-3 left-3">
+                            <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
+                                <path
+                                    d="M17 8C8 10 5.9 16.17 3.82 21.34l1.89.66.95-2.3c.48.17.98.3 1.34.3C19 20 22 3 22 3c-1 2-8 2.25-13 3.25S2 11.5 2 13.5s1.75 3.75 1.75 3.75C7 8 17 8 17 8z" />
+                            </svg>
+                            Organic Cotton
+                        </span>
+                    </div>
+                    <h3 class="font-serif text-lg">Sienna Shirt Dress</h3>
+                    <p class="text-warmBrown text-sm mt-0.5">Handwoven organic cotton &middot; Made in Portugal</p>
+                    <p class="text-sage font-medium mt-1">$148.00</p>
+                </div>
+
+                <!-- Product 2 -->
+                <div class="group reveal" style="transition-delay:0.1s">
+                    <div class="product-card-img aspect-[3/4] bg-sandDark/30 rounded-xl mb-4 relative">
+                        <img src="https://images.unsplash.com/photo-1551854838-212c50b4c184?w=600&q=80&auto=format&fit=crop"
+                            alt="TENCEL wide-leg trousers" class="w-full h-full object-cover rounded-xl"
+                            loading="lazy" />
+                        <span class="leaf-badge bg-white/90 text-sage absolute top-3 left-3">
+                            <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
+                                <path
+                                    d="M17 8C8 10 5.9 16.17 3.82 21.34l1.89.66.95-2.3c.48.17.98.3 1.34.3C19 20 22 3 22 3c-1 2-8 2.25-13 3.25S2 11.5 2 13.5s1.75 3.75 1.75 3.75C7 8 17 8 17 8z" />
+                            </svg>
+                            TENCEL™
+                        </span>
+                    </div>
+                    <h3 class="font-serif text-lg">Willow Wide-Leg Trousers</h3>
+                    <p class="text-warmBrown text-sm mt-0.5">TENCEL™ lyocell blend &middot; Made in India</p>
+                    <p class="text-sage font-medium mt-1">$118.00</p>
+                </div>
+
+                <!-- Product 3 -->
+                <div class="group reveal" style="transition-delay:0.2s">
+                    <div class="product-card-img aspect-[3/4] bg-sandDark/30 rounded-xl mb-4 relative">
+                        <img src="https://images.unsplash.com/photo-1434389677669-e08b4cda3a78?w=600&q=80&auto=format&fit=crop"
+                            alt="Recycled wool cardigan" class="w-full h-full object-cover rounded-xl" loading="lazy" />
+                        <span class="leaf-badge bg-white/90 text-sage absolute top-3 left-3">
+                            <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
+                                <path
+                                    d="M17 8C8 10 5.9 16.17 3.82 21.34l1.89.66.95-2.3c.48.17.98.3 1.34.3C19 20 22 3 22 3c-1 2-8 2.25-13 3.25S2 11.5 2 13.5s1.75 3.75 1.75 3.75C7 8 17 8 17 8z" />
+                            </svg>
+                            Recycled Wool
+                        </span>
+                    </div>
+                    <h3 class="font-serif text-lg">Moss Oversized Cardigan</h3>
+                    <p class="text-warmBrown text-sm mt-0.5">70% recycled merino wool &middot; Made in Peru</p>
+                    <p class="text-sage font-medium mt-1">$185.00</p>
+                </div>
+
+                <!-- Product 4 -->
+                <div class="group reveal">
+                    <div class="product-card-img aspect-[3/4] bg-sandDark/30 rounded-xl mb-4 relative">
+                        <img src="https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=600&q=80&auto=format&fit=crop"
+                            alt="Organic denim jacket" class="w-full h-full object-cover rounded-xl" loading="lazy" />
+                        <span class="leaf-badge bg-white/90 text-sage absolute top-3 left-3">
+                            <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
+                                <path
+                                    d="M17 8C8 10 5.9 16.17 3.82 21.34l1.89.66.95-2.3c.48.17.98.3 1.34.3C19 20 22 3 22 3c-1 2-8 2.25-13 3.25S2 11.5 2 13.5s1.75 3.75 1.75 3.75C7 8 17 8 17 8z" />
+                            </svg>
+                            Organic Cotton
+                        </span>
+                    </div>
+                    <h3 class="font-serif text-lg">Clay Denim Chore Jacket</h3>
+                    <p class="text-warmBrown text-sm mt-0.5">100% organic selvedge denim &middot; Made in Portugal</p>
+                    <p class="text-sage font-medium mt-1">$195.00</p>
+                </div>
+
+                <!-- Product 5 -->
+                <div class="group reveal" style="transition-delay:0.1s">
+                    <div class="product-card-img aspect-[3/4] bg-sandDark/30 rounded-xl mb-4 relative">
+                        <img src="https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=600&q=80&auto=format&fit=crop"
+                            alt="Cork and canvas tote" class="w-full h-full object-cover rounded-xl" loading="lazy" />
+                        <span class="leaf-badge bg-white/90 text-sage absolute top-3 left-3">
+                            <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
+                                <path
+                                    d="M17 8C8 10 5.9 16.17 3.82 21.34l1.89.66.95-2.3c.48.17.98.3 1.34.3C19 20 22 3 22 3c-1 2-8 2.25-13 3.25S2 11.5 2 13.5s1.75 3.75 1.75 3.75C7 8 17 8 17 8z" />
+                            </svg>
+                            Vegan
+                        </span>
+                    </div>
+                    <h3 class="font-serif text-lg">Heritage Canvas Tote</h3>
+                    <p class="text-warmBrown text-sm mt-0.5">Organic canvas &amp; cork &middot; Made in Portugal</p>
+                    <p class="text-sage font-medium mt-1">$68.00</p>
+                </div>
+
+                <!-- Product 6 -->
+                <div class="group reveal" style="transition-delay:0.2s">
+                    <div class="product-card-img aspect-[3/4] bg-sandDark/30 rounded-xl mb-4 relative">
+                        <img src="https://images.unsplash.com/photo-1564584217132-2271feaeb3c5?w=600&q=80&auto=format&fit=crop"
+                            alt="Linen wrap top" class="w-full h-full object-cover rounded-xl" loading="lazy" />
+                        <span class="leaf-badge bg-white/90 text-sage absolute top-3 left-3">
+                            <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
+                                <path
+                                    d="M17 8C8 10 5.9 16.17 3.82 21.34l1.89.66.95-2.3c.48.17.98.3 1.34.3C19 20 22 3 22 3c-1 2-8 2.25-13 3.25S2 11.5 2 13.5s1.75 3.75 1.75 3.75C7 8 17 8 17 8z" />
+                            </svg>
+                            European Linen
+                        </span>
+                    </div>
+                    <h3 class="font-serif text-lg">Ivory Linen Wrap Top</h3>
+                    <p class="text-warmBrown text-sm mt-0.5">Belgian linen &middot; Made in Portugal</p>
+                    <p class="text-sage font-medium mt-1">$92.00</p>
+                </div>
+            </div>
+
+            <div class="text-center mt-12 reveal">
+                <a href="#"
+                    class="btn-earth inline-flex items-center px-8 py-3.5 bg-forest text-white text-sm tracking-wider uppercase font-medium rounded-full hover:bg-forest/90 transition">
+                    View Full Collection
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== MATERIALS ====== -->
+    <section id="materials" class="py-20 md:py-28 bg-parchment">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-14 reveal">
+                <p class="text-sage text-xs tracking-[0.3em] uppercase mb-3 font-medium">What We're Made Of</p>
+                <h2 class="font-serif text-4xl md:text-5xl">Our Materials</h2>
+                <p class="text-warmBrown mt-4 max-w-lg mx-auto">We obsess over sourcing so you don't have to. Every
+                    fabric is chosen for its minimal environmental footprint and maximum comfort.</p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Material 1 -->
+                <div class="reveal bg-sand rounded-2xl p-6 text-center hover:shadow-lg transition-shadow">
+                    <div class="w-16 h-16 mx-auto bg-sage/15 rounded-full flex items-center justify-center mb-4">
+                        <svg class="w-8 h-8 text-sage" fill="none" stroke="currentColor" stroke-width="1.5"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M12.75 3.03v.568c0 .334.148.65.405.864l1.068.89c.442.369.535 1.01.216 1.49l-.51.766a2.25 2.25 0 01-1.161.886l-.143.048a1.107 1.107 0 00-.57 1.664c.369.555.169 1.307-.427 1.605L9 13.125l.423 1.059a.956.956 0 01-1.652.928l-.679-.906a1.125 1.125 0 00-1.906.172L4.5 15.75l-.612.153M12.75 3.031a9 9 0 00-8.862 12.872M12.75 3.031a9 9 0 016.69 14.036m0 0l-.177-.529A2.25 2.25 0 0017.128 15H16.5l-.324-.324a1.453 1.453 0 00-2.328.377l-.036.073a1.586 1.586 0 01-.982.816l-.99.282c-.55.157-.894.702-.8 1.267l.073.438c.08.474.49.821.97.821.846 0 1.598.542 1.865 1.345l.215.643m5.276-3.67a9.012 9.012 0 01-5.276 3.67" />
+                        </svg>
+                    </div>
+                    <h3 class="font-serif text-xl mb-2">Organic Cotton</h3>
+                    <p class="text-warmBrown text-sm leading-relaxed">GOTS-certified organic cotton grown without
+                        pesticides or synthetic fertilizers. Uses 91% less water than conventional cotton farming.</p>
+                </div>
+
+                <!-- Material 2 -->
+                <div class="reveal bg-sand rounded-2xl p-6 text-center hover:shadow-lg transition-shadow"
+                    style="transition-delay:0.1s">
+                    <div class="w-16 h-16 mx-auto bg-sage/15 rounded-full flex items-center justify-center mb-4">
+                        <svg class="w-8 h-8 text-sage" fill="none" stroke="currentColor" stroke-width="1.5"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.455 2.456L21.75 6l-1.036.259a3.375 3.375 0 00-2.455 2.456z" />
+                        </svg>
+                    </div>
+                    <h3 class="font-serif text-xl mb-2">TENCEL™ Lyocell</h3>
+                    <p class="text-warmBrown text-sm leading-relaxed">Made from sustainably harvested wood pulp in a
+                        closed-loop process that recovers 99.7% of solvents. Silky, breathable, fully biodegradable.</p>
+                </div>
+
+                <!-- Material 3 -->
+                <div class="reveal bg-sand rounded-2xl p-6 text-center hover:shadow-lg transition-shadow"
+                    style="transition-delay:0.2s">
+                    <div class="w-16 h-16 mx-auto bg-sage/15 rounded-full flex items-center justify-center mb-4">
+                        <svg class="w-8 h-8 text-sage" fill="none" stroke="currentColor" stroke-width="1.5"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182" />
+                        </svg>
+                    </div>
+                    <h3 class="font-serif text-xl mb-2">Recycled Wool</h3>
+                    <p class="text-warmBrown text-sm leading-relaxed">Post-industrial and post-consumer wool fibers
+                        given a second life. Diverts textile waste from landfills while delivering the warmth of virgin
+                        wool.</p>
+                </div>
+
+                <!-- Material 4 -->
+                <div class="reveal bg-sand rounded-2xl p-6 text-center hover:shadow-lg transition-shadow"
+                    style="transition-delay:0.3s">
+                    <div class="w-16 h-16 mx-auto bg-sage/15 rounded-full flex items-center justify-center mb-4">
+                        <svg class="w-8 h-8 text-sage" fill="none" stroke="currentColor" stroke-width="1.5"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M15.362 5.214A8.252 8.252 0 0112 21 8.25 8.25 0 016.038 7.048 8.287 8.287 0 009 9.6a8.983 8.983 0 013.361-6.867 8.21 8.21 0 003 2.48z" />
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M12 18a3.75 3.75 0 00.495-7.467 5.99 5.99 0 00-1.925 3.546 5.974 5.974 0 01-2.133-1.001A3.75 3.75 0 0012 18z" />
+                        </svg>
+                    </div>
+                    <h3 class="font-serif text-xl mb-2">European Linen</h3>
+                    <p class="text-warmBrown text-sm leading-relaxed">Flax grown in Belgium and France with zero
+                        irrigation and zero GMOs. Natural temperature regulation and only gets softer with every wash.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== QUOTE BANNER ====== -->
+    <section class="relative py-28 md:py-36 overflow-hidden">
+        <div class="absolute inset-0">
+            <img src="https://images.unsplash.com/photo-1501004318855-b174af83defd?w=1920&q=80&auto=format&fit=crop"
+                alt="Cotton fields at sunset" class="w-full h-full object-cover" loading="lazy" />
+            <div class="absolute inset-0 bg-forest/60"></div>
+        </div>
+        <div class="relative z-10 max-w-3xl mx-auto px-4 text-center text-white reveal">
+            <h2 class="font-serif text-3xl md:text-5xl italic leading-tight mb-6">"The most sustainable garment is the
+                one already in your closet. The second most sustainable is one built to last a lifetime."</h2>
+            <p class="text-white/60">— Yvon Chouinard</p>
+        </div>
+    </section>
+
+    <!-- ====== JOURNAL ====== -->
+    <section id="journal" class="py-20 md:py-28 bg-parchment">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 reveal">
+                <div>
+                    <p class="text-sage text-xs tracking-[0.3em] uppercase mb-2 font-medium">Stories & Thoughts</p>
+                    <h2 class="font-serif text-4xl md:text-5xl">The Journal</h2>
+                </div>
+                <a href="#"
+                    class="text-sage text-sm font-medium tracking-wider uppercase mt-4 md:mt-0 hover:text-sageDark transition">View
+                    All Entries →</a>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Journal 1 -->
+                <article class="group reveal">
+                    <div class="overflow-hidden rounded-xl aspect-[16/10] bg-sand mb-4">
+                        <img src="https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=600&q=80&auto=format&fit=crop"
+                            alt="Journal cover"
+                            class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                            loading="lazy" />
+                    </div>
+                    <span class="leaf-badge bg-sage/10 text-sage mb-3">Sustainability</span>
+                    <h3 class="font-serif text-xl mt-2 group-hover:text-sage transition">What Does "Ethical Fashion"
+                        Actually Mean in 2026?</h3>
+                    <p class="text-warmBrown text-sm mt-2 leading-relaxed">We unpack the greenwashing epidemic and share
+                        the five questions you should ask every brand before you buy — including us.</p>
+                    <p class="text-warmBrown/50 text-xs mt-3">February 15, 2026 &middot; 6 min read</p>
+                </article>
+
+                <!-- Journal 2 -->
+                <article class="group reveal" style="transition-delay:0.1s">
+                    <div class="overflow-hidden rounded-xl aspect-[16/10] bg-sand mb-4">
+                        <img src="https://images.unsplash.com/photo-1558171813-4c088753af8f?w=600&q=80&auto=format&fit=crop"
+                            alt="Journal cover"
+                            class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                            loading="lazy" />
+                    </div>
+                    <span class="leaf-badge bg-terracotta/10 text-terracotta mb-3">Behind The Scenes</span>
+                    <h3 class="font-serif text-xl mt-2 group-hover:text-sage transition">Meet The Artisans: A Week in
+                        Our Porto Workshop</h3>
+                    <p class="text-warmBrown text-sm mt-2 leading-relaxed">We spent a week with the hands that craft
+                        your garments. From pattern cutting at dawn to the final press — here's what we witnessed.</p>
+                    <p class="text-warmBrown/50 text-xs mt-3">February 8, 2026 &middot; 8 min read</p>
+                </article>
+
+                <!-- Journal 3 -->
+                <article class="group reveal" style="transition-delay:0.2s">
+                    <div class="overflow-hidden rounded-xl aspect-[16/10] bg-sand mb-4">
+                        <img src="https://images.unsplash.com/photo-1501004318855-b174af83defd?w=600&q=80&auto=format&fit=crop"
+                            alt="Journal cover"
+                            class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                            loading="lazy" />
+                    </div>
+                    <span class="leaf-badge bg-sage/10 text-sage mb-3">Materials</span>
+                    <h3 class="font-serif text-xl mt-2 group-hover:text-sage transition">The Linen Renaissance: Why This
+                        Ancient Fabric Is the Future</h3>
+                    <p class="text-warmBrown text-sm mt-2 leading-relaxed">Linen predates written history, yet it might
+                        be the most forward-thinking textile on the planet. Here's the science behind the softness.</p>
+                    <p class="text-warmBrown/50 text-xs mt-3">January 29, 2026 &middot; 5 min read</p>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== NEWSLETTER ====== -->
+    <section class="bg-forest py-16 md:py-20">
+        <div class="max-w-3xl mx-auto px-4 text-center">
+            <h2 class="font-serif text-3xl md:text-4xl text-white mb-3">Join Our <span
+                    class="italic text-sage">Community</span></h2>
+            <p class="text-white/50 text-sm mb-8 max-w-md mx-auto">Slow fashion updates, behind-the-scenes stories, and
+                early access to new collections — delivered thoughtfully, not excessively.</p>
+            <form class="flex flex-col sm:flex-row gap-3 max-w-lg mx-auto">
+                <input type="email" placeholder="your@email.com"
+                    class="flex-1 px-5 py-3.5 bg-white/10 border border-white/20 text-white placeholder-white/40 text-sm rounded-full focus:border-sage outline-none transition" />
+                <button type="submit"
+                    class="btn-earth px-8 py-3.5 bg-sage text-white text-sm tracking-wider uppercase font-medium rounded-full hover:bg-sageDark transition">Subscribe</button>
+            </form>
+            <p class="text-white/30 text-xs mt-4">We send one thoughtful email per month. Unsubscribe anytime.</p>
+        </div>
+    </section>
+
+    <!-- ====== FOOTER ====== -->
+    <footer class="bg-forest border-t border-white/5 py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
+                <div class="col-span-2 md:col-span-1">
+                    <a href="#story" class="font-serif text-2xl text-white">Terra <span class="text-sage">&</span>
+                        Thread</a>
+                    <p class="text-white/40 text-sm mt-3 leading-relaxed">Earth-conscious clothing made with love,
+                        transparency, and a deep respect for our planet.</p>
+                    <!-- Certifications -->
+                    <div class="flex gap-2 mt-4">
+                        <span class="leaf-badge bg-sage/20 text-sage text-[10px]">B Corp</span>
+                        <span class="leaf-badge bg-sage/20 text-sage text-[10px]">GOTS</span>
+                        <span class="leaf-badge bg-sage/20 text-sage text-[10px]">Fair Trade</span>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="text-white/60 text-xs tracking-wider uppercase mb-4">Shop</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-white/40 text-sm hover:text-sage transition">All Products</a></li>
+                        <li><a href="#" class="text-white/40 text-sm hover:text-sage transition">Tops</a></li>
+                        <li><a href="#" class="text-white/40 text-sm hover:text-sage transition">Bottoms</a></li>
+                        <li><a href="#" class="text-white/40 text-sm hover:text-sage transition">Outerwear</a></li>
+                        <li><a href="#" class="text-white/40 text-sm hover:text-sage transition">Accessories</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white/60 text-xs tracking-wider uppercase mb-4">About</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-white/40 text-sm hover:text-sage transition">Our Story</a></li>
+                        <li><a href="#" class="text-white/40 text-sm hover:text-sage transition">Materials</a></li>
+                        <li><a href="#" class="text-white/40 text-sm hover:text-sage transition">Impact Report</a></li>
+                        <li><a href="#" class="text-white/40 text-sm hover:text-sage transition">Careers</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white/60 text-xs tracking-wider uppercase mb-4">Support</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-white/40 text-sm hover:text-sage transition">FAQ</a></li>
+                        <li><a href="#" class="text-white/40 text-sm hover:text-sage transition">Shipping & Returns</a>
+                        </li>
+                        <li><a href="#" class="text-white/40 text-sm hover:text-sage transition">Size Guide</a></li>
+                        <li><a href="#" class="text-white/40 text-sm hover:text-sage transition">Contact Us</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-white/10 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
+                <p class="text-white/30 text-xs">&copy; 2026 Terra & Thread. All rights reserved.</p>
+                <div class="flex items-center gap-4">
+                    <a href="#" aria-label="Instagram" class="text-white/30 hover:text-sage transition"><svg
+                            class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                            <path
+                                d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" />
+                        </svg></a>
+                    <a href="#" aria-label="Pinterest" class="text-white/30 hover:text-sage transition"><svg
+                            class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                            <path
+                                d="M12.017 0C5.396 0 .029 5.367.029 11.987c0 5.079 3.158 9.417 7.618 11.162-.105-.949-.199-2.403.041-3.439.219-.937 1.406-5.957 1.406-5.957s-.359-.72-.359-1.781c0-1.668.967-2.914 2.171-2.914 1.023 0 1.518.769 1.518 1.69 0 1.029-.655 2.568-.994 3.995-.283 1.194.599 2.169 1.777 2.169 2.133 0 3.772-2.249 3.772-5.495 0-2.873-2.064-4.882-5.012-4.882-3.414 0-5.418 2.561-5.418 5.207 0 1.031.397 2.138.893 2.738a.36.36 0 01.083.345l-.333 1.36c-.053.22-.174.267-.402.161-1.499-.698-2.436-2.889-2.436-4.649 0-3.785 2.75-7.262 7.929-7.262 4.163 0 7.398 2.967 7.398 6.931 0 4.136-2.607 7.464-6.227 7.464-1.216 0-2.359-.631-2.75-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24 12.017 24c6.624 0 11.99-5.367 11.99-11.988C24.007 5.367 18.641.001 12.017.001z" />
+                        </svg></a>
+                    <a href="#" aria-label="Twitter" class="text-white/30 hover:text-sage transition"><svg
+                            class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                            <path
+                                d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                        </svg></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ====== SCROLL REVEAL ====== -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const reveals = document.querySelectorAll('.reveal');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+            reveals.forEach(el => observer.observe(el));
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>VØLT — Urban Streetwear</title>
+    <meta name="description"
+        content="VØLT — Bold streetwear for the culturally awake. Shop drops, lookbooks, and stories from the underground." />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap"
+        rel="stylesheet" />
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        display: ['"Space Grotesk"', 'system-ui', 'sans-serif'],
+                        body: ['"Inter"', 'system-ui', 'sans-serif'],
+                    },
+                    colors: {
+                        dark: '#0A0A0A',
+                        darkCard: '#141414',
+                        darkBorder: '#1F1F1F',
+                        neon: '#CCFF00',
+                        electricBlue: '#00D4FF',
+                        offWhite: '#E8E8E8',
+                        mutedGray: '#6B6B6B',
+                    },
+                },
+            },
+        };
+    </script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            background: #0A0A0A;
+            color: #E8E8E8;
+            overflow-x: hidden;
+        }
+
+        /* Neon glow on hover */
+        .glow-hover {
+            transition: box-shadow 0.3s ease, transform 0.3s ease;
+        }
+
+        .glow-hover:hover {
+            box-shadow: 0 0 25px rgba(204, 255, 0, 0.3);
+            transform: translateY(-3px);
+        }
+
+        /* Product card scale */
+        .product-card img {
+            transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94), filter 0.5s ease;
+        }
+
+        .product-card:hover img {
+            transform: scale(1.06);
+            filter: brightness(1.1);
+        }
+
+        /* Glitch effect on hero title */
+        @keyframes glitch {
+
+            0%,
+            100% {
+                transform: translate(0)
+            }
+
+            20% {
+                transform: translate(-2px, 2px)
+            }
+
+            40% {
+                transform: translate(2px, -1px)
+            }
+
+            60% {
+                transform: translate(-1px, -2px)
+            }
+
+            80% {
+                transform: translate(1px, 1px)
+            }
+        }
+
+        .glitch-hover:hover {
+            animation: glitch 0.3s ease;
+        }
+
+        /* Reveal */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.7s ease, transform 0.7s ease;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Marquee */
+        @keyframes marquee {
+            0% {
+                transform: translateX(0)
+            }
+
+            100% {
+                transform: translateX(-50%)
+            }
+        }
+
+        .marquee-track {
+            animation: marquee 20s linear infinite;
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #0A0A0A;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #CCFF00;
+            border-radius: 3px;
+        }
+
+        /* Tag pill */
+        .tag-pill {
+            transition: background 0.2s ease, color 0.2s ease;
+        }
+
+        .tag-pill:hover,
+        .tag-pill.active {
+            background: #CCFF00;
+            color: #0A0A0A;
+        }
+    </style>
+</head>
+
+<body x-data="{ mobileMenu: false, cartOpen: false, activeFilter: 'all' }" class="bg-dark text-offWhite">
+
+    <!-- ====== NAVIGATION ====== -->
+    <header class="fixed top-0 left-0 w-full z-50 bg-dark/90 backdrop-blur-md border-b border-darkBorder">
+        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16 md:h-20">
+                <a href="#home" class="font-display text-2xl md:text-3xl font-bold tracking-tighter">
+                    VØ<span class="text-neon">LT</span>
+                </a>
+
+                <ul class="hidden md:flex items-center space-x-8 font-body text-sm tracking-wider uppercase">
+                    <li><a href="#home" class="text-offWhite/60 hover:text-neon transition">Home</a></li>
+                    <li><a href="#shop" class="text-offWhite/60 hover:text-neon transition">Shop</a></li>
+                    <li><a href="#lookbook" class="text-offWhite/60 hover:text-neon transition">Lookbook</a></li>
+                    <li><a href="#blog" class="text-offWhite/60 hover:text-neon transition">Blog</a></li>
+                </ul>
+
+                <div class="hidden md:flex items-center gap-4">
+                    <button aria-label="Search" class="p-2 text-offWhite/50 hover:text-neon transition">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M21 21l-5.197-5.197M15.803 15.803A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+                        </svg>
+                    </button>
+                    <button @click="cartOpen = !cartOpen" aria-label="Cart"
+                        class="p-2 text-offWhite/50 hover:text-neon transition relative">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007z" />
+                        </svg>
+                        <span
+                            class="absolute -top-1 -right-1 bg-neon text-dark text-xs font-bold w-4 h-4 flex items-center justify-center rounded-full">3</span>
+                    </button>
+                </div>
+
+                <button @click="mobileMenu = !mobileMenu" class="md:hidden p-2 text-offWhite" aria-label="Toggle menu">
+                    <svg x-show="!mobileMenu" class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.5"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 9h16.5m-16.5 6.75h16.5" />
+                    </svg>
+                    <svg x-show="mobileMenu" x-cloak class="w-6 h-6" fill="none" stroke="currentColor"
+                        stroke-width="1.5" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Mobile Menu -->
+            <div x-show="mobileMenu" x-cloak x-transition class="md:hidden pb-6 border-t border-darkBorder">
+                <ul class="flex flex-col space-y-4 pt-4 font-body text-sm tracking-wider uppercase">
+                    <li><a @click="mobileMenu=false" href="#home"
+                            class="block py-1 text-offWhite/60 hover:text-neon">Home</a></li>
+                    <li><a @click="mobileMenu=false" href="#shop"
+                            class="block py-1 text-offWhite/60 hover:text-neon">Shop</a></li>
+                    <li><a @click="mobileMenu=false" href="#lookbook"
+                            class="block py-1 text-offWhite/60 hover:text-neon">Lookbook</a></li>
+                    <li><a @click="mobileMenu=false" href="#blog"
+                            class="block py-1 text-offWhite/60 hover:text-neon">Blog</a></li>
+                    <li><a @click="mobileMenu=false; cartOpen=true" href="#" class="block py-1 text-neon">Cart (3)</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <!-- ====== CART SIDEBAR OVERLAY ====== -->
+    <div x-show="cartOpen" x-cloak class="fixed inset-0 z-[60]" @keydown.escape.window="cartOpen = false">
+        <div @click="cartOpen=false" class="absolute inset-0 bg-black/60"
+            x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0"
+            x-transition:enter-end="opacity-100"></div>
+        <aside x-transition:enter="transition ease-out duration-300" x-transition:enter-start="translate-x-full"
+            x-transition:enter-end="translate-x-0" x-transition:leave="transition ease-in duration-200"
+            x-transition:leave-start="translate-x-0" x-transition:leave-end="translate-x-full"
+            class="absolute right-0 top-0 h-full w-full max-w-md bg-darkCard border-l border-darkBorder flex flex-col">
+            <div class="flex items-center justify-between p-6 border-b border-darkBorder">
+                <h3 class="font-display text-lg font-bold">Your Cart <span class="text-neon">(3)</span></h3>
+                <button @click="cartOpen=false" class="text-offWhite/50 hover:text-offWhite"
+                    aria-label="Close cart"><svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.5"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg></button>
+            </div>
+            <div class="flex-1 overflow-y-auto p-6 space-y-6">
+                <!-- Cart Item 1 -->
+                <div class="flex gap-4">
+                    <img src="https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=120&q=80&auto=format&fit=crop"
+                        alt="Oversized hoodie" class="w-20 h-20 object-cover bg-dark" />
+                    <div class="flex-1">
+                        <p class="font-display text-sm font-semibold">Shadow Oversized Hoodie</p>
+                        <p class="text-mutedGray text-xs mt-0.5">Size: L &middot; Qty: 1</p>
+                        <p class="text-neon text-sm font-bold mt-1">$120.00</p>
+                    </div>
+                </div>
+                <!-- Cart Item 2 -->
+                <div class="flex gap-4">
+                    <img src="https://images.unsplash.com/photo-1542272604-787c3835535d?w=120&q=80&auto=format&fit=crop"
+                        alt="Cargo pants" class="w-20 h-20 object-cover bg-dark" />
+                    <div class="flex-1">
+                        <p class="font-display text-sm font-semibold">Tactical Cargo Pants</p>
+                        <p class="text-mutedGray text-xs mt-0.5">Size: M &middot; Qty: 1</p>
+                        <p class="text-neon text-sm font-bold mt-1">$145.00</p>
+                    </div>
+                </div>
+                <!-- Cart Item 3 -->
+                <div class="flex gap-4">
+                    <img src="https://images.unsplash.com/photo-1588850561407-ed78c334e67a?w=120&q=80&auto=format&fit=crop"
+                        alt="Sneakers" class="w-20 h-20 object-cover bg-dark" />
+                    <div class="flex-1">
+                        <p class="font-display text-sm font-semibold">Volt Runner V2</p>
+                        <p class="text-mutedGray text-xs mt-0.5">Size: 10 &middot; Qty: 1</p>
+                        <p class="text-neon text-sm font-bold mt-1">$210.00</p>
+                    </div>
+                </div>
+            </div>
+            <div class="p-6 border-t border-darkBorder space-y-4">
+                <div class="flex justify-between font-display font-bold text-lg"><span>Total</span><span
+                        class="text-neon">$475.00</span></div>
+                <button
+                    class="glow-hover w-full py-3.5 bg-neon text-dark font-display font-bold tracking-wider uppercase text-sm">Checkout
+                    Now</button>
+                <button @click="cartOpen=false"
+                    class="w-full py-3 border border-darkBorder text-offWhite/60 text-sm hover:text-offWhite transition">Continue
+                    Shopping</button>
+            </div>
+        </aside>
+    </div>
+
+    <!-- ====== HERO / HOME ====== -->
+    <section id="home" class="relative min-h-screen flex items-center overflow-hidden">
+        <div class="absolute inset-0">
+            <img src="https://images.unsplash.com/photo-1523398002811-999ca8dec234?w=1920&q=80&auto=format&fit=crop"
+                alt="Urban streetwear model in dark alley with neon lights"
+                class="w-full h-full object-cover opacity-60" />
+            <div class="absolute inset-0 bg-gradient-to-t from-dark via-dark/70 to-dark/30"></div>
+        </div>
+
+        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-32">
+            <div class="max-w-2xl">
+                <div
+                    class="inline-block px-3 py-1 border border-neon/50 text-neon text-xs tracking-[0.2em] uppercase mb-6">
+                    Drop 04 — Now Live</div>
+                <h1
+                    class="glitch-hover font-display text-6xl sm:text-7xl lg:text-8xl font-bold leading-[0.95] tracking-tighter mb-6">
+                    BREAK <br />THE <span class="text-neon">CODE</span>
+                </h1>
+                <p class="font-body text-lg text-offWhite/60 leading-relaxed mb-8 max-w-lg">
+                    Limited-edition streetwear for those who refuse to blend in. Engineered fits, raw materials,
+                    unapologetic attitude. This is not fashion — it's a movement.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <a href="#shop"
+                        class="glow-hover inline-flex items-center justify-center px-8 py-4 bg-neon text-dark font-display font-bold text-sm tracking-wider uppercase">
+                        Shop The Drop
+                        <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" stroke-width="2"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" />
+                        </svg>
+                    </a>
+                    <a href="#lookbook"
+                        class="inline-flex items-center justify-center px-8 py-4 border border-offWhite/30 text-offWhite/80 font-display font-bold text-sm tracking-wider uppercase hover:border-neon hover:text-neon transition">
+                        View Lookbook
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== RUNNING MARQUEE ====== -->
+    <div class="bg-neon py-3 overflow-hidden">
+        <div class="flex whitespace-nowrap marquee-track">
+            <span class="font-display text-dark font-bold text-sm tracking-wider uppercase mx-8">FREE SHIPPING ON ORDERS
+                OVER $150 &bull;</span>
+            <span class="font-display text-dark font-bold text-sm tracking-wider uppercase mx-8">DROP 04 NOW LIVE
+                &bull;</span>
+            <span class="font-display text-dark font-bold text-sm tracking-wider uppercase mx-8">LIMITED STOCK — DON'T
+                SLEEP &bull;</span>
+            <span class="font-display text-dark font-bold text-sm tracking-wider uppercase mx-8">FREE SHIPPING ON ORDERS
+                OVER $150 &bull;</span>
+            <span class="font-display text-dark font-bold text-sm tracking-wider uppercase mx-8">DROP 04 NOW LIVE
+                &bull;</span>
+            <span class="font-display text-dark font-bold text-sm tracking-wider uppercase mx-8">LIMITED STOCK — DON'T
+                SLEEP &bull;</span>
+        </div>
+    </div>
+
+    <!-- ====== SHOP SECTION ====== -->
+    <section id="shop" class="py-20 md:py-28 bg-dark">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 reveal">
+                <div>
+                    <p class="text-neon text-xs tracking-[0.3em] uppercase mb-2">Collection</p>
+                    <h2 class="font-display text-4xl md:text-5xl font-bold tracking-tight">Shop The Grid</h2>
+                </div>
+                <!-- Filter Tags -->
+                <div class="flex flex-wrap gap-2 mt-4 md:mt-0">
+                    <button @click="activeFilter='all'" :class="activeFilter==='all' ? 'active' : ''"
+                        class="tag-pill px-4 py-1.5 border border-darkBorder text-offWhite/60 text-xs tracking-wider uppercase rounded-full">All</button>
+                    <button @click="activeFilter='tops'" :class="activeFilter==='tops' ? 'active' : ''"
+                        class="tag-pill px-4 py-1.5 border border-darkBorder text-offWhite/60 text-xs tracking-wider uppercase rounded-full">Tops</button>
+                    <button @click="activeFilter='bottoms'" :class="activeFilter==='bottoms' ? 'active' : ''"
+                        class="tag-pill px-4 py-1.5 border border-darkBorder text-offWhite/60 text-xs tracking-wider uppercase rounded-full">Bottoms</button>
+                    <button @click="activeFilter='footwear'" :class="activeFilter==='footwear' ? 'active' : ''"
+                        class="tag-pill px-4 py-1.5 border border-darkBorder text-offWhite/60 text-xs tracking-wider uppercase rounded-full">Footwear</button>
+                    <button @click="activeFilter='accessories'" :class="activeFilter==='accessories' ? 'active' : ''"
+                        class="tag-pill px-4 py-1.5 border border-darkBorder text-offWhite/60 text-xs tracking-wider uppercase rounded-full">Accessories</button>
+                </div>
+            </div>
+
+            <!-- Product Grid -->
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+                <!-- Product 1 -->
+                <div class="product-card group reveal">
+                    <div class="relative overflow-hidden aspect-[3/4] bg-darkCard mb-3">
+                        <img src="https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=600&q=80&auto=format&fit=crop"
+                            alt="Shadow oversized hoodie" class="w-full h-full object-cover" loading="lazy" />
+                        <div class="absolute top-3 left-3 px-2 py-0.5 bg-neon text-dark text-xs font-bold uppercase">New
+                        </div>
+                        <button
+                            class="absolute bottom-3 right-3 w-10 h-10 bg-dark/80 backdrop-blur flex items-center justify-center opacity-0 group-hover:opacity-100 transition hover:bg-neon hover:text-dark"
+                            aria-label="Add to cart">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                            </svg>
+                        </button>
+                    </div>
+                    <h3 class="font-display text-sm font-semibold">Shadow Oversized Hoodie</h3>
+                    <p class="text-neon text-sm font-bold mt-0.5">$120.00</p>
+                </div>
+
+                <!-- Product 2 -->
+                <div class="product-card group reveal" style="transition-delay:0.1s">
+                    <div class="relative overflow-hidden aspect-[3/4] bg-darkCard mb-3">
+                        <img src="https://images.unsplash.com/photo-1542272604-787c3835535d?w=600&q=80&auto=format&fit=crop"
+                            alt="Tactical cargo pants" class="w-full h-full object-cover" loading="lazy" />
+                        <button
+                            class="absolute bottom-3 right-3 w-10 h-10 bg-dark/80 backdrop-blur flex items-center justify-center opacity-0 group-hover:opacity-100 transition hover:bg-neon hover:text-dark"
+                            aria-label="Add to cart">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                            </svg>
+                        </button>
+                    </div>
+                    <h3 class="font-display text-sm font-semibold">Tactical Cargo Pants</h3>
+                    <p class="text-neon text-sm font-bold mt-0.5">$145.00</p>
+                </div>
+
+                <!-- Product 3 -->
+                <div class="product-card group reveal" style="transition-delay:0.15s">
+                    <div class="relative overflow-hidden aspect-[3/4] bg-darkCard mb-3">
+                        <img src="https://images.unsplash.com/photo-1588850561407-ed78c334e67a?w=600&q=80&auto=format&fit=crop"
+                            alt="Volt Runner sneakers" class="w-full h-full object-cover" loading="lazy" />
+                        <div
+                            class="absolute top-3 left-3 px-2 py-0.5 bg-red-600 text-white text-xs font-bold uppercase">
+                            Sold Out</div>
+                        <button
+                            class="absolute bottom-3 right-3 w-10 h-10 bg-dark/80 backdrop-blur flex items-center justify-center opacity-0 group-hover:opacity-100 transition hover:bg-neon hover:text-dark"
+                            aria-label="Add to cart">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                            </svg>
+                        </button>
+                    </div>
+                    <h3 class="font-display text-sm font-semibold">Volt Runner V2</h3>
+                    <p class="text-neon text-sm font-bold mt-0.5">$210.00</p>
+                </div>
+
+                <!-- Product 4 -->
+                <div class="product-card group reveal" style="transition-delay:0.2s">
+                    <div class="relative overflow-hidden aspect-[3/4] bg-darkCard mb-3">
+                        <img src="https://images.unsplash.com/photo-1622445275576-721325763afe?w=600&q=80&auto=format&fit=crop"
+                            alt="Graphic tee" class="w-full h-full object-cover" loading="lazy" />
+                        <button
+                            class="absolute bottom-3 right-3 w-10 h-10 bg-dark/80 backdrop-blur flex items-center justify-center opacity-0 group-hover:opacity-100 transition hover:bg-neon hover:text-dark"
+                            aria-label="Add to cart">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                            </svg>
+                        </button>
+                    </div>
+                    <h3 class="font-display text-sm font-semibold">Disruption Graphic Tee</h3>
+                    <p class="text-neon text-sm font-bold mt-0.5">$65.00</p>
+                </div>
+
+                <!-- Product 5 -->
+                <div class="product-card group reveal">
+                    <div class="relative overflow-hidden aspect-[3/4] bg-darkCard mb-3">
+                        <img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=600&q=80&auto=format&fit=crop"
+                            alt="Essential blank tee" class="w-full h-full object-cover" loading="lazy" />
+                        <button
+                            class="absolute bottom-3 right-3 w-10 h-10 bg-dark/80 backdrop-blur flex items-center justify-center opacity-0 group-hover:opacity-100 transition hover:bg-neon hover:text-dark"
+                            aria-label="Add to cart">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                            </svg>
+                        </button>
+                    </div>
+                    <h3 class="font-display text-sm font-semibold">Midnight Essential Tee</h3>
+                    <p class="text-neon text-sm font-bold mt-0.5">$55.00</p>
+                </div>
+
+                <!-- Product 6 -->
+                <div class="product-card group reveal" style="transition-delay:0.1s">
+                    <div class="relative overflow-hidden aspect-[3/4] bg-darkCard mb-3">
+                        <img src="https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=600&q=80&auto=format&fit=crop"
+                            alt="Crossbody bag" class="w-full h-full object-cover" loading="lazy" />
+                        <div class="absolute top-3 left-3 px-2 py-0.5 bg-neon text-dark text-xs font-bold uppercase">New
+                        </div>
+                        <button
+                            class="absolute bottom-3 right-3 w-10 h-10 bg-dark/80 backdrop-blur flex items-center justify-center opacity-0 group-hover:opacity-100 transition hover:bg-neon hover:text-dark"
+                            aria-label="Add to cart">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                            </svg>
+                        </button>
+                    </div>
+                    <h3 class="font-display text-sm font-semibold">Stealth Crossbody</h3>
+                    <p class="text-neon text-sm font-bold mt-0.5">$85.00</p>
+                </div>
+
+                <!-- Product 7 -->
+                <div class="product-card group reveal" style="transition-delay:0.15s">
+                    <div class="relative overflow-hidden aspect-[3/4] bg-darkCard mb-3">
+                        <img src="https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=600&q=80&auto=format&fit=crop"
+                            alt="Bomber jacket" class="w-full h-full object-cover" loading="lazy" />
+                        <button
+                            class="absolute bottom-3 right-3 w-10 h-10 bg-dark/80 backdrop-blur flex items-center justify-center opacity-0 group-hover:opacity-100 transition hover:bg-neon hover:text-dark"
+                            aria-label="Add to cart">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                            </svg>
+                        </button>
+                    </div>
+                    <h3 class="font-display text-sm font-semibold">Phantom Bomber</h3>
+                    <p class="text-neon text-sm font-bold mt-0.5">$195.00</p>
+                </div>
+
+                <!-- Product 8 -->
+                <div class="product-card group reveal" style="transition-delay:0.2s">
+                    <div class="relative overflow-hidden aspect-[3/4] bg-darkCard mb-3">
+                        <img src="https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=600&q=80&auto=format&fit=crop"
+                            alt="Tie dye hoodie" class="w-full h-full object-cover" loading="lazy" />
+                        <button
+                            class="absolute bottom-3 right-3 w-10 h-10 bg-dark/80 backdrop-blur flex items-center justify-center opacity-0 group-hover:opacity-100 transition hover:bg-neon hover:text-dark"
+                            aria-label="Add to cart">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                            </svg>
+                        </button>
+                    </div>
+                    <h3 class="font-display text-sm font-semibold">Acid Wash Hoodie</h3>
+                    <p class="text-neon text-sm font-bold mt-0.5">$135.00</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== LOOKBOOK ====== -->
+    <section id="lookbook" class="py-20 md:py-28 bg-darkCard">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-14 reveal">
+                <p class="text-neon text-xs tracking-[0.3em] uppercase mb-2">Season 04</p>
+                <h2 class="font-display text-4xl md:text-5xl font-bold tracking-tight">Lookbook</h2>
+                <p class="text-mutedGray mt-3 max-w-lg mx-auto">Shot on location in Tokyo's underground scene. Raw,
+                    unfiltered, uncompromising.</p>
+            </div>
+
+            <!-- Masonry-style Grid -->
+            <div class="columns-1 sm:columns-2 lg:columns-3 gap-4 space-y-4">
+                <div class="reveal break-inside-avoid overflow-hidden group">
+                    <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=700&q=80&auto=format&fit=crop"
+                        alt="Lookbook shot 1"
+                        class="w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        loading="lazy" />
+                </div>
+                <div class="reveal break-inside-avoid overflow-hidden group" style="transition-delay:0.05s">
+                    <img src="https://images.unsplash.com/photo-1509631179647-0177331693ae?w=700&q=80&auto=format&fit=crop"
+                        alt="Lookbook shot 2"
+                        class="w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        loading="lazy" />
+                </div>
+                <div class="reveal break-inside-avoid overflow-hidden group" style="transition-delay:0.1s">
+                    <img src="https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?w=700&q=80&auto=format&fit=crop"
+                        alt="Lookbook shot 3"
+                        class="w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        loading="lazy" />
+                </div>
+                <div class="reveal break-inside-avoid overflow-hidden group" style="transition-delay:0.15s">
+                    <img src="https://images.unsplash.com/photo-1529139574466-a303027c1d8b?w=700&q=80&auto=format&fit=crop"
+                        alt="Lookbook shot 4"
+                        class="w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        loading="lazy" />
+                </div>
+                <div class="reveal break-inside-avoid overflow-hidden group" style="transition-delay:0.2s">
+                    <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=700&q=80&auto=format&fit=crop"
+                        alt="Lookbook shot 5"
+                        class="w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        loading="lazy" />
+                </div>
+                <div class="reveal break-inside-avoid overflow-hidden group" style="transition-delay:0.25s">
+                    <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?w=700&q=80&auto=format&fit=crop"
+                        alt="Lookbook shot 6"
+                        class="w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        loading="lazy" />
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== BLOG ====== -->
+    <section id="blog" class="py-20 md:py-28 bg-dark">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 reveal">
+                <div>
+                    <p class="text-neon text-xs tracking-[0.3em] uppercase mb-2">Stories</p>
+                    <h2 class="font-display text-4xl md:text-5xl font-bold tracking-tight">From The Blog</h2>
+                </div>
+                <a href="#"
+                    class="text-neon text-sm font-display font-bold tracking-wider uppercase mt-4 md:mt-0 hover:underline">View
+                    All →</a>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Blog 1 -->
+                <article class="group reveal">
+                    <div class="overflow-hidden aspect-[16/10] bg-darkCard mb-4">
+                        <img src="https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=600&q=80&auto=format&fit=crop"
+                            alt="Blog post cover"
+                            class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                            loading="lazy" />
+                    </div>
+                    <p class="text-mutedGray text-xs tracking-wider uppercase mb-2">Culture &middot; Feb 18, 2026</p>
+                    <h3 class="font-display text-lg font-bold group-hover:text-neon transition">Why Streetwear Is the
+                        New High Fashion</h3>
+                    <p class="text-mutedGray text-sm mt-2 leading-relaxed">The lines between the runway and the sidewalk
+                        have never been thinner. We break down how independent labels are rewriting the rules of luxury.
+                    </p>
+                </article>
+
+                <!-- Blog 2 -->
+                <article class="group reveal" style="transition-delay:0.1s">
+                    <div class="overflow-hidden aspect-[16/10] bg-darkCard mb-4">
+                        <img src="https://images.unsplash.com/photo-1523398002811-999ca8dec234?w=600&q=80&auto=format&fit=crop"
+                            alt="Blog post cover"
+                            class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                            loading="lazy" />
+                    </div>
+                    <p class="text-mutedGray text-xs tracking-wider uppercase mb-2">Style Guide &middot; Feb 12, 2026
+                    </p>
+                    <h3 class="font-display text-lg font-bold group-hover:text-neon transition">5 Ways to Layer Like a
+                        Pro This Winter</h3>
+                    <p class="text-mutedGray text-sm mt-2 leading-relaxed">Layering isn't just about staying warm — it's
+                        about building depth, texture, and visual weight. Here's how to master the art.</p>
+                </article>
+
+                <!-- Blog 3 -->
+                <article class="group reveal" style="transition-delay:0.2s">
+                    <div class="overflow-hidden aspect-[16/10] bg-darkCard mb-4">
+                        <img src="https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=600&q=80&auto=format&fit=crop"
+                            alt="Blog post cover"
+                            class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                            loading="lazy" />
+                    </div>
+                    <p class="text-mutedGray text-xs tracking-wider uppercase mb-2">Behind The Brand &middot; Feb 5,
+                        2026</p>
+                    <h3 class="font-display text-lg font-bold group-hover:text-neon transition">Inside VØLT's Tokyo
+                        Pop-Up Store</h3>
+                    <p class="text-mutedGray text-sm mt-2 leading-relaxed">A behind-the-scenes look at our latest
+                        immersive retail experience in Harajuku — part gallery, part store, part cultural statement.</p>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== NEWSLETTER ====== -->
+    <section class="bg-darkCard border-y border-darkBorder py-16 md:py-20">
+        <div class="max-w-3xl mx-auto px-4 text-center">
+            <h2 class="font-display text-3xl md:text-4xl font-bold mb-3">Join The <span
+                    class="text-neon">Movement</span></h2>
+            <p class="text-mutedGray text-sm mb-8 max-w-md mx-auto">Get first access to drops, exclusive collaborations,
+                and stories from the underground. No spam — ever.</p>
+            <form class="flex flex-col sm:flex-row gap-3 max-w-lg mx-auto">
+                <input type="email" placeholder="your@email.com"
+                    class="flex-1 px-5 py-3.5 bg-dark border border-darkBorder text-offWhite placeholder-mutedGray text-sm focus:border-neon outline-none transition" />
+                <button type="submit"
+                    class="glow-hover px-8 py-3.5 bg-neon text-dark font-display font-bold text-sm tracking-wider uppercase">Subscribe</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- ====== FOOTER ====== -->
+    <footer class="bg-dark py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
+                <div class="col-span-2 md:col-span-1">
+                    <a href="#home" class="font-display text-2xl font-bold">VØ<span class="text-neon">LT</span></a>
+                    <p class="text-mutedGray text-sm mt-3 leading-relaxed">Streetwear for the culturally awake. Designed
+                        in Brooklyn, shipped worldwide.</p>
+                </div>
+                <div>
+                    <h4 class="text-offWhite/60 text-xs tracking-wider uppercase mb-4">Shop</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-mutedGray text-sm hover:text-neon transition">All Products</a></li>
+                        <li><a href="#" class="text-mutedGray text-sm hover:text-neon transition">New Drops</a></li>
+                        <li><a href="#" class="text-mutedGray text-sm hover:text-neon transition">Tops</a></li>
+                        <li><a href="#" class="text-mutedGray text-sm hover:text-neon transition">Bottoms</a></li>
+                        <li><a href="#" class="text-mutedGray text-sm hover:text-neon transition">Footwear</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-offWhite/60 text-xs tracking-wider uppercase mb-4">Brand</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-mutedGray text-sm hover:text-neon transition">Our Story</a></li>
+                        <li><a href="#" class="text-mutedGray text-sm hover:text-neon transition">Lookbook</a></li>
+                        <li><a href="#" class="text-mutedGray text-sm hover:text-neon transition">Blog</a></li>
+                        <li><a href="#" class="text-mutedGray text-sm hover:text-neon transition">Collaborations</a>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-offWhite/60 text-xs tracking-wider uppercase mb-4">Help</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-mutedGray text-sm hover:text-neon transition">FAQ</a></li>
+                        <li><a href="#" class="text-mutedGray text-sm hover:text-neon transition">Shipping</a></li>
+                        <li><a href="#" class="text-mutedGray text-sm hover:text-neon transition">Returns</a></li>
+                        <li><a href="#" class="text-mutedGray text-sm hover:text-neon transition">Contact</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-darkBorder pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
+                <p class="text-mutedGray text-xs">&copy; 2026 VØLT. All rights reserved.</p>
+                <div class="flex items-center gap-4">
+                    <a href="#" aria-label="Instagram" class="text-mutedGray hover:text-neon transition"><svg
+                            class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                            <path
+                                d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" />
+                        </svg></a>
+                    <a href="#" aria-label="TikTok" class="text-mutedGray hover:text-neon transition"><svg
+                            class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                            <path
+                                d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1v-3.5a6.37 6.37 0 00-.79-.05A6.34 6.34 0 003.15 15.2a6.34 6.34 0 0010.86 4.43v-7.15a8.16 8.16 0 005.58 2.17V11.2a4.85 4.85 0 01-3-.45V6.69h3z" />
+                        </svg></a>
+                    <a href="#" aria-label="Twitter" class="text-mutedGray hover:text-neon transition"><svg
+                            class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                            <path
+                                d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                        </svg></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ====== SCROLL REVEAL SCRIPT ====== -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const reveals = document.querySelectorAll('.reveal');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+            reveals.forEach(el => observer.observe(el));
+        });
+    </script>
+</body>
+
+</html>

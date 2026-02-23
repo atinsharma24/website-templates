@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>IRONSIDE BREWING CO. — Craft Beer & Taproom</title>
+    <meta name="description"
+        content="Ironside Brewing Co. — Small-batch craft beer brewed in-house. Taproom, beer garden, events, and online shop." />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet" />
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        display: ['"Bebas Neue"', 'Impact', 'sans-serif'],
+                        sans: ['"Inter"', 'system-ui', 'sans-serif'],
+                    },
+                    colors: {
+                        dark: '#0F0F0F',
+                        steel: '#1C1C1E',
+                        zinc: '#27272A',
+                        pewter: '#71717A',
+                        amber: '#F59E0B',
+                        amberLight: '#FEF3C7',
+                        amberDark: '#D97706',
+                        hops: '#65A30D',
+                        foam: '#FFF8E1',
+                    },
+                },
+            },
+        };
+    </script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            background: #0F0F0F;
+            color: #F5F5F5;
+            overflow-x: hidden;
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(24px);
+            transition: opacity 0.7s ease, transform 0.7s ease;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .beer-card {
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+        }
+
+        .beer-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 16px 40px rgba(245, 158, 11, 0.1);
+        }
+
+        .btn-amber {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .btn-amber:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(245, 158, 11, 0.25);
+        }
+
+        /* ABV gauge */
+        .abv-fill {
+            transition: width 0.8s ease;
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #0F0F0F;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #F59E0B;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+
+<body x-data="{ mobileMenu: false }" class="bg-dark text-white">
+
+    <!-- ====== NAVIGATION ====== -->
+    <header class="fixed top-0 left-0 w-full z-50 bg-dark/90 backdrop-blur-md border-b border-zinc">
+        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16 md:h-20">
+                <a href="#home" class="font-display text-2xl md:text-3xl tracking-wider text-amber">
+                    IRONSIDE <span class="text-white">BREWING CO.</span>
+                </a>
+
+                <ul
+                    class="hidden md:flex items-center space-x-8 font-sans text-sm tracking-wider uppercase text-pewter">
+                    <li><a href="#on-tap" class="hover:text-amber transition">On Tap</a></li>
+                    <li><a href="#beers" class="hover:text-amber transition">Our Beers</a></li>
+                    <li><a href="#visit" class="hover:text-amber transition">Visit Us</a></li>
+                    <li><a href="#events" class="hover:text-amber transition">Events</a></li>
+                    <li><a href="#shop" class="hover:text-amber transition">Shop</a></li>
+                </ul>
+
+                <a href="#shop"
+                    class="hidden md:inline-flex items-center px-5 py-2 bg-amber text-dark text-xs tracking-wider uppercase font-bold rounded btn-amber hover:bg-amberDark transition">
+                    Order Online
+                </a>
+
+                <button @click="mobileMenu = !mobileMenu" class="md:hidden p-2 text-white" aria-label="Toggle menu">
+                    <svg x-show="!mobileMenu" class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.5"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 9h16.5m-16.5 6.75h16.5" />
+                    </svg>
+                    <svg x-show="mobileMenu" x-cloak class="w-6 h-6" fill="none" stroke="currentColor"
+                        stroke-width="1.5" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+
+            <div x-show="mobileMenu" x-cloak x-transition class="md:hidden pb-6 border-t border-zinc">
+                <ul class="flex flex-col space-y-4 pt-4 font-sans text-sm tracking-wider uppercase">
+                    <li><a @click="mobileMenu=false" href="#on-tap" class="block py-1 text-pewter hover:text-amber">On
+                            Tap</a></li>
+                    <li><a @click="mobileMenu=false" href="#beers" class="block py-1 text-pewter hover:text-amber">Our
+                            Beers</a></li>
+                    <li><a @click="mobileMenu=false" href="#visit" class="block py-1 text-pewter hover:text-amber">Visit
+                            Us</a></li>
+                    <li><a @click="mobileMenu=false" href="#events"
+                            class="block py-1 text-pewter hover:text-amber">Events</a></li>
+                    <li><a @click="mobileMenu=false" href="#shop" class="block py-1 text-amber font-medium">Shop</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <!-- ====== HERO ====== -->
+    <section id="home" class="relative min-h-screen flex items-center justify-center overflow-hidden">
+        <div class="absolute inset-0">
+            <img src="https://images.unsplash.com/photo-1559526642-c3f001ea68ee?w=1920&q=80&auto=format&fit=crop"
+                alt="Craft brewery taproom with industrial lighting and beer taps" class="w-full h-full object-cover" />
+            <div class="absolute inset-0 bg-gradient-to-t from-dark via-dark/65 to-dark/20"></div>
+        </div>
+
+        <div class="relative z-10 text-center max-w-4xl px-4 py-32">
+            <p class="font-sans text-xs tracking-[0.4em] uppercase text-amber mb-6">Small Batch • Big Flavor • Portland,
+                OR</p>
+            <h1 class="font-display text-6xl sm:text-8xl lg:text-9xl tracking-wide leading-none mb-6">
+                BREWED <span class="text-amber">BOLD</span>
+            </h1>
+            <p class="font-sans text-base sm:text-lg text-white/60 max-w-lg mx-auto mb-10 leading-relaxed">
+                From grain to glass, every pint is handcrafted in our Portland taproom. Bold hops. Big flavors. No
+                shortcuts.
+            </p>
+            <div class="flex flex-col sm:flex-row justify-center gap-4">
+                <a href="#on-tap"
+                    class="btn-amber inline-flex items-center justify-center px-10 py-3.5 bg-amber text-dark text-sm tracking-wider uppercase font-bold rounded hover:bg-amberDark transition">
+                    What's On Tap
+                </a>
+                <a href="#visit"
+                    class="btn-amber inline-flex items-center justify-center px-10 py-3.5 border border-white/30 text-white text-sm tracking-wider uppercase font-medium rounded hover:bg-white hover:text-dark transition">
+                    Visit the Taproom
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== ON TAP ====== -->
+    <section id="on-tap" class="py-20 md:py-28 bg-steel">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-14 reveal">
+                <p class="text-amber text-xs tracking-[0.3em] uppercase font-medium mb-3">Currently Pouring</p>
+                <h2 class="font-display text-5xl md:text-6xl tracking-wide">ON TAP</h2>
+                <p class="text-pewter mt-4 max-w-lg mx-auto">Our rotating tap list — 12 lines, always changing. Flights
+                    available for the indecisive.</p>
+            </div>
+
+            <div class="space-y-0 reveal">
+                <!-- Tap 1 -->
+                <div
+                    class="flex items-center justify-between py-5 border-b border-zinc px-4 hover:bg-zinc/30 transition rounded-sm">
+                    <div class="flex items-center gap-4">
+                        <span class="text-amber font-display text-2xl w-8">01</span>
+                        <div>
+                            <h3 class="font-sans font-semibold text-lg">Anvil IPA</h3>
+                            <p class="text-pewter text-sm">West Coast IPA — Citra, Mosaic, Simcoe hops</p>
+                        </div>
+                    </div>
+                    <div class="text-right hidden sm:block">
+                        <div class="flex items-center gap-3">
+                            <div class="w-24">
+                                <div class="w-full h-1.5 bg-zinc rounded-full">
+                                    <div class="abv-fill h-full bg-amber rounded-full" style="width:70%"></div>
+                                </div>
+                                <p class="text-pewter text-[10px] mt-1">7.0% ABV</p>
+                            </div>
+                            <p class="text-white/50 text-sm w-16 text-right">$8 / $7</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tap 2 -->
+                <div
+                    class="flex items-center justify-between py-5 border-b border-zinc px-4 hover:bg-zinc/30 transition rounded-sm">
+                    <div class="flex items-center gap-4">
+                        <span class="text-amber font-display text-2xl w-8">02</span>
+                        <div>
+                            <h3 class="font-sans font-semibold text-lg">Blacksmith Stout</h3>
+                            <p class="text-pewter text-sm">Oatmeal Stout — Chocolate, coffee, vanilla bean</p>
+                        </div>
+                    </div>
+                    <div class="text-right hidden sm:block">
+                        <div class="flex items-center gap-3">
+                            <div class="w-24">
+                                <div class="w-full h-1.5 bg-zinc rounded-full">
+                                    <div class="abv-fill h-full bg-amber rounded-full" style="width:58%"></div>
+                                </div>
+                                <p class="text-pewter text-[10px] mt-1">5.8% ABV</p>
+                            </div>
+                            <p class="text-white/50 text-sm w-16 text-right">$8 / $7</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tap 3 -->
+                <div
+                    class="flex items-center justify-between py-5 border-b border-zinc px-4 hover:bg-zinc/30 transition rounded-sm">
+                    <div class="flex items-center gap-4">
+                        <span class="text-amber font-display text-2xl w-8">03</span>
+                        <div>
+                            <h3 class="font-sans font-semibold text-lg">Forge Lager</h3>
+                            <p class="text-pewter text-sm">Helles Lager — Clean, crisp, malt-forward</p>
+                        </div>
+                    </div>
+                    <div class="text-right hidden sm:block">
+                        <div class="flex items-center gap-3">
+                            <div class="w-24">
+                                <div class="w-full h-1.5 bg-zinc rounded-full">
+                                    <div class="abv-fill h-full bg-amber rounded-full" style="width:48%"></div>
+                                </div>
+                                <p class="text-pewter text-[10px] mt-1">4.8% ABV</p>
+                            </div>
+                            <p class="text-white/50 text-sm w-16 text-right">$7 / $6</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tap 4 -->
+                <div
+                    class="flex items-center justify-between py-5 border-b border-zinc px-4 hover:bg-zinc/30 transition rounded-sm">
+                    <div class="flex items-center gap-4">
+                        <span class="text-amber font-display text-2xl w-8">04</span>
+                        <div>
+                            <h3 class="font-sans font-semibold text-lg">Citrus Smash</h3>
+                            <p class="text-pewter text-sm">Hazy Pale Ale — Blood orange, Galaxy hops</p>
+                        </div>
+                    </div>
+                    <div class="text-right hidden sm:block">
+                        <div class="flex items-center gap-3">
+                            <div class="w-24">
+                                <div class="w-full h-1.5 bg-zinc rounded-full">
+                                    <div class="abv-fill h-full bg-amber rounded-full" style="width:54%"></div>
+                                </div>
+                                <p class="text-pewter text-[10px] mt-1">5.4% ABV</p>
+                            </div>
+                            <p class="text-white/50 text-sm w-16 text-right">$8 / $7</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tap 5 -->
+                <div
+                    class="flex items-center justify-between py-5 border-b border-zinc px-4 hover:bg-zinc/30 transition rounded-sm">
+                    <div class="flex items-center gap-4">
+                        <span class="text-amber font-display text-2xl w-8">05</span>
+                        <div>
+                            <div class="flex items-center gap-2">
+                                <h3 class="font-sans font-semibold text-lg">Barrel-Aged Brawler</h3>
+                                <span
+                                    class="text-[10px] px-2 py-0.5 bg-amber text-dark rounded font-bold">LIMITED</span>
+                            </div>
+                            <p class="text-pewter text-sm">Imperial Stout — 12mo bourbon barrel, dark cherry, cocoa</p>
+                        </div>
+                    </div>
+                    <div class="text-right hidden sm:block">
+                        <div class="flex items-center gap-3">
+                            <div class="w-24">
+                                <div class="w-full h-1.5 bg-zinc rounded-full">
+                                    <div class="abv-fill h-full bg-amber rounded-full" style="width:105%"></div>
+                                </div>
+                                <p class="text-pewter text-[10px] mt-1">10.5% ABV</p>
+                            </div>
+                            <p class="text-white/50 text-sm w-16 text-right">$12 / $10</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tap 6 -->
+                <div
+                    class="flex items-center justify-between py-5 border-b border-zinc px-4 hover:bg-zinc/30 transition rounded-sm">
+                    <div class="flex items-center gap-4">
+                        <span class="text-hops font-display text-2xl w-8">06</span>
+                        <div>
+                            <div class="flex items-center gap-2">
+                                <h3 class="font-sans font-semibold text-lg">Hop Water — Zero Alcohol</h3>
+                                <span class="text-[10px] px-2 py-0.5 bg-hops/20 text-hops rounded font-bold">N/A</span>
+                            </div>
+                            <p class="text-pewter text-sm">Sparkling hop water — Cascade hops, lemon, zero sugar</p>
+                        </div>
+                    </div>
+                    <div class="text-right hidden sm:block">
+                        <div class="flex items-center gap-3">
+                            <div class="w-24">
+                                <div class="w-full h-1.5 bg-zinc rounded-full">
+                                    <div class="abv-fill h-full bg-hops rounded-full" style="width:0%"></div>
+                                </div>
+                                <p class="text-pewter text-[10px] mt-1">0.0% ABV</p>
+                            </div>
+                            <p class="text-white/50 text-sm w-16 text-right">$5</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-8">
+                <p class="text-pewter text-xs">Pint (16oz) / Half (10oz) &middot; Flights of 4 — $14</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== OUR BEERS / PROCESS ====== -->
+    <section id="beers" class="py-20 md:py-28 bg-dark">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-14 reveal">
+                <p class="text-amber text-xs tracking-[0.3em] uppercase font-medium mb-3">Grain to Glass</p>
+                <h2 class="font-display text-5xl md:text-6xl tracking-wide">OUR BEERS</h2>
+                <p class="text-pewter mt-4 max-w-lg mx-auto">We brew in 10-barrel batches using Pacific Northwest
+                    ingredients. Every beer tells a story — from hop selection to final pour.</p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="beer-card bg-steel rounded-lg overflow-hidden reveal">
+                    <div class="aspect-[3/4] overflow-hidden"><img
+                            src="https://images.unsplash.com/photo-1608270586620-248524c67de9?w=400&q=80&auto=format&fit=crop"
+                            alt="IPA beer glass" class="w-full h-full object-cover" loading="lazy" /></div>
+                    <div class="p-5">
+                        <span class="text-amber text-[10px] tracking-wider uppercase font-bold">Flagship</span>
+                        <h3 class="font-display text-2xl mt-1 tracking-wide">ANVIL IPA</h3>
+                        <p class="text-pewter text-sm mt-2">Our flagship West Coast IPA. Dank pine, grapefruit, and a
+                            clean bitter finish that demands another sip.</p>
+                        <div class="flex justify-between items-center mt-3 text-xs text-pewter"><span>7.0% ABV &middot;
+                                65 IBU</span><span class="text-amber font-medium">Year-round</span></div>
+                    </div>
+                </div>
+
+                <div class="beer-card bg-steel rounded-lg overflow-hidden reveal" style="transition-delay:0.1s">
+                    <div class="aspect-[3/4] overflow-hidden"><img
+                            src="https://images.unsplash.com/photo-1535958636474-b021ee887b13?w=400&q=80&auto=format&fit=crop"
+                            alt="Dark stout beer" class="w-full h-full object-cover" loading="lazy" /></div>
+                    <div class="p-5">
+                        <span class="text-amber text-[10px] tracking-wider uppercase font-bold">Flagship</span>
+                        <h3 class="font-display text-2xl mt-1 tracking-wide">BLACKSMITH STOUT</h3>
+                        <p class="text-pewter text-sm mt-2">Silky oatmeal stout with layers of chocolate, espresso, and
+                            a whisper of vanilla from French oak.</p>
+                        <div class="flex justify-between items-center mt-3 text-xs text-pewter"><span>5.8% ABV &middot;
+                                30 IBU</span><span class="text-amber font-medium">Year-round</span></div>
+                    </div>
+                </div>
+
+                <div class="beer-card bg-steel rounded-lg overflow-hidden reveal" style="transition-delay:0.15s">
+                    <div class="aspect-[3/4] overflow-hidden"><img
+                            src="https://images.unsplash.com/photo-1566836610593-62a64888a216?w=400&q=80&auto=format&fit=crop"
+                            alt="Hazy pale ale" class="w-full h-full object-cover" loading="lazy" /></div>
+                    <div class="p-5">
+                        <span class="text-amber text-[10px] tracking-wider uppercase font-bold">Seasonal</span>
+                        <h3 class="font-display text-2xl mt-1 tracking-wide">CITRUS SMASH</h3>
+                        <p class="text-pewter text-sm mt-2">Juicy, hazy, and bursting with blood orange and tropical
+                            mango. Crushable at 5.4% — a session favorite.</p>
+                        <div class="flex justify-between items-center mt-3 text-xs text-pewter"><span>5.4% ABV &middot;
+                                25 IBU</span><span class="text-hops font-medium">Spring/Summer</span></div>
+                    </div>
+                </div>
+
+                <div class="beer-card bg-steel rounded-lg overflow-hidden reveal" style="transition-delay:0.2s">
+                    <div class="aspect-[3/4] overflow-hidden"><img
+                            src="https://images.unsplash.com/photo-1518176258769-f227c798150e?w=400&q=80&auto=format&fit=crop"
+                            alt="Barrel-aged imperial stout" class="w-full h-full object-cover" loading="lazy" /></div>
+                    <div class="p-5">
+                        <span class="text-amber text-[10px] tracking-wider uppercase font-bold">Limited</span>
+                        <h3 class="font-display text-2xl mt-1 tracking-wide">BARREL-AGED BRAWLER</h3>
+                        <p class="text-pewter text-sm mt-2">12-month bourbon barrel-aged imperial stout. Dark cherry,
+                            cocoa, toasted oak. Only 200 bottles per batch.</p>
+                        <div class="flex justify-between items-center mt-3 text-xs text-pewter"><span>10.5% ABV &middot;
+                                45 IBU</span><span class="text-amber font-medium">Annual Release</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Brewing Process -->
+            <div class="mt-20 text-center reveal">
+                <h3 class="font-display text-3xl md:text-4xl tracking-wide text-amber mb-10">THE PROCESS</h3>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                    <div class="bg-zinc/50 rounded-lg p-6">
+                        <div class="text-3xl mb-3">🌾</div>
+                        <h4 class="font-display text-xl tracking-wide">GRAIN</h4>
+                        <p class="text-pewter text-xs mt-2">Locally malted barley from Skagit Valley, Washington</p>
+                    </div>
+                    <div class="bg-zinc/50 rounded-lg p-6">
+                        <div class="text-3xl mb-3">🌿</div>
+                        <h4 class="font-display text-xl tracking-wide">HOPS</h4>
+                        <p class="text-pewter text-xs mt-2">Whole-cone Cascade, Citra, and Mosaic from Yakima Valley</p>
+                    </div>
+                    <div class="bg-zinc/50 rounded-lg p-6">
+                        <div class="text-3xl mb-3">🧪</div>
+                        <h4 class="font-display text-xl tracking-wide">FERMENT</h4>
+                        <p class="text-pewter text-xs mt-2">Proprietary house yeast strains, temperature-controlled
+                            vessels</p>
+                    </div>
+                    <div class="bg-zinc/50 rounded-lg p-6">
+                        <div class="text-3xl mb-3">🍺</div>
+                        <h4 class="font-display text-xl tracking-wide">POUR</h4>
+                        <p class="text-pewter text-xs mt-2">Served fresh from our 12-line tap system, 10 feet from the
+                            tanks</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== VISIT US ====== -->
+    <section id="visit" class="py-20 md:py-28 bg-steel">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+                <div class="reveal">
+                    <p class="text-amber text-xs tracking-[0.3em] uppercase font-medium mb-3">The Taproom</p>
+                    <h2 class="font-display text-5xl md:text-6xl tracking-wide mb-6">VISIT <span
+                            class="text-amber">US</span></h2>
+                    <div class="space-y-4 text-pewter leading-relaxed">
+                        <p>Our taproom and beer garden sit at the corner of a converted 1940s warehouse in Portland's
+                            Central Eastside. Exposed brick, steel beams, and 20-foot ceilings — industrial heritage
+                            meets brewery culture.</p>
+                        <p>We serve all 12 taps alongside a rotating food truck lineup, with communal picnic tables,
+                            lawn games, and live music every Friday & Saturday night.</p>
+                    </div>
+
+                    <div class="mt-8 space-y-4">
+                        <div class="flex items-start gap-4">
+                            <svg class="w-5 h-5 text-amber flex-shrink-0 mt-0.5" fill="none" stroke="currentColor"
+                                stroke-width="1.5" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
+                            </svg>
+                            <div>
+                                <p class="text-white text-sm font-medium">838 SE Stark Street</p>
+                                <p class="text-pewter text-sm">Portland, OR 97214</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4">
+                            <svg class="w-5 h-5 text-amber flex-shrink-0 mt-0.5" fill="none" stroke="currentColor"
+                                stroke-width="1.5" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <div class="text-sm space-y-1">
+                                <div class="flex justify-between gap-6"><span class="text-white">Mon – Thu</span><span
+                                        class="text-pewter">3:00 PM – 10:00 PM</span></div>
+                                <div class="flex justify-between gap-6"><span class="text-white">Fri – Sat</span><span
+                                        class="text-pewter">12:00 PM – 12:00 AM</span></div>
+                                <div class="flex justify-between gap-6"><span class="text-white">Sunday</span><span
+                                        class="text-pewter">12:00 PM – 9:00 PM</span></div>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4">
+                            <svg class="w-5 h-5 text-amber flex-shrink-0 mt-0.5" fill="none" stroke="currentColor"
+                                stroke-width="1.5" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z" />
+                            </svg>
+                            <div>
+                                <p class="text-white text-sm font-medium">(503) 555-0188</p>
+                                <p class="text-pewter text-sm">taproom@ironsidebrewing.com</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="reveal" style="transition-delay:0.15s">
+                    <img src="https://images.unsplash.com/photo-1559526642-c3f001ea68ee?w=800&q=80&auto=format&fit=crop"
+                        alt="Ironside taproom interior" class="w-full aspect-[4/3] object-cover rounded-lg"
+                        loading="lazy" />
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== EVENTS ====== -->
+    <section id="events" class="py-20 md:py-28 bg-dark">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-14 reveal">
+                <p class="text-amber text-xs tracking-[0.3em] uppercase font-medium mb-3">What's Happening</p>
+                <h2 class="font-display text-5xl md:text-6xl tracking-wide">EVENTS</h2>
+            </div>
+
+            <div class="space-y-4 reveal">
+                <div
+                    class="bg-steel rounded-lg p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:bg-zinc transition">
+                    <div class="flex items-center gap-5">
+                        <div class="text-center flex-shrink-0">
+                            <p class="font-display text-3xl text-amber leading-none">28</p>
+                            <p class="text-pewter text-[10px] uppercase tracking-wider">FEB</p>
+                        </div>
+                        <div>
+                            <h3 class="font-sans font-semibold text-lg">Barrel-Aged Brawler Release Party</h3>
+                            <p class="text-pewter text-sm mt-1">Annual release of our bourbon barrel imperial stout.
+                                Live jazz, limited bottles, first pour at 5pm.</p>
+                        </div>
+                    </div>
+                    <span class="text-amber text-xs tracking-wider uppercase font-bold flex-shrink-0">Free Entry</span>
+                </div>
+
+                <div
+                    class="bg-steel rounded-lg p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:bg-zinc transition">
+                    <div class="flex items-center gap-5">
+                        <div class="text-center flex-shrink-0">
+                            <p class="font-display text-3xl text-amber leading-none">07</p>
+                            <p class="text-pewter text-[10px] uppercase tracking-wider">MAR</p>
+                        </div>
+                        <div>
+                            <h3 class="font-sans font-semibold text-lg">Homebrewers Workshop</h3>
+                            <p class="text-pewter text-sm mt-1">Learn to brew your own IPA with our head brewer.
+                                Includes ingredients kit and two pints.</p>
+                        </div>
+                    </div>
+                    <span class="text-amber text-xs tracking-wider uppercase font-bold flex-shrink-0">$65 /
+                        person</span>
+                </div>
+
+                <div
+                    class="bg-steel rounded-lg p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:bg-zinc transition">
+                    <div class="flex items-center gap-5">
+                        <div class="text-center flex-shrink-0">
+                            <p class="font-display text-3xl text-amber leading-none">14</p>
+                            <p class="text-pewter text-[10px] uppercase tracking-wider">MAR</p>
+                        </div>
+                        <div>
+                            <h3 class="font-sans font-semibold text-lg">Live Music: The Grain Collective</h3>
+                            <p class="text-pewter text-sm mt-1">Portland's favorite folk-rock trio returns to the beer
+                                garden. Food trucks on-site from 5pm.</p>
+                        </div>
+                    </div>
+                    <span class="text-amber text-xs tracking-wider uppercase font-bold flex-shrink-0">Free Entry</span>
+                </div>
+
+                <div
+                    class="bg-steel rounded-lg p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:bg-zinc transition">
+                    <div class="flex items-center gap-5">
+                        <div class="text-center flex-shrink-0">
+                            <p class="font-display text-3xl text-amber leading-none">21</p>
+                            <p class="text-pewter text-[10px] uppercase tracking-wider">MAR</p>
+                        </div>
+                        <div>
+                            <h3 class="font-sans font-semibold text-lg">Beer & Cheese Pairing Night</h3>
+                            <p class="text-pewter text-sm mt-1">5 beers paired with 5 artisan cheeses from local
+                                creameries. Guided by our cicerone.</p>
+                        </div>
+                    </div>
+                    <span class="text-amber text-xs tracking-wider uppercase font-bold flex-shrink-0">$45 /
+                        person</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== SHOP ====== -->
+    <section id="shop" class="py-20 md:py-28 bg-steel">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-14 reveal">
+                <p class="text-amber text-xs tracking-[0.3em] uppercase font-medium mb-3">Take It Home</p>
+                <h2 class="font-display text-5xl md:text-6xl tracking-wide">SHOP</h2>
+                <p class="text-pewter mt-4 max-w-lg mx-auto">Crowlers, 4-packs, merch, and gift boxes — shipped within
+                    Oregon or pick up at the taproom.</p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="beer-card bg-zinc rounded-lg overflow-hidden reveal">
+                    <div class="aspect-square bg-dark flex items-center justify-center p-6">
+                        <img src="https://images.unsplash.com/photo-1608270586620-248524c67de9?w=400&q=80&auto=format&fit=crop"
+                            alt="Anvil IPA 4-pack cans" class="w-full h-full object-contain" loading="lazy" />
+                    </div>
+                    <div class="p-5">
+                        <h3 class="font-sans font-semibold">Anvil IPA — 4-Pack</h3>
+                        <p class="text-pewter text-xs mt-1">16oz cans</p>
+                        <div class="flex items-center justify-between mt-3">
+                            <span class="font-display text-xl text-amber">$16.00</span>
+                            <button class="text-xs tracking-wider uppercase text-amber font-bold hover:underline">Add to
+                                Cart</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="beer-card bg-zinc rounded-lg overflow-hidden reveal" style="transition-delay:0.1s">
+                    <div class="aspect-square bg-dark flex items-center justify-center p-6">
+                        <img src="https://images.unsplash.com/photo-1535958636474-b021ee887b13?w=400&q=80&auto=format&fit=crop"
+                            alt="Blacksmith Stout 4-pack" class="w-full h-full object-contain" loading="lazy" />
+                    </div>
+                    <div class="p-5">
+                        <h3 class="font-sans font-semibold">Blacksmith Stout — 4-Pack</h3>
+                        <p class="text-pewter text-xs mt-1">16oz cans</p>
+                        <div class="flex items-center justify-between mt-3">
+                            <span class="font-display text-xl text-amber">$16.00</span>
+                            <button class="text-xs tracking-wider uppercase text-amber font-bold hover:underline">Add to
+                                Cart</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="beer-card bg-zinc rounded-lg overflow-hidden reveal" style="transition-delay:0.15s">
+                    <div class="aspect-square bg-dark flex items-center justify-center p-6">
+                        <img src="https://images.unsplash.com/photo-1518176258769-f227c798150e?w=400&q=80&auto=format&fit=crop"
+                            alt="Barrel-Aged Brawler bottle" class="w-full h-full object-contain" loading="lazy" />
+                    </div>
+                    <div class="p-5">
+                        <div class="flex items-center gap-2">
+                            <h3 class="font-sans font-semibold">Barrel-Aged Brawler</h3><span
+                                class="text-[10px] px-1.5 py-0.5 bg-amber text-dark rounded font-bold">LTD</span>
+                        </div>
+                        <p class="text-pewter text-xs mt-1">500ml bottle</p>
+                        <div class="flex items-center justify-between mt-3">
+                            <span class="font-display text-xl text-amber">$24.00</span>
+                            <button class="text-xs tracking-wider uppercase text-amber font-bold hover:underline">Add to
+                                Cart</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="beer-card bg-zinc rounded-lg overflow-hidden reveal" style="transition-delay:0.2s">
+                    <div class="aspect-square bg-dark flex items-center justify-center p-6">
+                        <img src="https://images.unsplash.com/photo-1556192927-58e6d9b0e3c3?w=400&q=80&auto=format&fit=crop"
+                            alt="Ironside Brewing branded merch" class="w-full h-full object-contain" loading="lazy" />
+                    </div>
+                    <div class="p-5">
+                        <h3 class="font-sans font-semibold">Ironside Logo Tee</h3>
+                        <p class="text-pewter text-xs mt-1">Black, S–XXL</p>
+                        <div class="flex items-center justify-between mt-3">
+                            <span class="font-display text-xl text-amber">$28.00</span>
+                            <button class="text-xs tracking-wider uppercase text-amber font-bold hover:underline">Add to
+                                Cart</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== NEWSLETTER ====== -->
+    <section class="bg-amber py-12">
+        <div class="max-w-3xl mx-auto px-4 text-center">
+            <h2 class="font-display text-3xl md:text-4xl tracking-wide text-dark mb-3">JOIN THE MAILING LIST</h2>
+            <p class="text-dark/60 text-sm mb-6">First dibs on limited releases, event invites, and a free pint on your
+                birthday.</p>
+            <form class="flex flex-col sm:flex-row gap-3 max-w-lg mx-auto">
+                <input type="email" placeholder="your@email.com"
+                    class="flex-1 px-5 py-3 bg-dark text-white placeholder-pewter text-sm rounded outline-none focus:ring-2 focus:ring-white transition" />
+                <button type="submit"
+                    class="px-8 py-3 bg-dark text-amber text-sm tracking-wider uppercase font-bold rounded hover:bg-zinc transition">Subscribe</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- ====== FOOTER ====== -->
+    <footer class="bg-dark py-12 border-t border-zinc">
+        <div
+            class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-6">
+            <a href="#home" class="font-display text-xl tracking-wider"><span class="text-amber">IRONSIDE</span> BREWING
+                CO.</a>
+            <div class="flex items-center gap-6 text-pewter text-xs tracking-wider uppercase">
+                <a href="#" class="hover:text-amber transition">Privacy</a>
+                <a href="#" class="hover:text-amber transition">Terms</a>
+                <a href="#" class="hover:text-amber transition">21+ Only</a>
+            </div>
+            <div class="flex items-center gap-4">
+                <a href="#" aria-label="Instagram" class="text-pewter hover:text-amber transition"><svg class="w-5 h-5"
+                        fill="currentColor" viewBox="0 0 24 24">
+                        <path
+                            d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" />
+                    </svg></a>
+                <a href="#" aria-label="Facebook" class="text-pewter hover:text-amber transition"><svg class="w-5 h-5"
+                        fill="currentColor" viewBox="0 0 24 24">
+                        <path
+                            d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+                    </svg></a>
+                <a href="#" aria-label="Untappd" class="text-pewter hover:text-amber transition text-sm font-bold">U</a>
+            </div>
+        </div>
+        <p class="text-center text-pewter/30 text-xs mt-6">&copy; 2026 Ironside Brewing Co. Please drink responsibly.
+        </p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('active'); observer.unobserve(entry.target); } });
+            }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+            document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+        });
+    </script>
+</body>
+
+</html>

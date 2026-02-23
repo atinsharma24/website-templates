@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FRAG — Gaming Gear Hub</title>
+    <meta name="description"
+        content="FRAG — Gaming peripherals, esports news, community reviews, and pro gear setups. Mice, keyboards, headsets, monitors, and more." />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet" />
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        display: ['"Rajdhani"', 'Impact', 'sans-serif'],
+                        sans: ['"Inter"', 'system-ui', 'sans-serif'],
+                    },
+                    colors: {
+                        abyss: '#0A0A0F',
+                        onyx: '#141419',
+                        gunmetal: '#1E1E26',
+                        steel: '#71717A',
+                        red: '#EF4444',
+                        redDark: '#DC2626',
+                        redGlow: '#FCA5A5',
+                        lime: '#84CC16',
+                        limeGlow: '#D9F99D',
+                        violet: '#A78BFA',
+                        cyan: '#22D3EE',
+                        snow: '#F5F5F5',
+                    },
+                },
+            },
+        };
+    </script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            background: #0A0A0F;
+            color: #F5F5F5;
+            overflow-x: hidden;
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity .6s ease, transform .6s ease;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .gear-card {
+            transition: transform .3s, box-shadow .3s, border-color .3s;
+        }
+
+        .gear-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(239, 68, 68, .1);
+            border-color: rgba(239, 68, 68, .3);
+        }
+
+        .gear-card img {
+            transition: transform .5s ease;
+        }
+
+        .gear-card:hover img {
+            transform: scale(1.04);
+        }
+
+        .btn-red {
+            transition: transform .25s, box-shadow .25s;
+        }
+
+        .btn-red:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 24px rgba(239, 68, 68, .3);
+        }
+
+        .marquee {
+            animation: marquee 30s linear infinite;
+        }
+
+        @keyframes marquee {
+            0% {
+                transform: translateX(0)
+            }
+
+            100% {
+                transform: translateX(-50%)
+            }
+        }
+
+        ::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #0A0A0F;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #EF4444;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+
+<body x-data="{ mobileMenu: false, cartOpen: false, cartCount: 1 }" class="bg-abyss text-snow">
+
+    <!-- ====== NAVIGATION ====== -->
+    <header class="fixed top-0 left-0 w-full z-50 bg-abyss/90 backdrop-blur-md border-b border-gunmetal">
+        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16 md:h-20">
+                <a href="#home" class="font-display text-3xl font-bold tracking-widest">FR<span
+                        class="text-red">A</span>G</a>
+                <ul class="hidden md:flex items-center space-x-7 text-sm text-steel font-medium">
+                    <li><a href="#gear" class="hover:text-red transition">Shop Gear</a></li>
+                    <li><a href="#reviews" class="hover:text-red transition">Reviews</a></li>
+                    <li><a href="#esports" class="hover:text-red transition">Esports</a></li>
+                    <li><a href="#community" class="hover:text-red transition">Community</a></li>
+                    <li><a href="#support" class="hover:text-red transition">Support</a></li>
+                </ul>
+                <div class="hidden md:flex items-center gap-3">
+                    <button @click="cartOpen=true" aria-label="Cart"
+                        class="p-2 text-steel hover:text-snow transition relative">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007z" />
+                        </svg>
+                        <span x-text="cartCount"
+                            class="absolute -top-1 -right-1 bg-red text-white text-[10px] w-4 h-4 flex items-center justify-center rounded-full font-bold"></span>
+                    </button>
+                </div>
+                <button @click="mobileMenu=!mobileMenu" class="md:hidden p-2" aria-label="Menu">
+                    <svg x-show="!mobileMenu" class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.5"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 9h16.5m-16.5 6.75h16.5" />
+                    </svg>
+                    <svg x-show="mobileMenu" x-cloak class="w-6 h-6" fill="none" stroke="currentColor"
+                        stroke-width="1.5" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+            <div x-show="mobileMenu" x-cloak x-transition class="md:hidden pb-6 border-t border-gunmetal">
+                <ul class="flex flex-col space-y-4 pt-4 text-sm">
+                    <li><a @click="mobileMenu=false" href="#gear" class="block py-1 text-steel hover:text-red">Shop
+                            Gear</a></li>
+                    <li><a @click="mobileMenu=false" href="#reviews"
+                            class="block py-1 text-steel hover:text-red">Reviews</a></li>
+                    <li><a @click="mobileMenu=false" href="#esports"
+                            class="block py-1 text-steel hover:text-red">Esports</a></li>
+                    <li><a @click="mobileMenu=false" href="#community"
+                            class="block py-1 text-steel hover:text-red">Community</a></li>
+                    <li><a @click="mobileMenu=false" href="#support"
+                            class="block py-1 text-steel hover:text-red">Support</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <!-- ====== CART SIDEBAR ====== -->
+    <div x-show="cartOpen" x-cloak class="fixed inset-0 z-[60]" @keydown.escape.window="cartOpen=false">
+        <div class="absolute inset-0 bg-abyss/60" @click="cartOpen=false"></div>
+        <div x-show="cartOpen" x-transition:enter="transition ease-out duration-300"
+            x-transition:enter-start="translate-x-full" x-transition:enter-end="translate-x-0"
+            x-transition:leave="transition ease-in duration-200" x-transition:leave-start="translate-x-0"
+            x-transition:leave-end="translate-x-full"
+            class="absolute right-0 top-0 h-full w-full max-w-md bg-onyx shadow-2xl flex flex-col border-l border-gunmetal">
+            <div class="flex items-center justify-between px-6 py-5 border-b border-gunmetal">
+                <h3 class="font-display text-xl font-bold tracking-wider">CART (<span x-text="cartCount"></span>)</h3>
+                <button @click="cartOpen=false"><svg class="w-5 h-5 text-steel" fill="none" stroke="currentColor"
+                        stroke-width="1.5" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg></button>
+            </div>
+            <div class="flex-1 overflow-y-auto px-6 py-6 space-y-4">
+                <div class="flex gap-4 pb-4 border-b border-gunmetal">
+                    <div class="w-16 h-16 bg-gunmetal rounded flex-shrink-0 overflow-hidden"><img
+                            src="https://images.unsplash.com/photo-1527814050087-3793815479db?w=200&q=80&auto=format&fit=crop"
+                            alt="Gaming mouse" class="w-full h-full object-cover" /></div>
+                    <div class="flex-1">
+                        <h4 class="text-sm font-medium">Viper X Pro Wireless</h4>
+                        <p class="text-steel text-xs">26K DPI • 55g Ultralight</p>
+                        <div class="flex justify-between mt-1">
+                            <p class="font-semibold text-red">$149</p><button
+                                class="text-steel text-xs hover:text-red-400">Remove</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-gunmetal px-6 py-5 space-y-3">
+                <div class="flex justify-between text-sm"><span class="text-steel">Subtotal</span><span
+                        class="font-bold text-lg">$149</span></div>
+                <button
+                    class="btn-red w-full py-3.5 bg-red text-white text-sm tracking-wider uppercase font-bold rounded-lg">Checkout</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ====== HERO ====== -->
+    <section id="home" class="relative min-h-screen flex items-center overflow-hidden">
+        <div class="absolute inset-0">
+            <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?w=1920&q=80&auto=format&fit=crop"
+                alt="Gaming setup with RGB lighting" class="w-full h-full object-cover" />
+            <div class="absolute inset-0 bg-gradient-to-r from-abyss via-abyss/80 to-abyss/40"></div>
+        </div>
+        <div class="absolute top-1/3 right-1/3 w-96 h-96 bg-red/5 rounded-full blur-3xl"></div>
+        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-32">
+            <div class="max-w-xl">
+                <span
+                    class="inline-flex items-center px-3 py-1 bg-red/10 text-red text-xs font-bold tracking-wider uppercase rounded border border-red/20 mb-5">⚡
+                    SEASON 12 DROPS</span>
+                <h1 class="font-display text-6xl sm:text-7xl lg:text-8xl font-bold tracking-wide leading-none mb-6">
+                    GEAR <span class="text-red">UP.</span><br />GAME <span class="text-lime">ON.</span>
+                </h1>
+                <p class="text-steel text-base sm:text-lg leading-relaxed mb-8 max-w-md">Pro-grade mice, mechanical
+                    keyboards, tournament headsets, and 240Hz monitors — tested by pros, trusted by millions.</p>
+                <div class="flex flex-col sm:flex-row gap-3">
+                    <a href="#gear"
+                        class="btn-red inline-flex items-center justify-center px-8 py-3.5 bg-red text-white text-sm tracking-wider uppercase font-bold rounded-lg">Shop
+                        Gear</a>
+                    <a href="#reviews"
+                        class="btn-red inline-flex items-center justify-center px-8 py-3.5 border border-gunmetal text-snow text-sm tracking-wider uppercase font-medium rounded-lg hover:bg-gunmetal transition">Watch
+                        Reviews</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== TICKER ====== -->
+    <div class="bg-red py-2.5 overflow-hidden whitespace-nowrap">
+        <div class="marquee inline-flex gap-10 text-white text-xs font-bold tracking-wider uppercase">
+            <span>🎮 FREE SHIPPING ON $75+ &nbsp;•&nbsp; 30-DAY RETURNS &nbsp;•&nbsp; PRO PLAYER DISCOUNT 15% OFF
+                &nbsp;•&nbsp; NEW: VIPER X PRO WIRELESS &nbsp;•&nbsp; SPRING LAN TOURNAMENT — REGISTER NOW
+                &nbsp;•&nbsp;</span>
+            <span>🎮 FREE SHIPPING ON $75+ &nbsp;•&nbsp; 30-DAY RETURNS &nbsp;•&nbsp; PRO PLAYER DISCOUNT 15% OFF
+                &nbsp;•&nbsp; NEW: VIPER X PRO WIRELESS &nbsp;•&nbsp; SPRING LAN TOURNAMENT — REGISTER NOW
+                &nbsp;•&nbsp;</span>
+        </div>
+    </div>
+
+    <!-- ====== SHOP GEAR ====== -->
+    <section id="gear" class="py-20 md:py-28 bg-abyss">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 reveal">
+                <div>
+                    <p class="text-red text-xs tracking-[0.3em] uppercase font-bold mb-2">Pro Arsenal</p>
+                    <h2 class="font-display text-5xl md:text-6xl font-bold tracking-wide">SHOP GEAR</h2>
+                </div>
+                <a href="#" class="text-red text-sm font-medium mt-4 md:mt-0 hover:text-snow transition">View All →</a>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+                <div class="gear-card bg-onyx border border-gunmetal rounded-xl overflow-hidden reveal">
+                    <div class="aspect-square bg-gunmetal/50 overflow-hidden p-6 flex items-center justify-center"><img
+                            src="https://images.unsplash.com/photo-1527814050087-3793815479db?w=400&q=80&auto=format&fit=crop"
+                            alt="Gaming mouse" class="w-full h-full object-contain" loading="lazy" /></div>
+                    <div class="p-4"><span class="text-lime text-[10px] tracking-wider uppercase font-bold">New</span>
+                        <h3 class="font-semibold mt-1">Viper X Pro Wireless</h3>
+                        <p class="text-steel text-xs mt-1">26K DPI • 55g • 80hr Battery</p>
+                        <div class="flex items-center justify-between mt-3"><span
+                                class="font-bold text-lg text-red">$149</span><button @click="cartCount++"
+                                class="text-xs bg-red/10 text-red px-3 py-1.5 rounded-lg font-bold hover:bg-red hover:text-white transition">Add</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="gear-card bg-onyx border border-gunmetal rounded-xl overflow-hidden reveal"
+                    style="transition-delay:.1s">
+                    <div class="aspect-square bg-gunmetal/50 overflow-hidden p-6 flex items-center justify-center"><img
+                            src="https://images.unsplash.com/photo-1595225476474-87563907a212?w=400&q=80&auto=format&fit=crop"
+                            alt="Mechanical keyboard" class="w-full h-full object-contain" loading="lazy" /></div>
+                    <div class="p-4"><span class="text-violet text-[10px] tracking-wider uppercase font-bold">Best
+                            Seller</span>
+                        <h3 class="font-semibold mt-1">Titan 65% Keyboard</h3>
+                        <p class="text-steel text-xs mt-1">Hot-swap • PBT Keycaps • RGB</p>
+                        <div class="flex items-center justify-between mt-3"><span
+                                class="font-bold text-lg text-red">$179</span><button @click="cartCount++"
+                                class="text-xs bg-red/10 text-red px-3 py-1.5 rounded-lg font-bold hover:bg-red hover:text-white transition">Add</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="gear-card bg-onyx border border-gunmetal rounded-xl overflow-hidden reveal"
+                    style="transition-delay:.15s">
+                    <div class="aspect-square bg-gunmetal/50 overflow-hidden p-6 flex items-center justify-center"><img
+                            src="https://images.unsplash.com/photo-1583394838336-acd977736f90?w=400&q=80&auto=format&fit=crop"
+                            alt="Gaming headset" class="w-full h-full object-contain" loading="lazy" /></div>
+                    <div class="p-4"><span class="text-cyan text-[10px] tracking-wider uppercase font-bold">Pro
+                            Choice</span>
+                        <h3 class="font-semibold mt-1">StormCloud 7.1 Headset</h3>
+                        <p class="text-steel text-xs mt-1">50mm Drivers • Detach Mic • USB-C</p>
+                        <div class="flex items-center justify-between mt-3"><span
+                                class="font-bold text-lg text-red">$129</span><button @click="cartCount++"
+                                class="text-xs bg-red/10 text-red px-3 py-1.5 rounded-lg font-bold hover:bg-red hover:text-white transition">Add</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="gear-card bg-onyx border border-gunmetal rounded-xl overflow-hidden reveal"
+                    style="transition-delay:.2s">
+                    <div class="aspect-square bg-gunmetal/50 overflow-hidden p-6 flex items-center justify-center"><img
+                            src="https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=400&q=80&auto=format&fit=crop"
+                            alt="Gaming monitor" class="w-full h-full object-contain" loading="lazy" /></div>
+                    <div class="p-4"><span
+                            class="text-red text-[10px] tracking-wider uppercase font-bold">Limited</span>
+                        <h3 class="font-semibold mt-1">Prism 27" 240Hz Monitor</h3>
+                        <p class="text-steel text-xs mt-1">1ms IPS • QHD • G-Sync Compat</p>
+                        <div class="flex items-center justify-between mt-3"><span
+                                class="font-bold text-lg text-red">$449</span><button @click="cartCount++"
+                                class="text-xs bg-red/10 text-red px-3 py-1.5 rounded-lg font-bold hover:bg-red hover:text-white transition">Add</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== REVIEWS ====== -->
+    <section id="reviews" class="py-20 md:py-28 bg-onyx">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-10 reveal">
+                <p class="text-red text-xs tracking-[0.3em] uppercase font-bold mb-3">Deep Dives</p>
+                <h2 class="font-display text-5xl md:text-6xl font-bold tracking-wide">REVIEWS</h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                <article class="group reveal">
+                    <div class="aspect-video relative overflow-hidden rounded-xl mb-4 bg-gunmetal">
+                        <img src="https://images.unsplash.com/photo-1527814050087-3793815479db?w=600&q=80&auto=format&fit=crop"
+                            alt="Viper X review thumbnail"
+                            class="w-full h-full object-cover opacity-70 group-hover:opacity-100 transition"
+                            loading="lazy" />
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <div
+                                class="w-12 h-12 rounded-full bg-red/80 flex items-center justify-center group-hover:scale-110 transition-transform">
+                                <svg class="w-5 h-5 text-white ml-0.5" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M8 5v14l11-7z" />
+                                </svg></div>
+                        </div>
+                        <span
+                            class="absolute bottom-2 right-2 bg-abyss/80 text-snow text-[10px] px-1.5 py-0.5 rounded">12:34</span>
+                    </div>
+                    <h3 class="font-semibold group-hover:text-red transition">Viper X Pro — Is This the Endgame Mouse?
+                    </h3>
+                    <p class="text-steel text-xs mt-1">128K views • 3 days ago</p>
+                </article>
+                <article class="group reveal" style="transition-delay:.1s">
+                    <div class="aspect-video relative overflow-hidden rounded-xl mb-4 bg-gunmetal">
+                        <img src="https://images.unsplash.com/photo-1595225476474-87563907a212?w=600&q=80&auto=format&fit=crop"
+                            alt="Titan 65 review"
+                            class="w-full h-full object-cover opacity-70 group-hover:opacity-100 transition"
+                            loading="lazy" />
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <div
+                                class="w-12 h-12 rounded-full bg-red/80 flex items-center justify-center group-hover:scale-110 transition-transform">
+                                <svg class="w-5 h-5 text-white ml-0.5" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M8 5v14l11-7z" />
+                                </svg></div>
+                        </div>
+                        <span
+                            class="absolute bottom-2 right-2 bg-abyss/80 text-snow text-[10px] px-1.5 py-0.5 rounded">18:47</span>
+                    </div>
+                    <h3 class="font-semibold group-hover:text-red transition">Titan 65% Keyboard — Best Budget Mech of
+                        2026</h3>
+                    <p class="text-steel text-xs mt-1">84K views • 1 week ago</p>
+                </article>
+                <article class="group reveal" style="transition-delay:.15s">
+                    <div class="aspect-video relative overflow-hidden rounded-xl mb-4 bg-gunmetal">
+                        <img src="https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=600&q=80&auto=format&fit=crop"
+                            alt="Monitor review"
+                            class="w-full h-full object-cover opacity-70 group-hover:opacity-100 transition"
+                            loading="lazy" />
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <div
+                                class="w-12 h-12 rounded-full bg-red/80 flex items-center justify-center group-hover:scale-110 transition-transform">
+                                <svg class="w-5 h-5 text-white ml-0.5" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M8 5v14l11-7z" />
+                                </svg></div>
+                        </div>
+                        <span
+                            class="absolute bottom-2 right-2 bg-abyss/80 text-snow text-[10px] px-1.5 py-0.5 rounded">22:15</span>
+                    </div>
+                    <h3 class="font-semibold group-hover:text-red transition">Prism 27" 240Hz — The Monitor That Changed
+                        My Aim</h3>
+                    <p class="text-steel text-xs mt-1">62K views • 2 weeks ago</p>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== ESPORTS ====== -->
+    <section id="esports" class="py-20 md:py-28 bg-abyss">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-10 reveal">
+                <p class="text-lime text-xs tracking-[0.3em] uppercase font-bold mb-3">Competitive</p>
+                <h2 class="font-display text-5xl md:text-6xl font-bold tracking-wide">ESPORTS</h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div class="bg-onyx border border-gunmetal rounded-xl p-6 flex flex-col sm:flex-row gap-5 reveal">
+                    <div
+                        class="w-full sm:w-40 aspect-video sm:aspect-square bg-gunmetal rounded-lg overflow-hidden flex-shrink-0">
+                        <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?w=400&q=80&auto=format&fit=crop"
+                            alt="Esports tournament" class="w-full h-full object-cover" loading="lazy" /></div>
+                    <div><span
+                            class="inline-block px-2 py-0.5 bg-lime/10 text-lime text-[10px] tracking-wider uppercase font-bold rounded mb-2">Upcoming</span>
+                        <h3 class="font-display text-xl font-bold tracking-wide">FRAG Invitational — Spring LAN</h3>
+                        <p class="text-steel text-sm mt-1">March 15–17 • Dallas, TX • $50K Prize Pool • CS2 & Valorant
+                        </p><a href="#" class="text-red text-xs font-bold mt-3 inline-block hover:underline">Register
+                            Now →</a>
+                    </div>
+                </div>
+                <div class="bg-onyx border border-gunmetal rounded-xl p-6 flex flex-col sm:flex-row gap-5 reveal"
+                    style="transition-delay:.1s">
+                    <div
+                        class="w-full sm:w-40 aspect-video sm:aspect-square bg-gunmetal rounded-lg overflow-hidden flex-shrink-0">
+                        <img src="https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=400&q=80&auto=format&fit=crop"
+                            alt="Online qualifier" class="w-full h-full object-cover" loading="lazy" /></div>
+                    <div><span
+                            class="inline-block px-2 py-0.5 bg-violet/10 text-violet text-[10px] tracking-wider uppercase font-bold rounded mb-2">Live
+                            Now</span>
+                        <h3 class="font-display text-xl font-bold tracking-wide">Weekly Open Qualifier — Week 8</h3>
+                        <p class="text-steel text-sm mt-1">Every Friday • Online • Free Entry • Top 4 Advance to LAN</p>
+                        <a href="#" class="text-red text-xs font-bold mt-3 inline-block hover:underline">Watch Live
+                            →</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pro Setups -->
+            <div class="mt-16 reveal">
+                <h3 class="font-display text-2xl font-bold tracking-wide text-center mb-8">PRO SETUPS</h3>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+                    <div class="bg-onyx border border-gunmetal rounded-xl p-5 text-center">
+                        <div
+                            class="w-14 h-14 mx-auto rounded-full bg-red/10 flex items-center justify-center text-2xl mb-3">
+                            🎯</div>
+                        <h4 class="font-semibold">ZywOo</h4>
+                        <p class="text-steel text-xs">CS2 — #1 Ranked</p>
+                        <p class="text-red text-xs mt-2 font-medium">Viper X Pro • 400 DPI • 1.1 sens</p>
+                    </div>
+                    <div class="bg-onyx border border-gunmetal rounded-xl p-5 text-center">
+                        <div
+                            class="w-14 h-14 mx-auto rounded-full bg-violet/10 flex items-center justify-center text-2xl mb-3">
+                            ⚔️</div>
+                        <h4 class="font-semibold">TenZ</h4>
+                        <p class="text-steel text-xs">Valorant — Sentinels</p>
+                        <p class="text-violet text-xs mt-2 font-medium">Titan 65% • Red Switches • 800 DPI</p>
+                    </div>
+                    <div class="bg-onyx border border-gunmetal rounded-xl p-5 text-center">
+                        <div
+                            class="w-14 h-14 mx-auto rounded-full bg-cyan/10 flex items-center justify-center text-2xl mb-3">
+                            🏆</div>
+                        <h4 class="font-semibold">s1mple</h4>
+                        <p class="text-steel text-xs">CS2 — Legend</p>
+                        <p class="text-cyan text-xs mt-2 font-medium">Prism 240Hz • StormCloud 7.1</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== COMMUNITY ====== -->
+    <section id="community" class="py-20 md:py-28 bg-onyx">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-10 reveal">
+                <p class="text-cyan text-xs tracking-[0.3em] uppercase font-bold mb-3">Join the Squad</p>
+                <h2 class="font-display text-5xl md:text-6xl font-bold tracking-wide">COMMUNITY</h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                <article class="bg-gunmetal/50 border border-gunmetal rounded-xl p-5 reveal">
+                    <div class="flex items-center gap-3 mb-3">
+                        <div
+                            class="w-8 h-8 rounded-full bg-red flex items-center justify-center text-white text-xs font-bold">
+                            NX</div>
+                        <div>
+                            <p class="text-sm font-medium">NovaX</p>
+                            <p class="text-steel text-[10px]">2 hours ago</p>
+                        </div>
+                    </div>
+                    <h4 class="font-semibold text-sm">My FRAG Setup Tour — Before & After</h4>
+                    <p class="text-steel text-xs mt-1">Finally upgrade from my old Logitech setup. Titan 65% + Viper X +
+                        Prism 27". Night and day difference in responsiveness.</p>
+                    <div class="flex items-center gap-4 mt-3 text-steel text-xs"><span>❤️ 234</span><span>💬
+                            42</span><span>🔗 Share</span></div>
+                </article>
+                <article class="bg-gunmetal/50 border border-gunmetal rounded-xl p-5 reveal"
+                    style="transition-delay:.1s">
+                    <div class="flex items-center gap-3 mb-3">
+                        <div
+                            class="w-8 h-8 rounded-full bg-violet flex items-center justify-center text-white text-xs font-bold">
+                            KS</div>
+                        <div>
+                            <p class="text-sm font-medium">KaiStrike</p>
+                            <p class="text-steel text-[10px]">5 hours ago</p>
+                        </div>
+                    </div>
+                    <h4 class="font-semibold text-sm">StormCloud 7.1 — Honest Review After 3 Months</h4>
+                    <p class="text-steel text-xs mt-1">Build quality is insane for $129. Mic is not quite podcast-level
+                        but excellent for comms. Comfort is 10/10 for long sessions.</p>
+                    <div class="flex items-center gap-4 mt-3 text-steel text-xs"><span>❤️ 189</span><span>💬
+                            31</span><span>🔗 Share</span></div>
+                </article>
+                <article class="bg-gunmetal/50 border border-gunmetal rounded-xl p-5 reveal"
+                    style="transition-delay:.15s">
+                    <div class="flex items-center gap-3 mb-3">
+                        <div
+                            class="w-8 h-8 rounded-full bg-lime flex items-center justify-center text-abyss text-xs font-bold">
+                            RP</div>
+                        <div>
+                            <p class="text-sm font-medium">RyzenPro</p>
+                            <p class="text-steel text-[10px]">1 day ago</p>
+                        </div>
+                    </div>
+                    <h4 class="font-semibold text-sm">Tip: How to Optimize Your Polling Rate on Viper X</h4>
+                    <p class="text-steel text-xs mt-1">Quick guide on setting 4000Hz polling in the FRAG firmware tool.
+                        Makes a noticeable difference in fast-paced FPS tracking.</p>
+                    <div class="flex items-center gap-4 mt-3 text-steel text-xs"><span>❤️ 312</span><span>💬
+                            67</span><span>🔗 Share</span></div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== SUPPORT ====== -->
+    <section id="support" class="py-20 md:py-28 bg-abyss">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <div class="reveal">
+                <p class="text-red text-xs tracking-[0.3em] uppercase font-bold mb-3">We've Got You</p>
+                <h2 class="font-display text-5xl md:text-6xl font-bold tracking-wide mb-4">SUPPORT</h2>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-5 reveal">
+                <div class="bg-onyx border border-gunmetal rounded-xl p-6">
+                    <div class="text-2xl mb-3">📦</div>
+                    <h4 class="font-display text-lg font-bold tracking-wide">FREE SHIPPING</h4>
+                    <p class="text-steel text-xs mt-1">On $75+. Express 2-day available.</p>
+                </div>
+                <div class="bg-onyx border border-gunmetal rounded-xl p-6">
+                    <div class="text-2xl mb-3">🔧</div>
+                    <h4 class="font-display text-lg font-bold tracking-wide">2-YEAR WARRANTY</h4>
+                    <p class="text-steel text-xs mt-1">No questions asked replacement on defects.</p>
+                </div>
+                <div class="bg-onyx border border-gunmetal rounded-xl p-6">
+                    <div class="text-2xl mb-3">💬</div>
+                    <h4 class="font-display text-lg font-bold tracking-wide">LIVE CHAT</h4>
+                    <p class="text-steel text-xs mt-1">Real gamers answering. 9am–11pm EST, 7 days.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== NEWSLETTER ====== -->
+    <section class="bg-gradient-to-r from-red to-redDark py-10">
+        <div class="max-w-3xl mx-auto px-4 text-center">
+            <h3 class="font-display text-2xl font-bold tracking-wider text-white mb-2">JOIN THE FRAG NEWSLETTER</h3>
+            <p class="text-white/60 text-xs mb-5">Gear drops, pro guides, tournament announcements. No spam.</p>
+            <form class="flex flex-col sm:flex-row gap-3 max-w-lg mx-auto">
+                <input type="email" placeholder="gamer@email.com"
+                    class="flex-1 px-5 py-3 bg-white/10 border border-white/20 text-white placeholder-white/40 text-sm rounded-lg focus:border-white outline-none transition" />
+                <button type="submit"
+                    class="px-8 py-3 bg-abyss text-red text-sm tracking-wider uppercase font-bold rounded-lg btn-red hover:bg-onyx transition">Subscribe</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- ====== FOOTER ====== -->
+    <footer class="bg-abyss py-14 border-t border-gunmetal">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-10">
+                <div class="col-span-2 md:col-span-1"><a href="#home"
+                        class="font-display text-2xl font-bold tracking-widest">FR<span class="text-red">A</span>G</a>
+                    <p class="text-steel text-sm mt-3">Gaming gear for the competitive edge.</p>
+                </div>
+                <div>
+                    <h4 class="text-steel text-xs tracking-wider uppercase mb-4">Shop</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-steel/60 text-sm hover:text-red transition">Mice</a></li>
+                        <li><a href="#" class="text-steel/60 text-sm hover:text-red transition">Keyboards</a></li>
+                        <li><a href="#" class="text-steel/60 text-sm hover:text-red transition">Headsets</a></li>
+                        <li><a href="#" class="text-steel/60 text-sm hover:text-red transition">Monitors</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-steel text-xs tracking-wider uppercase mb-4">Community</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-steel/60 text-sm hover:text-red transition">Discord</a></li>
+                        <li><a href="#" class="text-steel/60 text-sm hover:text-red transition">Forums</a></li>
+                        <li><a href="#" class="text-steel/60 text-sm hover:text-red transition">Esports</a></li>
+                        <li><a href="#" class="text-steel/60 text-sm hover:text-red transition">Blog</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-steel text-xs tracking-wider uppercase mb-4">Support</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-steel/60 text-sm hover:text-red transition">Help Desk</a></li>
+                        <li><a href="#" class="text-steel/60 text-sm hover:text-red transition">Firmware</a></li>
+                        <li><a href="#" class="text-steel/60 text-sm hover:text-red transition">Returns</a></li>
+                        <li><a href="#" class="text-steel/60 text-sm hover:text-red transition">Warranty</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gunmetal pt-6 flex flex-col md:flex-row items-center justify-between gap-4">
+                <p class="text-steel/40 text-xs">&copy; 2026 FRAG Gaming. All rights reserved.</p>
+                <div class="flex gap-3"><a href="#" aria-label="Discord"
+                        class="text-steel/40 hover:text-red transition text-sm font-bold">Discord</a><a href="#"
+                        aria-label="YouTube" class="text-steel/40 hover:text-red transition"><svg class="w-5 h-5"
+                            fill="currentColor" viewBox="0 0 24 24">
+                            <path
+                                d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+                        </svg></a><a href="#" aria-label="Twitter" class="text-steel/40 hover:text-red transition"><svg
+                            class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                            <path
+                                d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                        </svg></a></div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('active'); observer.unobserve(e.target); } });
+            }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+            document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+        });
+    </script>
+</body>
+
+</html>

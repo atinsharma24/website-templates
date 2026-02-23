@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DERMATICA — Science-Led Skincare</title>
+    <meta name="description"
+        content="DERMATICA — Clinical-grade skincare powered by science. Potent, clean formulations backed by dermatologists and loved by skin." />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Source+Serif+4:ital,wght@0,400;0,500;0,600;1,400&display=swap"
+        rel="stylesheet" />
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        display: ['"Outfit"', 'system-ui', 'sans-serif'],
+                        serif: ['"Source Serif 4"', 'Georgia', 'serif'],
+                    },
+                    colors: {
+                        snow: '#FAFAFA',
+                        pearl: '#F0EDE8',
+                        coolGray: '#6B7280',
+                        slate: '#374151',
+                        midnight: '#111827',
+                        clinical: '#E6F0F5',
+                        serum: '#A7C7D9',
+                        accent: '#2563EB',
+                        accentLight: '#DBEAFE',
+                        blushPink: '#FBE8E4',
+                        rosegold: '#D4A59A',
+                    },
+                },
+            },
+        };
+    </script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Outfit', system-ui, sans-serif;
+            background: #FAFAFA;
+            color: #111827;
+            overflow-x: hidden;
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(24px);
+            transition: opacity 0.7s ease, transform 0.7s ease;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .product-hover {
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+        }
+
+        .product-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.06);
+        }
+
+        .ingredient-pill {
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .ingredient-pill:hover {
+            background: #2563EB;
+            color: #fff;
+        }
+
+        /* Progress bar for quiz */
+        .quiz-progress {
+            transition: width 0.5s ease;
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #FAFAFA;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #A7C7D9;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+
+<body x-data="{ mobileMenu: false }" class="bg-snow text-midnight">
+
+    <!-- ====== NAVIGATION ====== -->
+    <header class="fixed top-0 left-0 w-full z-50 bg-snow/90 backdrop-blur-md border-b border-pearl">
+        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16 md:h-20">
+                <a href="#hero" class="font-display text-2xl md:text-3xl font-bold tracking-tight">
+                    DERMA<span class="text-accent">TICA</span>
+                </a>
+
+                <ul
+                    class="hidden md:flex items-center space-x-8 font-display text-sm tracking-wider uppercase text-coolGray">
+                    <li><a href="#shop" class="hover:text-accent transition">Shop</a></li>
+                    <li><a href="#science" class="hover:text-accent transition">Science</a></li>
+                    <li><a href="#about" class="hover:text-accent transition">About Us</a></li>
+                    <li><a href="#quiz" class="hover:text-accent transition">Skin Quiz</a></li>
+                </ul>
+
+                <div class="hidden md:flex items-center gap-3">
+                    <button aria-label="Search" class="p-2 text-coolGray hover:text-accent transition">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M21 21l-5.197-5.197M15.803 15.803A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+                        </svg>
+                    </button>
+                    <button aria-label="Cart" class="p-2 text-coolGray hover:text-accent transition relative">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007z" />
+                        </svg>
+                        <span
+                            class="absolute -top-1 -right-1 bg-accent text-white text-xs w-4 h-4 flex items-center justify-center rounded-full">2</span>
+                    </button>
+                </div>
+
+                <button @click="mobileMenu = !mobileMenu" class="md:hidden p-2 text-midnight" aria-label="Toggle menu">
+                    <svg x-show="!mobileMenu" class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.5"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 9h16.5m-16.5 6.75h16.5" />
+                    </svg>
+                    <svg x-show="mobileMenu" x-cloak class="w-6 h-6" fill="none" stroke="currentColor"
+                        stroke-width="1.5" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+
+            <div x-show="mobileMenu" x-cloak x-transition class="md:hidden pb-6 border-t border-pearl">
+                <ul class="flex flex-col space-y-4 pt-4 font-display text-sm tracking-wider uppercase">
+                    <li><a @click="mobileMenu=false" href="#shop"
+                            class="block py-1 text-coolGray hover:text-accent">Shop</a></li>
+                    <li><a @click="mobileMenu=false" href="#science"
+                            class="block py-1 text-coolGray hover:text-accent">Science</a></li>
+                    <li><a @click="mobileMenu=false" href="#about"
+                            class="block py-1 text-coolGray hover:text-accent">About Us</a></li>
+                    <li><a @click="mobileMenu=false" href="#quiz" class="block py-1 text-accent font-medium">Skin
+                            Quiz</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <!-- ====== HERO ====== -->
+    <section id="hero"
+        class="relative min-h-screen flex items-center overflow-hidden bg-gradient-to-br from-clinical via-snow to-snow">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-32">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div>
+                    <div
+                        class="inline-block px-3 py-1 bg-accentLight text-accent text-xs font-medium tracking-wider uppercase rounded-full mb-6">
+                        Clinically Proven &bull; Dermatologist Approved</div>
+                    <h1
+                        class="font-display text-5xl sm:text-6xl lg:text-7xl font-bold leading-[1.05] tracking-tight mb-6">
+                        Skin Science, <br /><span class="text-accent">Simplified.</span>
+                    </h1>
+                    <p class="text-lg text-coolGray leading-relaxed mb-8 max-w-lg">
+                        Potent, clean formulations designed by dermatologists and backed by clinical trials. No fillers,
+                        no fluff — just ingredients that actually work.
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <a href="#shop"
+                            class="inline-flex items-center justify-center px-8 py-3.5 bg-accent text-white text-sm font-medium tracking-wider uppercase rounded-full hover:bg-accent/90 transition">
+                            Shop Bestsellers
+                        </a>
+                        <a href="#quiz"
+                            class="inline-flex items-center justify-center px-8 py-3.5 border border-midnight/20 text-midnight text-sm font-medium tracking-wider uppercase rounded-full hover:bg-midnight hover:text-white transition">
+                            Take The Skin Quiz
+                        </a>
+                    </div>
+                    <!-- Trust badges -->
+                    <div class="flex items-center gap-6 mt-10 text-coolGray/60 text-xs tracking-wider uppercase">
+                        <span>✦ Vegan</span>
+                        <span>✦ Cruelty-Free</span>
+                        <span>✦ Clean</span>
+                        <span>✦ pH-Balanced</span>
+                    </div>
+                </div>
+
+                <div class="relative flex justify-center">
+                    <img src="https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=600&q=80&auto=format&fit=crop"
+                        alt="Premium skincare serums and bottles on a clean white surface"
+                        class="w-full max-w-lg rounded-2xl shadow-xl" />
+                    <div class="absolute -bottom-4 -left-4 w-32 h-32 bg-accentLight rounded-full -z-10 blur-xl"></div>
+                    <div class="absolute -top-4 -right-4 w-24 h-24 bg-blushPink rounded-full -z-10 blur-xl"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== SHOP ====== -->
+    <section id="shop" class="py-20 md:py-28 bg-snow">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-14 reveal">
+                <p class="text-accent text-xs tracking-[0.3em] uppercase font-medium mb-3">Our Products</p>
+                <h2 class="font-display text-4xl md:text-5xl font-bold tracking-tight">Shop Skincare</h2>
+                <p class="text-coolGray mt-4 max-w-lg mx-auto">Every formula undergoes 12+ months of development and
+                    clinical testing before it earns its place in your routine.</p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Product 1 -->
+                <div class="product-hover bg-white rounded-2xl overflow-hidden reveal">
+                    <div class="aspect-square bg-clinical/30 flex items-center justify-center p-6">
+                        <img src="https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=400&q=80&auto=format&fit=crop"
+                            alt="Vitamin C brightening serum" class="w-full h-full object-contain" loading="lazy" />
+                    </div>
+                    <div class="p-5">
+                        <div class="flex gap-1 mb-2">
+                            <span
+                                class="text-[10px] px-2 py-0.5 bg-accentLight text-accent rounded-full font-medium">Brightening</span>
+                            <span
+                                class="text-[10px] px-2 py-0.5 bg-blushPink text-rosegold rounded-full font-medium">Anti-Aging</span>
+                        </div>
+                        <h3 class="font-display font-semibold">Vitamin C Radiance Serum</h3>
+                        <p class="text-coolGray text-xs mt-1">20% L-Ascorbic Acid + Ferulic Acid</p>
+                        <div class="flex items-center justify-between mt-3">
+                            <span class="font-display font-bold text-accent">$58.00</span>
+                            <button class="text-xs tracking-wider uppercase text-accent font-medium hover:underline">Add
+                                to Cart</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product 2 -->
+                <div class="product-hover bg-white rounded-2xl overflow-hidden reveal" style="transition-delay:0.1s">
+                    <div class="aspect-square bg-clinical/30 flex items-center justify-center p-6">
+                        <img src="https://images.unsplash.com/photo-1611930022073-b7a4ba5fcccd?w=400&q=80&auto=format&fit=crop"
+                            alt="Hyaluronic acid hydrating moisturizer" class="w-full h-full object-contain"
+                            loading="lazy" />
+                    </div>
+                    <div class="p-5">
+                        <div class="flex gap-1 mb-2">
+                            <span
+                                class="text-[10px] px-2 py-0.5 bg-accentLight text-accent rounded-full font-medium">Hydration</span>
+                        </div>
+                        <h3 class="font-display font-semibold">HA Barrier Moisturizer</h3>
+                        <p class="text-coolGray text-xs mt-1">Triple-weight Hyaluronic Acid + Ceramides</p>
+                        <div class="flex items-center justify-between mt-3">
+                            <span class="font-display font-bold text-accent">$45.00</span>
+                            <button class="text-xs tracking-wider uppercase text-accent font-medium hover:underline">Add
+                                to Cart</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product 3 -->
+                <div class="product-hover bg-white rounded-2xl overflow-hidden reveal" style="transition-delay:0.15s">
+                    <div class="aspect-square bg-clinical/30 flex items-center justify-center p-6">
+                        <img src="https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=400&q=80&auto=format&fit=crop"
+                            alt="Retinol night treatment" class="w-full h-full object-contain" loading="lazy" />
+                    </div>
+                    <div class="p-5">
+                        <div class="flex gap-1 mb-2">
+                            <span
+                                class="text-[10px] px-2 py-0.5 bg-blushPink text-rosegold rounded-full font-medium">Anti-Aging</span>
+                            <span
+                                class="text-[10px] px-2 py-0.5 bg-accentLight text-accent rounded-full font-medium">Renewal</span>
+                        </div>
+                        <h3 class="font-display font-semibold">0.5% Retinol Night Oil</h3>
+                        <p class="text-coolGray text-xs mt-1">Encapsulated Retinol + Squalane + Bakuchiol</p>
+                        <div class="flex items-center justify-between mt-3">
+                            <span class="font-display font-bold text-accent">$62.00</span>
+                            <button class="text-xs tracking-wider uppercase text-accent font-medium hover:underline">Add
+                                to Cart</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product 4 -->
+                <div class="product-hover bg-white rounded-2xl overflow-hidden reveal" style="transition-delay:0.2s">
+                    <div class="aspect-square bg-clinical/30 flex items-center justify-center p-6">
+                        <img src="https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?w=400&q=80&auto=format&fit=crop"
+                            alt="Niacinamide pore serum" class="w-full h-full object-contain" loading="lazy" />
+                    </div>
+                    <div class="p-5">
+                        <div class="flex gap-1 mb-2">
+                            <span
+                                class="text-[10px] px-2 py-0.5 bg-accentLight text-accent rounded-full font-medium">Pore
+                                Care</span>
+                            <span
+                                class="text-[10px] px-2 py-0.5 bg-accentLight text-accent rounded-full font-medium">Calming</span>
+                        </div>
+                        <h3 class="font-display font-semibold">Niacinamide Pore Serum</h3>
+                        <p class="text-coolGray text-xs mt-1">10% Niacinamide + 1% Zinc PCA</p>
+                        <div class="flex items-center justify-between mt-3">
+                            <span class="font-display font-bold text-accent">$38.00</span>
+                            <button class="text-xs tracking-wider uppercase text-accent font-medium hover:underline">Add
+                                to Cart</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== SCIENCE / INGREDIENTS ====== -->
+    <section id="science" class="py-20 md:py-28 bg-clinical/30">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+                <div class="reveal">
+                    <p class="text-accent text-xs tracking-[0.3em] uppercase font-medium mb-3">The Science</p>
+                    <h2 class="font-display text-4xl md:text-5xl font-bold tracking-tight mb-6">Ingredients <span
+                            class="text-accent">That Work</span></h2>
+                    <p class="text-coolGray leading-relaxed mb-6">
+                        We don't hide behind proprietary blends or marketing jargon. Every active ingredient is listed
+                        at its exact concentration, and every claim is backed by peer-reviewed clinical data.
+                    </p>
+                    <p class="text-coolGray leading-relaxed mb-8">
+                        Our R&D lab partners with University of Michigan dermatology researchers to develop novel
+                        delivery systems that increase bioavailability by up to 3x compared to standard formulations.
+                    </p>
+
+                    <!-- Key Ingredient Pills -->
+                    <div class="flex flex-wrap gap-2">
+                        <span
+                            class="ingredient-pill px-4 py-2 border border-accent/30 text-accent text-sm rounded-full cursor-pointer">Niacinamide
+                            (10%)</span>
+                        <span
+                            class="ingredient-pill px-4 py-2 border border-accent/30 text-accent text-sm rounded-full cursor-pointer">L-Ascorbic
+                            Acid (20%)</span>
+                        <span
+                            class="ingredient-pill px-4 py-2 border border-accent/30 text-accent text-sm rounded-full cursor-pointer">Retinol
+                            (0.5%)</span>
+                        <span
+                            class="ingredient-pill px-4 py-2 border border-accent/30 text-accent text-sm rounded-full cursor-pointer">Hyaluronic
+                            Acid</span>
+                        <span
+                            class="ingredient-pill px-4 py-2 border border-accent/30 text-accent text-sm rounded-full cursor-pointer">Ceramide
+                            NP</span>
+                        <span
+                            class="ingredient-pill px-4 py-2 border border-accent/30 text-accent text-sm rounded-full cursor-pointer">Bakuchiol</span>
+                        <span
+                            class="ingredient-pill px-4 py-2 border border-accent/30 text-accent text-sm rounded-full cursor-pointer">Squalane</span>
+                        <span
+                            class="ingredient-pill px-4 py-2 border border-accent/30 text-accent text-sm rounded-full cursor-pointer">Zinc
+                            PCA</span>
+                    </div>
+                </div>
+
+                <div class="reveal" style="transition-delay:0.15s">
+                    <!-- Clinical Stats -->
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="bg-white rounded-2xl p-6 text-center">
+                            <p class="font-display text-4xl font-bold text-accent">97%</p>
+                            <p class="text-coolGray text-sm mt-2">reported brighter, more even skin tone in 4 weeks</p>
+                            <p class="text-coolGray/40 text-xs mt-2 italic">Clinical trial, n=120</p>
+                        </div>
+                        <div class="bg-white rounded-2xl p-6 text-center">
+                            <p class="font-display text-4xl font-bold text-accent">94%</p>
+                            <p class="text-coolGray text-sm mt-2">saw visibly reduced fine lines in 8 weeks</p>
+                            <p class="text-coolGray/40 text-xs mt-2 italic">Clinical trial, n=85</p>
+                        </div>
+                        <div class="bg-white rounded-2xl p-6 text-center">
+                            <p class="font-display text-4xl font-bold text-accent">3x</p>
+                            <p class="text-coolGray text-sm mt-2">improved active ingredient absorption</p>
+                            <p class="text-coolGray/40 text-xs mt-2 italic">Bioavailability study, 2025</p>
+                        </div>
+                        <div class="bg-white rounded-2xl p-6 text-center">
+                            <p class="font-display text-4xl font-bold text-accent">0</p>
+                            <p class="text-coolGray text-sm mt-2">parabens, sulfates, synthetic fragrances</p>
+                            <p class="text-coolGray/40 text-xs mt-2 italic">Clean formula standard</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== ABOUT US ====== -->
+    <section id="about" class="py-20 md:py-28 bg-snow">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+                <div class="order-2 lg:order-1 reveal" style="transition-delay:0.1s">
+                    <img src="https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=800&q=80&auto=format&fit=crop"
+                        alt="DERMATICA lab and R&D team" class="w-full aspect-[4/3] object-cover rounded-2xl"
+                        loading="lazy" />
+                </div>
+                <div class="order-1 lg:order-2 reveal">
+                    <p class="text-accent text-xs tracking-[0.3em] uppercase font-medium mb-3">About Us</p>
+                    <h2 class="font-display text-4xl md:text-5xl font-bold tracking-tight mb-6">Built by <span
+                            class="text-accent">Dermatologists</span></h2>
+                    <div class="space-y-4 text-coolGray leading-relaxed">
+                        <p>
+                            DERMATICA was founded in 2020 by board-certified dermatologist Dr. Elena Park, who spent 15
+                            years watching patients waste money on overpriced products filled with inactive fillers. She
+                            set out to create a line where every ingredient earns its place.
+                        </p>
+                        <p>
+                            Today, our team of 12 scientists, 3 dermatologists, and 2 cosmetic chemists develops each
+                            formula in our Portland, Oregon lab. We test obsessively, publish our trial data openly, and
+                            reformulate annually based on the latest peer-reviewed research.
+                        </p>
+                        <p>
+                            We believe great skincare shouldn't require a PhD to understand — or a trust fund to afford.
+                            That's why we keep our prices fair, our ingredient lists transparent, and our science
+                            approachable.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== TESTIMONIALS ====== -->
+    <section class="py-20 md:py-28 bg-pearl/50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12 reveal">
+                <p class="text-accent text-xs tracking-[0.3em] uppercase font-medium mb-3">Real Results</p>
+                <h2 class="font-display text-4xl md:text-5xl font-bold tracking-tight">What Our Customers Say</h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-white rounded-2xl p-6 reveal">
+                    <div class="flex gap-1 mb-4"><template x-for="i in 5"><svg class="w-4 h-4 text-accent"
+                                fill="currentColor" viewBox="0 0 20 20">
+                                <path
+                                    d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                            </svg></template></div>
+                    <p class="text-coolGray text-sm leading-relaxed mb-4">"The Vitamin C Serum literally transformed my
+                        skin in three weeks. My dark spots are fading, my texture is smoother, and I've gotten more
+                        compliments on my skin in one month than in the last five years combined."</p>
+                    <div class="flex items-center gap-3">
+                        <div
+                            class="w-10 h-10 bg-accentLight rounded-full flex items-center justify-center text-accent font-bold text-sm">
+                            JL</div>
+                        <div>
+                            <p class="text-sm font-medium">Jessica L.</p>
+                            <p class="text-coolGray text-xs">Verified Buyer &middot; Combo Skin</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-2xl p-6 reveal" style="transition-delay:0.1s">
+                    <div class="flex gap-1 mb-4"><template x-for="i in 5"><svg class="w-4 h-4 text-accent"
+                                fill="currentColor" viewBox="0 0 20 20">
+                                <path
+                                    d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                            </svg></template></div>
+                    <p class="text-coolGray text-sm leading-relaxed mb-4">"As an esthetician, I'm very picky about
+                        ingredients. DERMATICA is the first brand I've found that lists exact concentrations AND
+                        publishes their trial data. That's real transparency. My clients love it too."</p>
+                    <div class="flex items-center gap-3">
+                        <div
+                            class="w-10 h-10 bg-blushPink rounded-full flex items-center justify-center text-rosegold font-bold text-sm">
+                            MR</div>
+                        <div>
+                            <p class="text-sm font-medium">Maria R.</p>
+                            <p class="text-coolGray text-xs">Licensed Esthetician</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-2xl p-6 reveal" style="transition-delay:0.2s">
+                    <div class="flex gap-1 mb-4"><template x-for="i in 5"><svg class="w-4 h-4 text-accent"
+                                fill="currentColor" viewBox="0 0 20 20">
+                                <path
+                                    d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                            </svg></template></div>
+                    <p class="text-coolGray text-sm leading-relaxed mb-4">"The Retinol Night Oil is the only retinol
+                        I've ever used that didn't make my sensitive skin flake. The encapsulated delivery system is a
+                        game-changer. My fine lines are noticeably softer after just 6 weeks."</p>
+                    <div class="flex items-center gap-3">
+                        <div
+                            class="w-10 h-10 bg-accentLight rounded-full flex items-center justify-center text-accent font-bold text-sm">
+                            AK</div>
+                        <div>
+                            <p class="text-sm font-medium">Akiko K.</p>
+                            <p class="text-coolGray text-xs">Verified Buyer &middot; Sensitive Skin</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== SKIN QUIZ ====== -->
+    <section id="quiz" class="py-20 md:py-28 bg-snow">
+        <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12 reveal">
+                <p class="text-accent text-xs tracking-[0.3em] uppercase font-medium mb-3">Personalized Routine</p>
+                <h2 class="font-display text-4xl md:text-5xl font-bold tracking-tight">Find Your <span
+                        class="text-accent">Perfect</span> Routine</h2>
+                <p class="text-coolGray mt-4">Answer 4 quick questions and we'll build a science-backed skincare regimen
+                    tailored to your unique skin type and concerns.</p>
+            </div>
+
+            <div x-data="{ step: 0, answers: {}, total: 4 }" class="bg-white rounded-2xl p-6 md:p-10 shadow-sm reveal">
+                <!-- Progress Bar -->
+                <div class="mb-8">
+                    <div class="flex justify-between text-xs text-coolGray mb-2">
+                        <span>Progress</span>
+                        <span x-text="Math.min(step, total) + '/' + total"></span>
+                    </div>
+                    <div class="w-full h-1.5 bg-pearl rounded-full overflow-hidden">
+                        <div class="quiz-progress h-full bg-accent rounded-full"
+                            :style="'width:' + (step / total * 100) + '%'"></div>
+                    </div>
+                </div>
+
+                <!-- Q1 -->
+                <div x-show="step === 0">
+                    <h3 class="font-display text-xl font-semibold mb-4">What's your skin type?</h3>
+                    <div class="grid grid-cols-2 gap-3">
+                        <button @click="answers.type='Oily'; step=1"
+                            class="p-4 border border-pearl rounded-xl text-sm text-left hover:border-accent hover:bg-accentLight/30 transition">🌊
+                            Oily<br /><span class="text-coolGray text-xs">Shiny by midday, enlarged
+                                pores</span></button>
+                        <button @click="answers.type='Dry'; step=1"
+                            class="p-4 border border-pearl rounded-xl text-sm text-left hover:border-accent hover:bg-accentLight/30 transition">🏜️
+                            Dry<br /><span class="text-coolGray text-xs">Tight, flaky, needs moisture</span></button>
+                        <button @click="answers.type='Combo'; step=1"
+                            class="p-4 border border-pearl rounded-xl text-sm text-left hover:border-accent hover:bg-accentLight/30 transition">⚖️
+                            Combination<br /><span class="text-coolGray text-xs">Oily T-zone, dry cheeks</span></button>
+                        <button @click="answers.type='Sensitive'; step=1"
+                            class="p-4 border border-pearl rounded-xl text-sm text-left hover:border-accent hover:bg-accentLight/30 transition">🌸
+                            Sensitive<br /><span class="text-coolGray text-xs">Reacts easily,
+                                redness-prone</span></button>
+                    </div>
+                </div>
+
+                <!-- Q2 -->
+                <div x-show="step === 1" x-cloak>
+                    <h3 class="font-display text-xl font-semibold mb-4">What's your #1 skin concern?</h3>
+                    <div class="grid grid-cols-2 gap-3">
+                        <button @click="answers.concern='Aging'; step=2"
+                            class="p-4 border border-pearl rounded-xl text-sm text-left hover:border-accent hover:bg-accentLight/30 transition">⏳
+                            Fine Lines & Wrinkles</button>
+                        <button @click="answers.concern='Acne'; step=2"
+                            class="p-4 border border-pearl rounded-xl text-sm text-left hover:border-accent hover:bg-accentLight/30 transition">🔴
+                            Breakouts & Acne</button>
+                        <button @click="answers.concern='Dullness'; step=2"
+                            class="p-4 border border-pearl rounded-xl text-sm text-left hover:border-accent hover:bg-accentLight/30 transition">✨
+                            Dark spots & Dullness</button>
+                        <button @click="answers.concern='Dryness'; step=2"
+                            class="p-4 border border-pearl rounded-xl text-sm text-left hover:border-accent hover:bg-accentLight/30 transition">💧
+                            Dehydration</button>
+                    </div>
+                </div>
+
+                <!-- Q3 -->
+                <div x-show="step === 2" x-cloak>
+                    <h3 class="font-display text-xl font-semibold mb-4">How many steps do you prefer?</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                        <button @click="answers.steps='Minimal'; step=3"
+                            class="p-4 border border-pearl rounded-xl text-sm hover:border-accent hover:bg-accentLight/30 transition">2–3
+                            Steps<br /><span class="text-coolGray text-xs">Keep it simple</span></button>
+                        <button @click="answers.steps='Moderate'; step=3"
+                            class="p-4 border border-pearl rounded-xl text-sm hover:border-accent hover:bg-accentLight/30 transition">4–5
+                            Steps<br /><span class="text-coolGray text-xs">Balanced routine</span></button>
+                        <button @click="answers.steps='Full'; step=3"
+                            class="p-4 border border-pearl rounded-xl text-sm hover:border-accent hover:bg-accentLight/30 transition">6+
+                            Steps<br /><span class="text-coolGray text-xs">I love my ritual</span></button>
+                    </div>
+                </div>
+
+                <!-- Q4 -->
+                <div x-show="step === 3" x-cloak>
+                    <h3 class="font-display text-xl font-semibold mb-4">What's your budget?</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                        <button @click="answers.budget='Essential'; step=4"
+                            class="p-4 border border-pearl rounded-xl text-sm hover:border-accent hover:bg-accentLight/30 transition">Under
+                            $80<br /><span class="text-coolGray text-xs">Essentials only</span></button>
+                        <button @click="answers.budget='Premium'; step=4"
+                            class="p-4 border border-pearl rounded-xl text-sm hover:border-accent hover:bg-accentLight/30 transition">$80–$150<br /><span
+                                class="text-coolGray text-xs">Invest in key actives</span></button>
+                        <button @click="answers.budget='AllIn'; step=4"
+                            class="p-4 border border-pearl rounded-xl text-sm hover:border-accent hover:bg-accentLight/30 transition">$150+<br /><span
+                                class="text-coolGray text-xs">Full regimen</span></button>
+                    </div>
+                </div>
+
+                <!-- Result -->
+                <div x-show="step === 4" x-cloak class="text-center py-6">
+                    <div class="w-16 h-16 mx-auto bg-accentLight rounded-full flex items-center justify-center mb-4">
+                        <svg class="w-8 h-8 text-accent" fill="none" stroke="currentColor" stroke-width="1.5"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                    <h3 class="font-display text-2xl font-bold mb-2">Your routine is ready!</h3>
+                    <p class="text-coolGray text-sm mb-6">We've curated a personalized regimen based on your answers.
+                        Enter your email and we'll send it straight to your inbox.</p>
+                    <form class="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+                        <input type="email" placeholder="your@email.com"
+                            class="flex-1 px-4 py-3 border border-pearl rounded-full text-sm focus:border-accent outline-none transition" />
+                        <button type="submit"
+                            class="px-6 py-3 bg-accent text-white text-sm font-medium tracking-wider uppercase rounded-full hover:bg-accent/90 transition">Get
+                            My Routine</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== FOOTER ====== -->
+    <footer class="bg-midnight py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
+                <div class="col-span-2 md:col-span-1">
+                    <a href="#hero" class="font-display text-2xl font-bold text-white">DERMA<span
+                            class="text-accent">TICA</span></a>
+                    <p class="text-white/40 text-sm mt-3 leading-relaxed">Science-led skincare. Clean, potent,
+                        transparent.</p>
+                </div>
+                <div>
+                    <h4 class="text-white/60 text-xs tracking-wider uppercase mb-4">Shop</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-white/40 text-sm hover:text-accent transition">All Products</a></li>
+                        <li><a href="#" class="text-white/40 text-sm hover:text-accent transition">Serums</a></li>
+                        <li><a href="#" class="text-white/40 text-sm hover:text-accent transition">Moisturizers</a></li>
+                        <li><a href="#" class="text-white/40 text-sm hover:text-accent transition">Sets & Bundles</a>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white/60 text-xs tracking-wider uppercase mb-4">Learn</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-white/40 text-sm hover:text-accent transition">Ingredient
+                                Glossary</a></li>
+                        <li><a href="#" class="text-white/40 text-sm hover:text-accent transition">Clinical Trials</a>
+                        </li>
+                        <li><a href="#" class="text-white/40 text-sm hover:text-accent transition">Skin Quiz</a></li>
+                        <li><a href="#" class="text-white/40 text-sm hover:text-accent transition">Blog</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white/60 text-xs tracking-wider uppercase mb-4">Support</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-white/40 text-sm hover:text-accent transition">Contact Us</a></li>
+                        <li><a href="#" class="text-white/40 text-sm hover:text-accent transition">Shipping &
+                                Returns</a></li>
+                        <li><a href="#" class="text-white/40 text-sm hover:text-accent transition">FAQ</a></li>
+                        <li><a href="#" class="text-white/40 text-sm hover:text-accent transition">Careers</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-white/10 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
+                <p class="text-white/30 text-xs">&copy; 2026 DERMATICA. All rights reserved.</p>
+                <div class="flex items-center gap-4">
+                    <a href="#" aria-label="Instagram" class="text-white/30 hover:text-accent transition"><svg
+                            class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                            <path
+                                d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" />
+                        </svg></a>
+                    <a href="#" aria-label="TikTok" class="text-white/30 hover:text-accent transition"><svg
+                            class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                            <path
+                                d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1v-3.5a6.37 6.37 0 00-.79-.05A6.34 6.34 0 003.15 15.2a6.34 6.34 0 0010.86 4.43v-7.15a8.16 8.16 0 005.58 2.17V11.2a4.85 4.85 0 01-3-.45V6.69h3z" />
+                        </svg></a>
+                    <a href="#" aria-label="YouTube" class="text-white/30 hover:text-accent transition"><svg
+                            class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                            <path
+                                d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+                        </svg></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('active'); observer.unobserve(entry.target); } });
+            }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+            document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+        });
+    </script>
+</body>
+
+</html>

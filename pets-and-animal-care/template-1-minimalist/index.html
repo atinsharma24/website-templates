@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pawsitive Care — Veterinary Clinic</title>
+    <meta name="description"
+        content="Pawsitive Care Veterinary Clinic — Compassionate, modern veterinary medicine for dogs, cats, and exotic pets. Book your appointment today." />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap"
+        rel="stylesheet" />
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'] },
+                    colors: {
+                        teal: '#0D9488',
+                        tealDark: '#0F766E',
+                        tealLight: '#CCFBF1',
+                        tealPale: '#F0FDFA',
+                        sky: '#E0F2FE',
+                        blue: '#0284C7',
+                        warm: '#FFF7ED',
+                        amber: '#F59E0B',
+                        coral: '#FB7185',
+                        night: '#0F172A',
+                        slate: '#475569',
+                        mist: '#E2E8F0',
+                        cloud: '#F8FAFC',
+                        snow: '#FFFFFF',
+                    },
+                },
+            },
+        };
+    </script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+            background: #FFFFFF;
+            color: #0F172A;
+            overflow-x: hidden;
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity .7s ease, transform .7s ease;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .card {
+            transition: transform .35s, box-shadow .35s;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 16px 48px rgba(13, 148, 136, .08);
+        }
+
+        .btn-teal {
+            transition: transform .25s, box-shadow .25s;
+        }
+
+        .btn-teal:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(13, 148, 136, .25);
+        }
+
+        ::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #FFFFFF;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #0D9488;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+
+<body x-data="{ mobileMenu: false }" class="bg-snow text-night">
+
+    <!-- ====== NAVIGATION ====== -->
+    <header class="fixed top-0 left-0 w-full z-50 bg-snow/90 backdrop-blur-md border-b border-mist/50">
+        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16 md:h-20">
+                <a href="#home" class="flex items-center gap-2">
+                    <span class="text-2xl">🐾</span>
+                    <span class="font-bold text-xl">Pawsitive <span class="text-teal">Care</span></span>
+                </a>
+                <ul class="hidden md:flex items-center space-x-7 text-sm text-slate font-medium">
+                    <li><a href="#services" class="hover:text-teal transition">Services</a></li>
+                    <li><a href="#team" class="hover:text-teal transition">Our Team</a></li>
+                    <li><a href="#patients" class="hover:text-teal transition">New Patients</a></li>
+                    <li><a href="#library" class="hover:text-teal transition">Pet Health</a></li>
+                    <li><a href="#contact" class="hover:text-teal transition">Contact</a></li>
+                </ul>
+                <a href="#contact"
+                    class="hidden md:inline-flex px-6 py-2.5 bg-teal text-white text-xs tracking-wider uppercase font-bold rounded-full btn-teal">Book
+                    Appointment</a>
+                <button @click="mobileMenu=!mobileMenu" class="md:hidden p-2" aria-label="Menu">
+                    <svg x-show="!mobileMenu" class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.5"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 9h16.5m-16.5 6.75h16.5" />
+                    </svg>
+                    <svg x-show="mobileMenu" x-cloak class="w-6 h-6" fill="none" stroke="currentColor"
+                        stroke-width="1.5" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+            <div x-show="mobileMenu" x-cloak x-transition class="md:hidden pb-6 border-t border-mist/50">
+                <ul class="flex flex-col space-y-4 pt-4 text-sm font-medium">
+                    <li><a @click="mobileMenu=false" href="#services"
+                            class="block py-1 text-slate hover:text-teal">Services</a></li>
+                    <li><a @click="mobileMenu=false" href="#team" class="block py-1 text-slate hover:text-teal">Our
+                            Team</a></li>
+                    <li><a @click="mobileMenu=false" href="#patients" class="block py-1 text-slate hover:text-teal">New
+                            Patients</a></li>
+                    <li><a @click="mobileMenu=false" href="#library" class="block py-1 text-slate hover:text-teal">Pet
+                            Health</a></li>
+                    <li><a @click="mobileMenu=false" href="#contact" class="block py-1 text-teal font-bold">Contact</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <!-- ====== HERO ====== -->
+    <section id="home" class="relative min-h-screen flex items-center overflow-hidden bg-tealPale">
+        <div class="absolute top-20 right-0 w-[400px] h-[400px] bg-teal/5 rounded-full blur-3xl"></div>
+        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-32">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+                <div>
+                    <span
+                        class="inline-flex items-center gap-1.5 px-3 py-1 bg-teal/10 text-teal text-xs font-bold tracking-wider uppercase rounded-full border border-teal/20 mb-5">🏥
+                        Now Accepting New Patients</span>
+                    <h1 class="text-5xl sm:text-6xl lg:text-7xl font-extrabold leading-[1.05] mb-6">
+                        Compassionate Care for <span class="text-teal">Every Pet</span>
+                    </h1>
+                    <p class="text-slate text-base sm:text-lg leading-relaxed mb-8 max-w-md">Modern veterinary medicine
+                        with a personal touch. Preventive care, surgery, dentistry, and emergency services for dogs,
+                        cats, and exotic companions.</p>
+                    <div class="flex flex-col sm:flex-row gap-3">
+                        <a href="#contact"
+                            class="btn-teal inline-flex items-center justify-center px-8 py-3.5 bg-teal text-white text-sm tracking-wider uppercase font-bold rounded-full">Book
+                            Appointment</a>
+                        <a href="#services"
+                            class="btn-teal inline-flex items-center justify-center px-8 py-3.5 border border-mist text-night text-sm tracking-wider uppercase font-medium rounded-full hover:bg-night hover:text-white transition">Our
+                            Services</a>
+                    </div>
+                </div>
+                <div class="relative flex justify-center">
+                    <img src="https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=700&q=80&auto=format&fit=crop"
+                        alt="Happy golden retriever at veterinary clinic"
+                        class="w-full max-w-lg rounded-3xl shadow-xl shadow-teal/10" />
+                    <div class="absolute -bottom-4 -left-4 bg-snow border border-mist rounded-xl p-3 shadow-lg">
+                        <div class="flex items-center gap-2"><span class="text-amber text-lg">⭐</span>
+                            <div>
+                                <p class="font-bold text-sm">4.9 / 5.0</p>
+                                <p class="text-slate text-[10px]">2,800+ reviews</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== SERVICES ====== -->
+    <section id="services" class="py-20 md:py-28 bg-snow">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-14 reveal">
+                <p class="text-teal text-xs tracking-[0.3em] uppercase font-semibold mb-3">What We Offer</p>
+                <h2 class="text-4xl md:text-5xl font-bold">Our Services</h2>
+                <p class="text-slate mt-4 max-w-lg mx-auto">Full-spectrum veterinary care under one roof — from puppy
+                    vaccinations to advanced surgical procedures.</p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                <div class="card bg-tealPale border border-tealLight rounded-2xl p-6 reveal">
+                    <div class="w-12 h-12 bg-teal/10 rounded-xl flex items-center justify-center text-2xl mb-4">💉</div>
+                    <h3 class="font-bold text-lg">Wellness & Vaccines</h3>
+                    <p class="text-slate text-sm mt-2 leading-relaxed">Annual exams, core vaccinations, heartworm
+                        testing, and age-specific preventive care plans for every life stage.</p>
+                </div>
+                <div class="card bg-sky/30 border border-sky rounded-2xl p-6 reveal" style="transition-delay:.1s">
+                    <div class="w-12 h-12 bg-blue/10 rounded-xl flex items-center justify-center text-2xl mb-4">🏥</div>
+                    <h3 class="font-bold text-lg">Surgery</h3>
+                    <p class="text-slate text-sm mt-2 leading-relaxed">Spay/neuter, orthopedic, soft tissue, and
+                        laparoscopic surgery — all with in-house anesthesia monitoring.</p>
+                </div>
+                <div class="card bg-warm border border-amber/20 rounded-2xl p-6 reveal" style="transition-delay:.15s">
+                    <div class="w-12 h-12 bg-amber/10 rounded-xl flex items-center justify-center text-2xl mb-4">🦷
+                    </div>
+                    <h3 class="font-bold text-lg">Dental Care</h3>
+                    <p class="text-slate text-sm mt-2 leading-relaxed">Digital dental X-rays, cleanings, extractions,
+                        and at-home oral health guidance — dental disease affects 80% of pets by age 3.</p>
+                </div>
+                <div class="card bg-coral/5 border border-coral/20 rounded-2xl p-6 reveal">
+                    <div class="w-12 h-12 bg-coral/10 rounded-xl flex items-center justify-center text-2xl mb-4">🚨
+                    </div>
+                    <h3 class="font-bold text-lg">Urgent & Emergency</h3>
+                    <p class="text-slate text-sm mt-2 leading-relaxed">Walk-in urgent care Mon–Sat. After-hours
+                        emergency triage with direct transfer to our partner ER hospital.</p>
+                </div>
+                <div class="card bg-tealPale border border-tealLight rounded-2xl p-6 reveal"
+                    style="transition-delay:.1s">
+                    <div class="w-12 h-12 bg-teal/10 rounded-xl flex items-center justify-center text-2xl mb-4">🔬</div>
+                    <h3 class="font-bold text-lg">Diagnostics & Lab</h3>
+                    <p class="text-slate text-sm mt-2 leading-relaxed">In-house blood work with 15-minute results,
+                        digital radiography, ultrasound, and cytology.</p>
+                </div>
+                <div class="card bg-sky/30 border border-sky rounded-2xl p-6 reveal" style="transition-delay:.15s">
+                    <div class="w-12 h-12 bg-blue/10 rounded-xl flex items-center justify-center text-2xl mb-4">🐍</div>
+                    <h3 class="font-bold text-lg">Exotic Pets</h3>
+                    <p class="text-slate text-sm mt-2 leading-relaxed">Specialized care for rabbits, reptiles, birds,
+                        and small mammals. Dr. Chen is board-eligible in exotic animal medicine.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== OUR TEAM ====== -->
+    <section id="team" class="py-20 md:py-28 bg-cloud">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-10 reveal">
+                <p class="text-teal text-xs tracking-[0.3em] uppercase font-semibold mb-3">The Humans Behind the Care
+                </p>
+                <h2 class="text-4xl md:text-5xl font-bold">Our Team</h2>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+                <div class="card bg-snow rounded-2xl overflow-hidden reveal">
+                    <div class="aspect-[3/4] overflow-hidden"><img
+                            src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&q=80&auto=format&fit=crop"
+                            alt="Dr. Sarah Mitchell" class="w-full h-full object-cover" loading="lazy" /></div>
+                    <div class="p-4 text-center">
+                        <h3 class="font-bold">Dr. Sarah Mitchell</h3>
+                        <p class="text-teal text-xs font-semibold mt-0.5">DVM, Chief Veterinarian</p>
+                        <p class="text-slate text-xs mt-2">Cornell '12. 14 years in small animal medicine. Specialty:
+                            orthopedics & soft tissue surgery.</p>
+                    </div>
+                </div>
+                <div class="card bg-snow rounded-2xl overflow-hidden reveal" style="transition-delay:.1s">
+                    <div class="aspect-[3/4] overflow-hidden"><img
+                            src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=400&q=80&auto=format&fit=crop"
+                            alt="Dr. James Chen" class="w-full h-full object-cover" loading="lazy" /></div>
+                    <div class="p-4 text-center">
+                        <h3 class="font-bold">Dr. James Chen</h3>
+                        <p class="text-teal text-xs font-semibold mt-0.5">DVM, Exotic Animal</p>
+                        <p class="text-slate text-xs mt-2">UC Davis '16. Reptiles, birds, pocket pets. Board-eligible
+                            exotic companion animal practice.</p>
+                    </div>
+                </div>
+                <div class="card bg-snow rounded-2xl overflow-hidden reveal" style="transition-delay:.15s">
+                    <div class="aspect-[3/4] overflow-hidden"><img
+                            src="https://images.unsplash.com/photo-1594824476967-48c8b964ac31?w=400&q=80&auto=format&fit=crop"
+                            alt="Dr. Maria Lopez" class="w-full h-full object-cover" loading="lazy" /></div>
+                    <div class="p-4 text-center">
+                        <h3 class="font-bold">Dr. Maria Lopez</h3>
+                        <p class="text-teal text-xs font-semibold mt-0.5">DVM, Dentistry</p>
+                        <p class="text-slate text-xs mt-2">Tufts '14. Advanced veterinary dentistry. Certified in
+                            digital dental radiography.</p>
+                    </div>
+                </div>
+                <div class="card bg-snow rounded-2xl overflow-hidden reveal" style="transition-delay:.2s">
+                    <div class="aspect-[3/4] overflow-hidden"><img
+                            src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&q=80&auto=format&fit=crop"
+                            alt="Amanda Torres" class="w-full h-full object-cover" loading="lazy" /></div>
+                    <div class="p-4 text-center">
+                        <h3 class="font-bold">Amanda Torres</h3>
+                        <p class="text-teal text-xs font-semibold mt-0.5">CVT, Head Technician</p>
+                        <p class="text-slate text-xs mt-2">8 years. Fear Free certified. Specializes in feline handling
+                            and anesthesia monitoring.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== NEW PATIENTS ====== -->
+    <section id="patients" class="py-20 md:py-28 bg-teal text-white">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div class="reveal">
+                    <p class="text-tealLight text-xs tracking-[0.3em] uppercase font-semibold mb-3">Welcome</p>
+                    <h2 class="text-4xl md:text-5xl font-bold mb-6">New Patients</h2>
+                    <p class="text-white/70 leading-relaxed mb-8">We're always accepting new family members. Your first
+                        visit includes a comprehensive exam, vaccine review, and a personalized wellness plan — all at
+                        no extra charge.</p>
+                    <div class="space-y-4">
+                        <div class="flex items-start gap-3">
+                            <div
+                                class="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center text-lg flex-shrink-0">
+                                📋</div>
+                            <div>
+                                <h4 class="font-semibold">Pre-Visit Checklist</h4>
+                                <p class="text-white/60 text-sm">Download and complete our digital form before your
+                                    visit to save time at check-in.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <div
+                                class="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center text-lg flex-shrink-0">
+                                📁</div>
+                            <div>
+                                <h4 class="font-semibold">Transfer Records</h4>
+                                <p class="text-white/60 text-sm">We'll contact your previous vet to request medical
+                                    history — just provide the name and number.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <div
+                                class="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center text-lg flex-shrink-0">
+                                💳</div>
+                            <div>
+                                <h4 class="font-semibold">Payment & Insurance</h4>
+                                <p class="text-white/60 text-sm">We accept all major cards, CareCredit, and work with
+                                    Trupanion, ASPCA Pet Insurance, and Nationwide.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="#contact"
+                        class="btn-teal inline-flex items-center justify-center px-8 py-3.5 bg-white text-teal text-sm tracking-wider uppercase font-bold rounded-full mt-8">Schedule
+                        First Visit</a>
+                </div>
+                <div class="reveal" style="transition-delay:.15s">
+                    <img src="https://images.unsplash.com/photo-1548199973-03cce0bbc87b?w=600&q=80&auto=format&fit=crop"
+                        alt="Two dogs playing in park" class="w-full rounded-2xl shadow-xl shadow-tealDark/20"
+                        loading="lazy" />
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== PET HEALTH LIBRARY ====== -->
+    <section id="library" class="py-20 md:py-28 bg-snow">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 reveal">
+                <div>
+                    <p class="text-teal text-xs tracking-[0.3em] uppercase font-semibold mb-2">Learn</p>
+                    <h2 class="text-4xl md:text-5xl font-bold">Pet Health Library</h2>
+                </div>
+                <a href="#" class="text-teal text-sm font-medium mt-3 md:mt-0 hover:text-tealDark transition">All
+                    Articles →</a>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                <article class="card group rounded-2xl overflow-hidden bg-cloud reveal">
+                    <div class="aspect-[16/10] overflow-hidden"><img
+                            src="https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=600&q=80&auto=format&fit=crop"
+                            alt="Dog vaccination guide" class="w-full h-full object-cover" loading="lazy" /></div>
+                    <div class="p-5"><span class="text-teal text-[10px] tracking-wider uppercase font-bold">Dogs</span>
+                        <h3 class="font-bold text-lg mt-1 group-hover:text-teal transition">The Complete Puppy
+                            Vaccination Schedule — 2026 Update</h3>
+                        <p class="text-slate text-sm mt-2">Core vs. lifestyle vaccines, booster timing, and what to
+                            expect at each visit from 8 weeks to 16 months.</p>
+                        <p class="text-slate/50 text-xs mt-3">7 min read</p>
+                    </div>
+                </article>
+                <article class="card group rounded-2xl overflow-hidden bg-cloud reveal" style="transition-delay:.1s">
+                    <div class="aspect-[16/10] overflow-hidden"><img
+                            src="https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=600&q=80&auto=format&fit=crop"
+                            alt="Cat dental health" class="w-full h-full object-cover" loading="lazy" /></div>
+                    <div class="p-5"><span class="text-coral text-[10px] tracking-wider uppercase font-bold">Cats</span>
+                        <h3 class="font-bold text-lg mt-1 group-hover:text-teal transition">5 Signs Your Cat Needs a
+                            Dental Cleaning (Don't Ignore #3)</h3>
+                        <p class="text-slate text-sm mt-2">Bad breath isn't normal. Learn the symptoms of periodontal
+                            disease and what a professional cleaning involves.</p>
+                        <p class="text-slate/50 text-xs mt-3">5 min read</p>
+                    </div>
+                </article>
+                <article class="card group rounded-2xl overflow-hidden bg-cloud reveal" style="transition-delay:.15s">
+                    <div class="aspect-[16/10] overflow-hidden"><img
+                            src="https://images.unsplash.com/photo-1548199973-03cce0bbc87b?w=600&q=80&auto=format&fit=crop"
+                            alt="Pet nutrition guide" class="w-full h-full object-cover" loading="lazy" /></div>
+                    <div class="p-5"><span
+                            class="text-amber text-[10px] tracking-wider uppercase font-bold">Nutrition</span>
+                        <h3 class="font-bold text-lg mt-1 group-hover:text-teal transition">Grain-Free Dog Food — What
+                            the Science Actually Says</h3>
+                        <p class="text-slate text-sm mt-2">The FDA investigation, DCM risk, and evidence-based guidance
+                            from our nutrition team.</p>
+                        <p class="text-slate/50 text-xs mt-3">10 min read</p>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== CONTACT ====== -->
+    <section id="contact" class="py-20 md:py-28 bg-cloud">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <div class="reveal">
+                    <p class="text-teal text-xs tracking-[0.3em] uppercase font-semibold mb-3">Get In Touch</p>
+                    <h2 class="text-4xl md:text-5xl font-bold mb-6">Contact Us</h2>
+                    <div class="space-y-4 text-sm text-slate">
+                        <div class="flex items-center gap-3"><svg class="w-5 h-5 text-teal" fill="none"
+                                stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
+                            </svg><span>2850 SE Belmont St, Portland, OR 97214</span></div>
+                        <div class="flex items-center gap-3"><svg class="w-5 h-5 text-teal" fill="none"
+                                stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z" />
+                            </svg><span>(503) 555-0842</span></div>
+                        <div class="flex items-center gap-3"><svg class="w-5 h-5 text-teal" fill="none"
+                                stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+                            </svg><span>care@pawsitivevet.com</span></div>
+                    </div>
+                    <div class="mt-6 text-sm text-slate">
+                        <p><strong>Hours:</strong> Mon–Fri 8am–7pm, Sat 9am–4pm</p>
+                        <p class="mt-1"><strong>Urgent Care:</strong> Walk-ins Mon–Sat until 5pm</p>
+                        <p class="mt-1"><strong>After Hours:</strong> Call for ER triage guidance</p>
+                    </div>
+                </div>
+                <div class="reveal" style="transition-delay:.15s">
+                    <form class="bg-snow border border-mist/50 rounded-2xl p-6 md:p-8 space-y-4 shadow-sm">
+                        <h3 class="font-bold text-lg mb-2">Book an Appointment</h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <input type="text" placeholder="Your name"
+                                class="w-full px-4 py-3 bg-cloud border border-mist focus:border-teal outline-none text-sm rounded-xl transition" />
+                            <input type="tel" placeholder="Phone"
+                                class="w-full px-4 py-3 bg-cloud border border-mist focus:border-teal outline-none text-sm rounded-xl transition" />
+                        </div>
+                        <input type="email" placeholder="Email"
+                            class="w-full px-4 py-3 bg-cloud border border-mist focus:border-teal outline-none text-sm rounded-xl transition" />
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <input type="text" placeholder="Pet name"
+                                class="w-full px-4 py-3 bg-cloud border border-mist focus:border-teal outline-none text-sm rounded-xl transition" />
+                            <select
+                                class="w-full px-4 py-3 bg-cloud border border-mist focus:border-teal outline-none text-sm text-slate rounded-xl transition">
+                                <option>Species</option>
+                                <option>Dog</option>
+                                <option>Cat</option>
+                                <option>Rabbit</option>
+                                <option>Reptile</option>
+                                <option>Bird</option>
+                                <option>Other</option>
+                            </select>
+                        </div>
+                        <select
+                            class="w-full px-4 py-3 bg-cloud border border-mist focus:border-teal outline-none text-sm text-slate rounded-xl transition">
+                            <option>Reason for Visit</option>
+                            <option>Wellness Exam</option>
+                            <option>Vaccinations</option>
+                            <option>Sick Pet</option>
+                            <option>Dental Cleaning</option>
+                            <option>Surgery Consult</option>
+                            <option>New Patient Visit</option>
+                            <option>Other</option>
+                        </select>
+                        <textarea rows="3" placeholder="Additional notes…"
+                            class="w-full px-4 py-3 bg-cloud border border-mist focus:border-teal outline-none text-sm rounded-xl resize-none transition"></textarea>
+                        <button type="submit"
+                            class="btn-teal w-full sm:w-auto px-10 py-3.5 bg-teal text-white text-sm tracking-wider uppercase font-bold rounded-full">Request
+                            Appointment</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== FOOTER ====== -->
+    <footer class="bg-night py-14">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-10">
+                <div class="col-span-2 md:col-span-1"><a href="#home" class="flex items-center gap-2"><span
+                            class="text-xl">🐾</span><span class="text-white font-bold text-lg">Pawsitive
+                            Care</span></a>
+                    <p class="text-white/40 text-sm mt-3">Compassionate veterinary medicine.</p>
+                </div>
+                <div>
+                    <h4 class="text-white/50 text-xs tracking-wider uppercase mb-4">Services</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-white/40 text-sm hover:text-teal transition">Wellness</a></li>
+                        <li><a href="#" class="text-white/40 text-sm hover:text-teal transition">Surgery</a></li>
+                        <li><a href="#" class="text-white/40 text-sm hover:text-teal transition">Dental</a></li>
+                        <li><a href="#" class="text-white/40 text-sm hover:text-teal transition">Emergency</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white/50 text-xs tracking-wider uppercase mb-4">Resources</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-white/40 text-sm hover:text-teal transition">Health Library</a></li>
+                        <li><a href="#" class="text-white/40 text-sm hover:text-teal transition">New Patients</a></li>
+                        <li><a href="#" class="text-white/40 text-sm hover:text-teal transition">Pet Portal</a></li>
+                        <li><a href="#" class="text-white/40 text-sm hover:text-teal transition">Insurance</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white/50 text-xs tracking-wider uppercase mb-4">Follow</h4>
+                    <div class="flex gap-3"><a href="#" aria-label="Instagram"
+                            class="text-white/40 hover:text-teal transition"><svg class="w-5 h-5" fill="currentColor"
+                                viewBox="0 0 24 24">
+                                <path
+                                    d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" />
+                            </svg></a><a href="#" aria-label="Facebook"
+                            class="text-white/40 hover:text-teal transition"><svg class="w-5 h-5" fill="currentColor"
+                                viewBox="0 0 24 24">
+                                <path
+                                    d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+                            </svg></a></div>
+                </div>
+            </div>
+            <div class="border-t border-white/10 pt-6 text-center">
+                <p class="text-white/30 text-xs">&copy; 2026 Pawsitive Care Veterinary Clinic. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('active'); observer.unobserve(e.target); } });
+            }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+            document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Evergreen Acres — Landscaping & Nursery</title>
+    <meta name="description"
+        content="Evergreen Acres — Expert landscaping, plant nursery, and garden center. Design, install, and maintain your dream outdoor space." />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Nunito+Sans:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet" />
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        serif: ['"Playfair Display"', 'Georgia', 'serif'],
+                        sans: ['"Nunito Sans"', 'system-ui', 'sans-serif'],
+                    },
+                    colors: {
+                        forest: '#2D5A27',
+                        forestDark: '#1E3E1B',
+                        sage: '#7FA87F',
+                        mint: '#D4E8D0',
+                        meadow: '#F4F9F2',
+                        earth: '#8B6F47',
+                        earthLight: '#F5EDE0',
+                        bark: '#4A3728',
+                        cream: '#FDFBF7',
+                        sunflower: '#F2C94C',
+                    },
+                },
+            },
+        };
+    </script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Nunito Sans', system-ui, sans-serif;
+            background: #FDFBF7;
+            color: #4A3728;
+            overflow-x: hidden;
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(24px);
+            transition: opacity .7s ease, transform .7s ease;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .card-hover {
+            transition: transform .4s, box-shadow .4s;
+        }
+
+        .card-hover:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 32px rgba(45, 90, 39, .1);
+        }
+
+        .card-hover img {
+            transition: transform .6s ease;
+        }
+
+        .card-hover:hover img {
+            transform: scale(1.05);
+        }
+
+        .btn-green {
+            transition: transform .3s, box-shadow .3s;
+        }
+
+        .btn-green:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(45, 90, 39, .2);
+        }
+
+        ::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #FDFBF7;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #7FA87F;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+
+<body x-data="{ mobileMenu: false }" class="bg-cream text-bark">
+
+    <!-- ====== NAVIGATION ====== -->
+    <header class="fixed top-0 left-0 w-full z-50 bg-cream/90 backdrop-blur-md border-b border-mint">
+        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16 md:h-20">
+                <a href="#home" class="flex items-center gap-2">
+                    <svg class="w-8 h-8 text-forest" fill="currentColor" viewBox="0 0 24 24">
+                        <path
+                            d="M17 8C8 10 5.9 16.17 3.82 21.34l1.89.66.95-2.3c.48.17.98.3 1.34.3C19 20 22 3 22 3c-1 2-8 2.25-13 3.25S2 11.5 2 13.5s1.75 3.75 1.75 3.75C7 8 17 8 17 8z" />
+                    </svg>
+                    <span class="font-serif text-2xl md:text-3xl font-semibold">Evergreen <span
+                            class="text-forest">Acres</span></span>
+                </a>
+                <ul class="hidden md:flex items-center space-x-8 text-sm tracking-wider uppercase text-bark/60">
+                    <li><a href="#services" class="hover:text-forest transition">Services</a></li>
+                    <li><a href="#projects" class="hover:text-forest transition">Our Projects</a></li>
+                    <li><a href="#plants" class="hover:text-forest transition">Plant Guide</a></li>
+                    <li><a href="#blog" class="hover:text-forest transition">Blog</a></li>
+                    <li><a href="#quote" class="hover:text-forest transition">Get a Quote</a></li>
+                </ul>
+                <a href="#quote"
+                    class="hidden md:inline-flex items-center px-6 py-2.5 bg-forest text-white text-xs tracking-wider uppercase font-medium rounded-full btn-green hover:bg-forestDark transition">Free
+                    Quote</a>
+                <button @click="mobileMenu = !mobileMenu" class="md:hidden p-2" aria-label="Toggle menu">
+                    <svg x-show="!mobileMenu" class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.5"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 9h16.5m-16.5 6.75h16.5" />
+                    </svg>
+                    <svg x-show="mobileMenu" x-cloak class="w-6 h-6" fill="none" stroke="currentColor"
+                        stroke-width="1.5" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+            <div x-show="mobileMenu" x-cloak x-transition class="md:hidden pb-6 border-t border-mint">
+                <ul class="flex flex-col space-y-4 pt-4 text-sm tracking-wider uppercase">
+                    <li><a @click="mobileMenu=false" href="#services"
+                            class="block py-1 text-bark/60 hover:text-forest">Services</a></li>
+                    <li><a @click="mobileMenu=false" href="#projects"
+                            class="block py-1 text-bark/60 hover:text-forest">Our Projects</a></li>
+                    <li><a @click="mobileMenu=false" href="#plants"
+                            class="block py-1 text-bark/60 hover:text-forest">Plant Guide</a></li>
+                    <li><a @click="mobileMenu=false" href="#blog"
+                            class="block py-1 text-bark/60 hover:text-forest">Blog</a></li>
+                    <li><a @click="mobileMenu=false" href="#quote" class="block py-1 text-forest font-semibold">Get a
+                            Quote</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <!-- ====== HERO ====== -->
+    <section id="home" class="relative min-h-screen flex items-center overflow-hidden">
+        <div class="absolute inset-0">
+            <img src="https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=1920&q=80&auto=format&fit=crop"
+                alt="Beautiful landscaped garden with stone pathway and lush greenery"
+                class="w-full h-full object-cover" />
+            <div class="absolute inset-0 bg-gradient-to-r from-cream/95 via-cream/70 to-transparent"></div>
+        </div>
+        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-32">
+            <div class="max-w-xl">
+                <span
+                    class="inline-flex items-center gap-1.5 px-3 py-1 bg-mint text-forest text-xs font-semibold tracking-wider uppercase rounded-full mb-5">
+                    🌿 Serving Portland Since 2008
+                </span>
+                <h1 class="font-serif text-5xl sm:text-6xl lg:text-7xl leading-[1.1] mb-6">
+                    Your Garden, <br /><span class="italic text-forest">Reimagined</span>
+                </h1>
+                <p class="text-bark/70 text-base sm:text-lg leading-relaxed mb-8 max-w-md">
+                    From design to installation and year-round maintenance — we create outdoor spaces that grow more
+                    beautiful with every season.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <a href="#quote"
+                        class="btn-green inline-flex items-center justify-center px-8 py-3.5 bg-forest text-white text-sm tracking-wider uppercase font-medium rounded-full">
+                        Request a Free Quote
+                    </a>
+                    <a href="#projects"
+                        class="btn-green inline-flex items-center justify-center px-8 py-3.5 border border-bark/20 text-bark text-sm tracking-wider uppercase font-medium rounded-full hover:bg-bark hover:text-cream transition">
+                        View Projects
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== SERVICES ====== -->
+    <section id="services" class="py-20 md:py-28 bg-meadow">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-14 reveal">
+                <p class="text-forest text-xs tracking-[0.3em] uppercase font-semibold mb-3">What We Do</p>
+                <h2 class="font-serif text-4xl md:text-5xl">Our Services</h2>
+                <p class="text-bark/60 mt-4 max-w-lg mx-auto">Full-service landscaping, from backyard redesigns to
+                    commercial installations — plus a 35,000 sq ft nursery stocked year-round.</p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="card-hover bg-cream rounded-xl overflow-hidden reveal">
+                    <div class="aspect-video overflow-hidden"><img
+                            src="https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?w=500&q=80&auto=format&fit=crop"
+                            alt="Landscape design blueprint" class="w-full h-full object-cover" loading="lazy" /></div>
+                    <div class="p-6">
+                        <div class="w-10 h-10 bg-mint rounded-full flex items-center justify-center mb-3 text-lg">🎨
+                        </div>
+                        <h3 class="font-serif text-xl font-semibold">Landscape Design</h3>
+                        <p class="text-bark/60 text-sm mt-2 leading-relaxed">Custom 3D-rendered plans tailored to your
+                            property, climate, and lifestyle. We design for beauty, low maintenance, and four-season
+                            interest.</p>
+                    </div>
+                </div>
+                <div class="card-hover bg-cream rounded-xl overflow-hidden reveal" style="transition-delay:.1s">
+                    <div class="aspect-video overflow-hidden"><img
+                            src="https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=500&q=80&auto=format&fit=crop"
+                            alt="Garden installation" class="w-full h-full object-cover" loading="lazy" /></div>
+                    <div class="p-6">
+                        <div class="w-10 h-10 bg-mint rounded-full flex items-center justify-center mb-3 text-lg">🏗️
+                        </div>
+                        <h3 class="font-serif text-xl font-semibold">Hardscape & Installation</h3>
+                        <p class="text-bark/60 text-sm mt-2 leading-relaxed">Patios, retaining walls, fire pits, water
+                            features, and pergolas — built with natural stone, reclaimed wood, and steel.</p>
+                    </div>
+                </div>
+                <div class="card-hover bg-cream rounded-xl overflow-hidden reveal" style="transition-delay:.15s">
+                    <div class="aspect-video overflow-hidden"><img
+                            src="https://images.unsplash.com/photo-1592150621744-aca64f48394a?w=500&q=80&auto=format&fit=crop"
+                            alt="Lawn mowing and care" class="w-full h-full object-cover" loading="lazy" /></div>
+                    <div class="p-6">
+                        <div class="w-10 h-10 bg-mint rounded-full flex items-center justify-center mb-3 text-lg">✂️
+                        </div>
+                        <h3 class="font-serif text-xl font-semibold">Lawn & Garden Maintenance</h3>
+                        <p class="text-bark/60 text-sm mt-2 leading-relaxed">Weekly mowing, seasonal pruning,
+                            fertilization, pest management, and irrigation system checks — plans from $199/month.</p>
+                    </div>
+                </div>
+                <div class="card-hover bg-cream rounded-xl overflow-hidden reveal">
+                    <div class="aspect-video overflow-hidden"><img
+                            src="https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=500&q=80&auto=format&fit=crop"
+                            alt="Tree care" class="w-full h-full object-cover" loading="lazy" /></div>
+                    <div class="p-6">
+                        <div class="w-10 h-10 bg-mint rounded-full flex items-center justify-center mb-3 text-lg">🌳
+                        </div>
+                        <h3 class="font-serif text-xl font-semibold">Tree & Shrub Care</h3>
+                        <p class="text-bark/60 text-sm mt-2 leading-relaxed">ISA-certified arborists for pruning, health
+                            assessments, and safe removal. We also offer planting and deep-root fertilization.</p>
+                    </div>
+                </div>
+                <div class="card-hover bg-cream rounded-xl overflow-hidden reveal" style="transition-delay:.1s">
+                    <div class="aspect-video overflow-hidden"><img
+                            src="https://images.unsplash.com/photo-1557429287-b2e26868fc2b?w=500&q=80&auto=format&fit=crop"
+                            alt="Irrigation system" class="w-full h-full object-cover" loading="lazy" /></div>
+                    <div class="p-6">
+                        <div class="w-10 h-10 bg-mint rounded-full flex items-center justify-center mb-3 text-lg">💧
+                        </div>
+                        <h3 class="font-serif text-xl font-semibold">Irrigation & Drainage</h3>
+                        <p class="text-bark/60 text-sm mt-2 leading-relaxed">Smart irrigation design and installation,
+                            rain sensor integration, and French drain systems to prevent waterlogging.</p>
+                    </div>
+                </div>
+                <div class="card-hover bg-cream rounded-xl overflow-hidden reveal" style="transition-delay:.15s">
+                    <div class="aspect-video overflow-hidden"><img
+                            src="https://images.unsplash.com/photo-1466692476868-aef1dfb1e735?w=500&q=80&auto=format&fit=crop"
+                            alt="Plant nursery" class="w-full h-full object-cover" loading="lazy" /></div>
+                    <div class="p-6">
+                        <div class="w-10 h-10 bg-mint rounded-full flex items-center justify-center mb-3 text-lg">🪴
+                        </div>
+                        <h3 class="font-serif text-xl font-semibold">Nursery & Plant Sales</h3>
+                        <p class="text-bark/60 text-sm mt-2 leading-relaxed">35,000 sq ft garden center with 800+
+                            varieties — perennials, natives, ornamental trees, edibles, and indoor houseplants.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== OUR PROJECTS ====== -->
+    <section id="projects" class="py-20 md:py-28 bg-cream">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-10 reveal">
+                <p class="text-forest text-xs tracking-[0.3em] uppercase font-semibold mb-3">Gallery</p>
+                <h2 class="font-serif text-4xl md:text-5xl">Our Projects</h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div class="card-hover group relative overflow-hidden rounded-lg reveal">
+                    <img src="https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=600&q=80&auto=format&fit=crop"
+                        alt="Modern garden patio" class="w-full aspect-[4/3] object-cover" loading="lazy" />
+                    <div
+                        class="absolute inset-0 bg-forest/0 group-hover:bg-forest/50 transition-all duration-500 flex items-end p-5">
+                        <div
+                            class="translate-y-4 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-500">
+                            <h3 class="text-white font-serif text-xl">The Hawthorne Retreat</h3>
+                            <p class="text-white/60 text-sm">Full backyard redesign — 2,400 sq ft</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-hover group relative overflow-hidden rounded-lg reveal" style="transition-delay:.1s">
+                    <img src="https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?w=600&q=80&auto=format&fit=crop"
+                        alt="Landscaped front yard" class="w-full aspect-[4/3] object-cover" loading="lazy" />
+                    <div
+                        class="absolute inset-0 bg-forest/0 group-hover:bg-forest/50 transition-all duration-500 flex items-end p-5">
+                        <div
+                            class="translate-y-4 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-500">
+                            <h3 class="text-white font-serif text-xl">Maple Grove Estate</h3>
+                            <p class="text-white/60 text-sm">Front yard curb appeal + lighting</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-hover group relative overflow-hidden rounded-lg reveal" style="transition-delay:.15s">
+                    <img src="https://images.unsplash.com/photo-1598902108854-d1446c0cf98e?w=600&q=80&auto=format&fit=crop"
+                        alt="Commercial building landscaping" class="w-full aspect-[4/3] object-cover" loading="lazy" />
+                    <div
+                        class="absolute inset-0 bg-forest/0 group-hover:bg-forest/50 transition-all duration-500 flex items-end p-5">
+                        <div
+                            class="translate-y-4 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-500">
+                            <h3 class="text-white font-serif text-xl">Parkview Office Campus</h3>
+                            <p class="text-white/60 text-sm">Commercial grounds — 5 acres</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-hover group relative overflow-hidden rounded-lg reveal">
+                    <img src="https://images.unsplash.com/photo-1592150621744-aca64f48394a?w=600&q=80&auto=format&fit=crop"
+                        alt="Stone patio with fire pit" class="w-full aspect-[4/3] object-cover" loading="lazy" />
+                    <div
+                        class="absolute inset-0 bg-forest/0 group-hover:bg-forest/50 transition-all duration-500 flex items-end p-5">
+                        <div
+                            class="translate-y-4 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-500">
+                            <h3 class="text-white font-serif text-xl">The Burnside Fire Pit</h3>
+                            <p class="text-white/60 text-sm">Reclaimed stone patio + gas fire feature</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-hover group relative overflow-hidden rounded-lg reveal" style="transition-delay:.1s">
+                    <img src="https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=600&q=80&auto=format&fit=crop"
+                        alt="Raised garden beds" class="w-full aspect-[4/3] object-cover" loading="lazy" />
+                    <div
+                        class="absolute inset-0 bg-forest/0 group-hover:bg-forest/50 transition-all duration-500 flex items-end p-5">
+                        <div
+                            class="translate-y-4 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-500">
+                            <h3 class="text-white font-serif text-xl">Urban Kitchen Garden</h3>
+                            <p class="text-white/60 text-sm">Cedar raised beds, drip irrigation, herb spirals</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-hover group relative overflow-hidden rounded-lg reveal" style="transition-delay:.15s">
+                    <img src="https://images.unsplash.com/photo-1466692476868-aef1dfb1e735?w=600&q=80&auto=format&fit=crop"
+                        alt="Flowering garden" class="w-full aspect-[4/3] object-cover" loading="lazy" />
+                    <div
+                        class="absolute inset-0 bg-forest/0 group-hover:bg-forest/50 transition-all duration-500 flex items-end p-5">
+                        <div
+                            class="translate-y-4 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-500">
+                            <h3 class="text-white font-serif text-xl">Cottage Perennial Garden</h3>
+                            <p class="text-white/60 text-sm">English-style cottage borders</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== PLANT GUIDE ====== -->
+    <section id="plants" class="py-20 md:py-28 bg-mint/30">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-14 reveal">
+                <p class="text-forest text-xs tracking-[0.3em] uppercase font-semibold mb-3">From Our Nursery</p>
+                <h2 class="font-serif text-4xl md:text-5xl">Plant Guide</h2>
+                <p class="text-bark/60 mt-4 max-w-lg mx-auto">Top picks from our garden center — selected by our
+                    horticulturists for the Pacific Northwest climate.</p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+                <div class="card-hover bg-cream rounded-xl overflow-hidden reveal">
+                    <div class="aspect-square overflow-hidden"><img
+                            src="https://images.unsplash.com/photo-1459411552884-841db9b3cc2a?w=400&q=80&auto=format&fit=crop"
+                            alt="Hydrangea bush in bloom" class="w-full h-full object-cover" loading="lazy" /></div>
+                    <div class="p-5">
+                        <div class="flex items-center gap-2 mb-1"><span
+                                class="text-[10px] px-2 py-0.5 bg-mint text-forest rounded-full font-semibold">Perennial</span><span
+                                class="text-[10px] px-2 py-0.5 bg-sunflower/20 text-earth rounded-full font-semibold">Part
+                                Shade</span></div>
+                        <h3 class="font-serif text-lg font-semibold">Endless Summer Hydrangea</h3>
+                        <p class="text-bark/50 text-xs mt-1">Blue to pink blooms all summer. Zones 4–9. Grows 3–5 ft.
+                        </p>
+                        <p class="text-forest font-semibold text-sm mt-2">$34.99</p>
+                    </div>
+                </div>
+                <div class="card-hover bg-cream rounded-xl overflow-hidden reveal" style="transition-delay:.1s">
+                    <div class="aspect-square overflow-hidden"><img
+                            src="https://images.unsplash.com/photo-1520412099551-62b6bafeb5bb?w=400&q=80&auto=format&fit=crop"
+                            alt="Japanese maple tree" class="w-full h-full object-cover" loading="lazy" /></div>
+                    <div class="p-5">
+                        <div class="flex items-center gap-2 mb-1"><span
+                                class="text-[10px] px-2 py-0.5 bg-earthLight text-earth rounded-full font-semibold">Tree</span><span
+                                class="text-[10px] px-2 py-0.5 bg-sunflower/20 text-earth rounded-full font-semibold">Full
+                                Sun</span></div>
+                        <h3 class="font-serif text-lg font-semibold">Crimson Queen Japanese Maple</h3>
+                        <p class="text-bark/50 text-xs mt-1">Cascading deep red foliage. Zones 5–8. Grows 8–10 ft.</p>
+                        <p class="text-forest font-semibold text-sm mt-2">$149.99</p>
+                    </div>
+                </div>
+                <div class="card-hover bg-cream rounded-xl overflow-hidden reveal" style="transition-delay:.15s">
+                    <div class="aspect-square overflow-hidden"><img
+                            src="https://images.unsplash.com/photo-1530968033775-2c92736b131e?w=400&q=80&auto=format&fit=crop"
+                            alt="Lavender field" class="w-full h-full object-cover" loading="lazy" /></div>
+                    <div class="p-5">
+                        <div class="flex items-center gap-2 mb-1"><span
+                                class="text-[10px] px-2 py-0.5 bg-mint text-forest rounded-full font-semibold">Perennial</span><span
+                                class="text-[10px] px-2 py-0.5 bg-sunflower/20 text-earth rounded-full font-semibold">Full
+                                Sun</span></div>
+                        <h3 class="font-serif text-lg font-semibold">English Lavender 'Hidcote'</h3>
+                        <p class="text-bark/50 text-xs mt-1">Fragrant violet-blue spikes. Drought-tolerant. Zones 5–9.
+                        </p>
+                        <p class="text-forest font-semibold text-sm mt-2">$12.99</p>
+                    </div>
+                </div>
+                <div class="card-hover bg-cream rounded-xl overflow-hidden reveal" style="transition-delay:.2s">
+                    <div class="aspect-square overflow-hidden"><img
+                            src="https://images.unsplash.com/photo-1459411552884-841db9b3cc2a?w=400&q=80&auto=format&fit=crop"
+                            alt="Fern" class="w-full h-full object-cover" loading="lazy" /></div>
+                    <div class="p-5">
+                        <div class="flex items-center gap-2 mb-1"><span
+                                class="text-[10px] px-2 py-0.5 bg-mint text-forest rounded-full font-semibold">Native</span><span
+                                class="text-[10px] px-2 py-0.5 bg-sunflower/20 text-earth rounded-full font-semibold">Shade</span>
+                        </div>
+                        <h3 class="font-serif text-lg font-semibold">Sword Fern (Native PNW)</h3>
+                        <p class="text-bark/50 text-xs mt-1">Low-maintenance evergreen native. Perfect under conifers.
+                        </p>
+                        <p class="text-forest font-semibold text-sm mt-2">$8.99</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-10 reveal"><a href="#"
+                    class="btn-green inline-flex items-center px-8 py-3.5 border border-forest text-forest text-sm tracking-wider uppercase font-medium rounded-full hover:bg-forest hover:text-white transition">View
+                    Full Plant Catalog</a></div>
+        </div>
+    </section>
+
+    <!-- ====== BLOG ====== -->
+    <section id="blog" class="py-20 md:py-28 bg-cream">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 reveal">
+                <div>
+                    <p class="text-forest text-xs tracking-[0.3em] uppercase font-semibold mb-2">Tips & Tricks</p>
+                    <h2 class="font-serif text-4xl md:text-5xl">The Garden Blog</h2>
+                </div>
+                <a href="#"
+                    class="text-forest text-sm font-medium tracking-wider uppercase mt-4 md:mt-0 hover:text-forestDark transition">All
+                    Posts →</a>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <article class="card-hover group reveal">
+                    <div class="aspect-[16/10] overflow-hidden rounded-lg mb-4"><img
+                            src="https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=600&q=80&auto=format&fit=crop"
+                            alt="Spring garden preparation" class="w-full h-full object-cover" loading="lazy" /></div>
+                    <span class="text-forest text-[10px] tracking-wider uppercase font-bold">Seasonal Guide</span>
+                    <h3 class="font-serif text-xl mt-1 group-hover:text-forest transition">Your Complete Spring Garden
+                        Checklist for the Pacific Northwest</h3>
+                    <p class="text-bark/60 text-sm mt-2">Soil prep, pruning schedules, what to plant in March, and how
+                        to wake up your lawn after winter dormancy.</p>
+                    <p class="text-bark/30 text-xs mt-3">8 min read &middot; Feb 15, 2026</p>
+                </article>
+                <article class="card-hover group reveal" style="transition-delay:.1s">
+                    <div class="aspect-[16/10] overflow-hidden rounded-lg mb-4"><img
+                            src="https://images.unsplash.com/photo-1557429287-b2e26868fc2b?w=600&q=80&auto=format&fit=crop"
+                            alt="Drip irrigation setup" class="w-full h-full object-cover" loading="lazy" /></div>
+                    <span class="text-forest text-[10px] tracking-wider uppercase font-bold">How-To</span>
+                    <h3 class="font-serif text-xl mt-1 group-hover:text-forest transition">DIY Drip Irrigation: Save
+                        Water and Your Weekend</h3>
+                    <p class="text-bark/60 text-sm mt-2">A step-by-step guide to installing a drip irrigation system for
+                        raised beds, borders, and containers.</p>
+                    <p class="text-bark/30 text-xs mt-3">6 min read &middot; Feb 8, 2026</p>
+                </article>
+                <article class="card-hover group reveal" style="transition-delay:.2s">
+                    <div class="aspect-[16/10] overflow-hidden rounded-lg mb-4"><img
+                            src="https://images.unsplash.com/photo-1466692476868-aef1dfb1e735?w=600&q=80&auto=format&fit=crop"
+                            alt="Pollinator garden" class="w-full h-full object-cover" loading="lazy" /></div>
+                    <span class="text-forest text-[10px] tracking-wider uppercase font-bold">Ecology</span>
+                    <h3 class="font-serif text-xl mt-1 group-hover:text-forest transition">10 Native Plants That Attract
+                        Pollinators to Your Garden</h3>
+                    <p class="text-bark/60 text-sm mt-2">Create a pollinator paradise with these PNW native species that
+                        butterflies, bees, and hummingbirds love.</p>
+                    <p class="text-bark/30 text-xs mt-3">5 min read &middot; Jan 28, 2026</p>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== REQUEST A QUOTE ====== -->
+    <section id="quote" class="py-20 md:py-28 bg-forest text-white">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">
+                <div class="reveal">
+                    <p class="text-mint text-xs tracking-[0.3em] uppercase font-semibold mb-3">Let's Get Started</p>
+                    <h2 class="font-serif text-4xl md:text-5xl mb-6">Request a <span class="italic text-sunflower">Free
+                            Quote</span></h2>
+                    <p class="text-white/60 leading-relaxed mb-8">Whether it's a full landscape overhaul or a simple
+                        garden refresh, we'd love to learn about your project. Consultations are always free.</p>
+                    <div class="space-y-4 text-sm text-white/60">
+                        <div class="flex items-center gap-3"><svg class="w-5 h-5 text-sunflower" fill="none"
+                                stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z" />
+                            </svg><span>(503) 555-0234</span></div>
+                        <div class="flex items-center gap-3"><svg class="w-5 h-5 text-sunflower" fill="none"
+                                stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+                            </svg><span>hello@evergreenacres.com</span></div>
+                        <div class="flex items-center gap-3"><svg class="w-5 h-5 text-sunflower" fill="none"
+                                stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
+                            </svg><span>4820 SE Division St, Portland, OR 97206</span></div>
+                    </div>
+                    <div class="mt-6 text-sm text-white/40">
+                        <p>Nursery Hours: Mon–Sat 8am–6pm, Sun 9am–5pm</p>
+                    </div>
+                </div>
+
+                <div class="reveal" style="transition-delay:.15s">
+                    <form class="bg-forestDark rounded-xl p-6 md:p-8 space-y-5">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                            <div><label for="qName"
+                                    class="block text-xs tracking-wider uppercase text-white/50 mb-2">Name</label><input
+                                    type="text" id="qName" placeholder="Your name"
+                                    class="w-full px-4 py-3 bg-forest border border-sage/20 focus:border-sunflower outline-none text-sm text-white placeholder-white/30 rounded-lg transition" />
+                            </div>
+                            <div><label for="qPhone"
+                                    class="block text-xs tracking-wider uppercase text-white/50 mb-2">Phone</label><input
+                                    type="tel" id="qPhone" placeholder="(503) 555-0000"
+                                    class="w-full px-4 py-3 bg-forest border border-sage/20 focus:border-sunflower outline-none text-sm text-white placeholder-white/30 rounded-lg transition" />
+                            </div>
+                        </div>
+                        <div><label for="qEmail"
+                                class="block text-xs tracking-wider uppercase text-white/50 mb-2">Email</label><input
+                                type="email" id="qEmail" placeholder="you@example.com"
+                                class="w-full px-4 py-3 bg-forest border border-sage/20 focus:border-sunflower outline-none text-sm text-white placeholder-white/30 rounded-lg transition" />
+                        </div>
+                        <div><label for="qService"
+                                class="block text-xs tracking-wider uppercase text-white/50 mb-2">Service Needed</label>
+                            <select id="qService"
+                                class="w-full px-4 py-3 bg-forest border border-sage/20 focus:border-sunflower outline-none text-sm text-white/50 rounded-lg transition">
+                                <option>Landscape Design</option>
+                                <option>Hardscape & Patios</option>
+                                <option>Lawn Maintenance</option>
+                                <option>Tree & Shrub Care</option>
+                                <option>Irrigation</option>
+                                <option>Nursery / Plant Order</option>
+                                <option>Other</option>
+                            </select>
+                        </div>
+                        <div><label for="qDetails"
+                                class="block text-xs tracking-wider uppercase text-white/50 mb-2">Project
+                                Details</label><textarea id="qDetails" rows="4"
+                                placeholder="Tell us about your space — size, goals, timeline, budget range…"
+                                class="w-full px-4 py-3 bg-forest border border-sage/20 focus:border-sunflower outline-none text-sm text-white placeholder-white/30 rounded-lg resize-none transition"></textarea>
+                        </div>
+                        <button type="submit"
+                            class="btn-green w-full sm:w-auto px-10 py-3.5 bg-sunflower text-bark text-sm tracking-wider uppercase font-bold rounded-full hover:bg-sunflower/90 transition">Submit
+                            Request</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== FOOTER ====== -->
+    <footer class="bg-bark py-14">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-10">
+                <div class="col-span-2 md:col-span-1"><a href="#home"
+                        class="font-serif text-xl text-white font-semibold">🌿 Evergreen Acres</a>
+                    <p class="text-white/40 text-sm mt-3">Landscaping, nursery, and garden center in Portland, Oregon.
+                    </p>
+                </div>
+                <div>
+                    <h4 class="text-white/50 text-xs tracking-wider uppercase mb-4">Services</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-white/40 text-sm hover:text-sage transition">Landscape Design</a>
+                        </li>
+                        <li><a href="#" class="text-white/40 text-sm hover:text-sage transition">Hardscape</a></li>
+                        <li><a href="#" class="text-white/40 text-sm hover:text-sage transition">Maintenance</a></li>
+                        <li><a href="#" class="text-white/40 text-sm hover:text-sage transition">Tree Care</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white/50 text-xs tracking-wider uppercase mb-4">Nursery</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-white/40 text-sm hover:text-sage transition">Plant Guide</a></li>
+                        <li><a href="#" class="text-white/40 text-sm hover:text-sage transition">Blog</a></li>
+                        <li><a href="#" class="text-white/40 text-sm hover:text-sage transition">Workshops</a></li>
+                        <li><a href="#" class="text-white/40 text-sm hover:text-sage transition">Gift Cards</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white/50 text-xs tracking-wider uppercase mb-4">Follow Us</h4>
+                    <div class="flex gap-3"><a href="#" aria-label="Instagram"
+                            class="text-white/40 hover:text-sage transition"><svg class="w-5 h-5" fill="currentColor"
+                                viewBox="0 0 24 24">
+                                <path
+                                    d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" />
+                            </svg></a><a href="#" aria-label="Facebook"
+                            class="text-white/40 hover:text-sage transition"><svg class="w-5 h-5" fill="currentColor"
+                                viewBox="0 0 24 24">
+                                <path
+                                    d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+                            </svg></a><a href="#" aria-label="YouTube"
+                            class="text-white/40 hover:text-sage transition"><svg class="w-5 h-5" fill="currentColor"
+                                viewBox="0 0 24 24">
+                                <path
+                                    d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+                            </svg></a></div>
+                </div>
+            </div>
+            <div class="border-t border-white/10 pt-6 text-center">
+                <p class="text-white/30 text-xs">&copy; 2026 Evergreen Acres Landscaping LLC. All rights reserved.
+                    Licensed, bonded, and insured — CCB #198234</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('active'); observer.unobserve(entry.target); } });
+            }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+            document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+        });
+    </script>
+</body>
+
+</html>

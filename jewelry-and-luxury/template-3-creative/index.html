@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MAËLLE — Handcrafted Bijoux Atelier</title>
+    <meta name="description"
+        content="MAËLLE — Handcrafted jewelry atelier. One-of-a-kind pieces forged in recycled gold and silver, inspired by the wild Oregon coast. Every piece tells a story." />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=Manrope:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet" />
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        serif: ['"Crimson Pro"', 'Georgia', 'serif'],
+                        sans: ['"Manrope"', 'system-ui', 'sans-serif'],
+                    },
+                    colors: {
+                        terracotta: '#C2410C',
+                        terracottaPale: '#FFF7ED',
+                        sage: '#4D7C0F',
+                        sagePale: '#F7FEE7',
+                        stone: '#78716C',
+                        warm: '#A8A29E',
+                        sand: '#D6D3D1',
+                        linen: '#F5F1EB',
+                        cream: '#FAF8F5',
+                        earth: '#44403C',
+                        night: '#1C1917',
+                        mist: '#E7E5E4',
+                        snow: '#FFFFFF',
+                    },
+                },
+            },
+        };
+    </script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Manrope', system-ui, sans-serif;
+            background: #FAF8F5;
+            color: #1C1917;
+            overflow-x: hidden;
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity .8s ease, transform .8s ease;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .card {
+            transition: transform .4s, box-shadow .4s;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 56px rgba(194, 65, 12, .06);
+        }
+
+        .card img {
+            transition: transform .6s ease;
+        }
+
+        .card:hover img {
+            transform: scale(1.04);
+        }
+
+        .btn-terra {
+            transition: all .3s ease;
+        }
+
+        .btn-terra:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(194, 65, 12, .2);
+        }
+
+        ::-webkit-scrollbar {
+            width: 3px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #FAF8F5;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #C2410C;
+            border-radius: 2px;
+        }
+    </style>
+</head>
+
+<body x-data="{ mobileMenu: false }" class="bg-cream text-night">
+
+    <!-- ====== NAVIGATION ====== -->
+    <header class="fixed top-0 left-0 w-full z-50 bg-cream/90 backdrop-blur-md border-b border-mist/30">
+        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16 md:h-20">
+                <a href="#home"
+                    class="font-serif text-2xl sm:text-3xl font-light italic tracking-wide text-terracotta">Maëlle</a>
+                <ul
+                    class="hidden md:flex items-center space-x-8 text-xs text-stone tracking-[0.15em] uppercase font-medium">
+                    <li><a href="#shop" class="hover:text-terracotta transition">Shop</a></li>
+                    <li><a href="#collections" class="hover:text-terracotta transition">Collections</a></li>
+                    <li><a href="#craft" class="hover:text-terracotta transition">Craftsmanship</a></li>
+                    <li><a href="#artist" class="hover:text-terracotta transition">The Artist</a></li>
+                    <li><a href="#contact" class="hover:text-terracotta transition">Contact</a></li>
+                </ul>
+                <button @click="mobileMenu=!mobileMenu" class="md:hidden p-2" aria-label="Menu">
+                    <svg x-show="!mobileMenu" class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.5"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 9h16.5m-16.5 6.75h16.5" />
+                    </svg>
+                    <svg x-show="mobileMenu" x-cloak class="w-6 h-6" fill="none" stroke="currentColor"
+                        stroke-width="1.5" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+            <div x-show="mobileMenu" x-cloak x-transition class="md:hidden pb-6 border-t border-mist/30">
+                <ul class="flex flex-col space-y-4 pt-4 text-xs tracking-[0.15em] uppercase font-medium">
+                    <li><a @click="mobileMenu=false" href="#shop"
+                            class="block py-1 text-stone hover:text-terracotta">Shop</a></li>
+                    <li><a @click="mobileMenu=false" href="#collections"
+                            class="block py-1 text-stone hover:text-terracotta">Collections</a></li>
+                    <li><a @click="mobileMenu=false" href="#craft"
+                            class="block py-1 text-stone hover:text-terracotta">Craftsmanship</a></li>
+                    <li><a @click="mobileMenu=false" href="#artist"
+                            class="block py-1 text-stone hover:text-terracotta">The Artist</a></li>
+                    <li><a @click="mobileMenu=false" href="#contact"
+                            class="block py-1 text-terracotta font-semibold">Contact</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <!-- ====== HERO ====== -->
+    <section id="home" class="relative min-h-screen flex items-center overflow-hidden">
+        <div class="absolute inset-0"><img
+                src="https://images.unsplash.com/photo-1603561591411-07134e71a2a9?w=1920&q=80&auto=format&fit=crop"
+                alt="Handcrafted gold rings on textured stone" class="w-full h-full object-cover" />
+            <div class="absolute inset-0 bg-gradient-to-r from-cream via-cream/70 to-cream/20"></div>
+        </div>
+        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-32">
+            <div class="max-w-lg">
+                <p class="text-terracotta text-xs tracking-[0.3em] uppercase font-medium mb-5">Handforged •
+                    One-of-a-Kind</p>
+                <h1 class="font-serif text-5xl sm:text-6xl lg:text-7xl font-light italic leading-[1.1] mb-6">
+                    Made by <span class="text-terracotta">Hand,</span> Worn with <span class="text-sage">Soul</span>
+                </h1>
+                <p class="text-stone text-sm leading-relaxed tracking-wide mb-8 max-w-sm">Small-batch, handforged
+                    jewelry from a one-woman atelier on the Oregon coast. Recycled metals, raw stones, and no two pieces
+                    alike.</p>
+                <a href="#shop"
+                    class="btn-terra inline-flex items-center gap-2 px-8 py-3.5 bg-terracotta text-white text-xs tracking-[0.2em] uppercase font-semibold rounded-full">Shop
+                    the Collection</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== SHOP ====== -->
+    <section id="shop" class="py-20 md:py-28 bg-cream">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 reveal">
+                <div>
+                    <p class="text-terracotta text-xs tracking-[0.3em] uppercase font-medium mb-2">All Pieces</p>
+                    <h2 class="font-serif text-4xl md:text-5xl font-light italic">Shop</h2>
+                </div>
+                <a href="#" class="text-terracotta text-sm font-medium mt-3 md:mt-0 hover:text-night transition">View
+                    All →</a>
+            </div>
+
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="card rounded-2xl overflow-hidden reveal">
+                    <div class="aspect-square overflow-hidden bg-linen"><img
+                            src="https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=500&q=80&auto=format&fit=crop"
+                            alt="Hammered gold ring" class="w-full h-full object-cover" loading="lazy" /></div>
+                    <div class="p-4">
+                        <h4 class="font-serif text-lg italic">Rivière Ring</h4>
+                        <p class="text-stone text-xs mt-1">Recycled 14K gold • Hammered</p>
+                        <p class="text-terracotta font-semibold text-sm mt-2">$285</p>
+                    </div>
+                </div>
+                <div class="card rounded-2xl overflow-hidden reveal" style="transition-delay:.1s">
+                    <div class="aspect-square overflow-hidden bg-linen"><img
+                            src="https://images.unsplash.com/photo-1515562141589-67f0d9c6a0e5?w=500&q=80&auto=format&fit=crop"
+                            alt="Rough sapphire pendant" class="w-full h-full object-cover" loading="lazy" /></div>
+                    <div class="p-4">
+                        <h4 class="font-serif text-lg italic">Drift Pendant</h4>
+                        <p class="text-stone text-xs mt-1">Sterling silver • Raw sapphire</p>
+                        <p class="text-terracotta font-semibold text-sm mt-2">$195</p>
+                    </div>
+                </div>
+                <div class="card rounded-2xl overflow-hidden reveal" style="transition-delay:.15s">
+                    <div class="aspect-square overflow-hidden bg-linen"><img
+                            src="https://images.unsplash.com/photo-1603561591411-07134e71a2a9?w=500&q=80&auto=format&fit=crop"
+                            alt="Stacking bands" class="w-full h-full object-cover" loading="lazy" /></div>
+                    <div class="p-4">
+                        <h4 class="font-serif text-lg italic">Tide Stacking Bands</h4>
+                        <p class="text-stone text-xs mt-1">Recycled gold & silver • Set of 3</p>
+                        <p class="text-terracotta font-semibold text-sm mt-2">$320</p>
+                    </div>
+                </div>
+                <div class="card rounded-2xl overflow-hidden reveal" style="transition-delay:.2s">
+                    <div class="aspect-square overflow-hidden bg-linen"><img
+                            src="https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=500&q=80&auto=format&fit=crop"
+                            alt="Textured earrings" class="w-full h-full object-cover" loading="lazy" /></div>
+                    <div class="p-4">
+                        <h4 class="font-serif text-lg italic">Ember Earrings</h4>
+                        <p class="text-stone text-xs mt-1">14K rose gold • Oxidized texture</p>
+                        <p class="text-terracotta font-semibold text-sm mt-2">$240</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== COLLECTIONS ====== -->
+    <section id="collections" class="py-20 md:py-28 bg-linen">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-14 reveal">
+                <p class="text-terracotta text-xs tracking-[0.3em] uppercase font-medium mb-3">Seasonal</p>
+                <h2 class="font-serif text-4xl md:text-5xl font-light italic">Collections</h2>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                <div class="card group relative rounded-2xl overflow-hidden reveal">
+                    <div class="aspect-[3/4] overflow-hidden"><img
+                            src="https://images.unsplash.com/photo-1515562141589-67f0d9c6a0e5?w=600&q=80&auto=format&fit=crop"
+                            alt="Tideline collection"
+                            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                            loading="lazy" /></div>
+                    <div
+                        class="absolute inset-0 bg-gradient-to-t from-night/60 to-transparent flex flex-col justify-end p-6">
+                        <h3 class="font-serif text-2xl italic text-white">Tideline</h3>
+                        <p class="text-white/60 text-xs mt-1 tracking-wide">Inspired by the jagged Oregon coast. Raw
+                            textures & sea glass.</p>
+                        <a href="#" class="text-terracotta text-xs font-medium mt-3 hover:text-white transition">Explore
+                            →</a>
+                    </div>
+                </div>
+                <div class="card group relative rounded-2xl overflow-hidden reveal" style="transition-delay:.1s">
+                    <div class="aspect-[3/4] overflow-hidden"><img
+                            src="https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=600&q=80&auto=format&fit=crop"
+                            alt="Ember collection"
+                            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                            loading="lazy" /></div>
+                    <div
+                        class="absolute inset-0 bg-gradient-to-t from-night/60 to-transparent flex flex-col justify-end p-6">
+                        <h3 class="font-serif text-2xl italic text-white">Ember</h3>
+                        <p class="text-white/60 text-xs mt-1 tracking-wide">Warm tones, fire-forged metals & amber
+                            cabochons.</p>
+                        <a href="#" class="text-terracotta text-xs font-medium mt-3 hover:text-white transition">Explore
+                            →</a>
+                    </div>
+                </div>
+                <div class="card group relative rounded-2xl overflow-hidden reveal" style="transition-delay:.15s">
+                    <div class="aspect-[3/4] overflow-hidden"><img
+                            src="https://images.unsplash.com/photo-1603561591411-07134e71a2a9?w=600&q=80&auto=format&fit=crop"
+                            alt="Bloom collection"
+                            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                            loading="lazy" /></div>
+                    <div
+                        class="absolute inset-0 bg-gradient-to-t from-night/60 to-transparent flex flex-col justify-end p-6">
+                        <h3 class="font-serif text-2xl italic text-white">Bloom</h3>
+                        <p class="text-white/60 text-xs mt-1 tracking-wide">Botanical forms cast in recycled gold.
+                            Spring 2026.</p>
+                        <a href="#" class="text-terracotta text-xs font-medium mt-3 hover:text-white transition">Explore
+                            →</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== CRAFTSMANSHIP ====== -->
+    <section id="craft" class="py-20 md:py-28 bg-earth text-white">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-14 reveal">
+                <p class="text-terracotta text-xs tracking-[0.3em] uppercase font-medium mb-3">The Process</p>
+                <h2 class="font-serif text-4xl md:text-5xl font-light italic">Craftsmanship</h2>
+                <p class="text-white/40 text-sm mt-4 max-w-md mx-auto tracking-wide">Every piece is made by hand in my
+                    small coastal studio — from sketch to finish, no machines, no shortcuts.</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="flex gap-4 reveal">
+                    <div
+                        class="w-10 h-10 border border-terracotta/30 rounded-full flex items-center justify-center flex-shrink-0">
+                        <span class="font-serif italic text-terracotta">01</span></div>
+                    <div>
+                        <h3 class="font-serif text-lg italic">Sketch & Design</h3>
+                        <p class="text-white/40 text-xs mt-2 leading-relaxed">Each piece begins as a pencil sketch in my
+                            journal, inspired by tidal patterns, geological formations, and botanical forms.</p>
+                    </div>
+                </div>
+                <div class="flex gap-4 reveal" style="transition-delay:.1s">
+                    <div
+                        class="w-10 h-10 border border-terracotta/30 rounded-full flex items-center justify-center flex-shrink-0">
+                        <span class="font-serif italic text-terracotta">02</span></div>
+                    <div>
+                        <h3 class="font-serif text-lg italic">Forge & Form</h3>
+                        <p class="text-white/40 text-xs mt-2 leading-relaxed">Using recycled precious metals, I
+                            hand-forge each piece at my bench with hammer, torch, and traditional silversmithing
+                            techniques.</p>
+                    </div>
+                </div>
+                <div class="flex gap-4 reveal">
+                    <div
+                        class="w-10 h-10 border border-terracotta/30 rounded-full flex items-center justify-center flex-shrink-0">
+                        <span class="font-serif italic text-terracotta">03</span></div>
+                    <div>
+                        <h3 class="font-serif text-lg italic">Set & Finish</h3>
+                        <p class="text-white/40 text-xs mt-2 leading-relaxed">Stones are hand-set, surfaces textured or
+                            polished, and patinas applied. Each piece is one-of-a-kind — slight variations are part of
+                            the beauty.</p>
+                    </div>
+                </div>
+                <div class="flex gap-4 reveal" style="transition-delay:.1s">
+                    <div
+                        class="w-10 h-10 border border-terracotta/30 rounded-full flex items-center justify-center flex-shrink-0">
+                        <span class="font-serif italic text-terracotta">04</span></div>
+                    <div>
+                        <h3 class="font-serif text-lg italic">Package & Ship</h3>
+                        <p class="text-white/40 text-xs mt-2 leading-relaxed">Wrapped in linen and housed in handmade
+                            boxes from local paper artisans. Shipped plastic-free with a signed certificate of
+                            authenticity.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="flex justify-center gap-6 mt-12 text-center reveal">
+                <div>
+                    <p class="font-serif text-2xl italic text-terracotta">100%</p>
+                    <p class="text-white/40 text-[10px] tracking-wider uppercase mt-1">Recycled Metals</p>
+                </div>
+                <div>
+                    <p class="font-serif text-2xl italic text-terracotta">1</p>
+                    <p class="text-white/40 text-[10px] tracking-wider uppercase mt-1">Maker</p>
+                </div>
+                <div>
+                    <p class="font-serif text-2xl italic text-terracotta">0</p>
+                    <p class="text-white/40 text-[10px] tracking-wider uppercase mt-1">Duplicates</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== ABOUT THE ARTIST ====== -->
+    <section id="artist" class="py-20 md:py-28 bg-cream">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div class="reveal" style="transition-delay:.15s">
+                    <p class="text-terracotta text-xs tracking-[0.3em] uppercase font-medium mb-3">The Maker</p>
+                    <h2 class="font-serif text-4xl md:text-5xl font-light italic mb-6">About the Artist</h2>
+                    <div class="space-y-4 text-stone text-sm leading-relaxed tracking-wide">
+                        <p>Hi, I'm Maëlle. I'm a self-taught metalsmith working from a converted garage studio in Cannon
+                            Beach, Oregon. I've been making jewelry since 2015, when I traded a career in architecture
+                            for a torch and an anvil.</p>
+                        <p>My work is rooted in the Oregon landscape — I find most of my stones beachcombing, and every
+                            texture in my pieces comes from hammering on a little steel block I found on the beach our
+                            first week here. The imperfections are what make each piece alive.</p>
+                        <p>I use 100% recycled gold and silver, source stones ethically, and ship everything
+                            plastic-free. Sustainability isn't a brand value — it's just how I make things.</p>
+                    </div>
+                </div>
+                <div class="reveal"><img
+                        src="https://images.unsplash.com/photo-1603561591411-07134e71a2a9?w=800&q=80&auto=format&fit=crop"
+                        alt="Maëlle at her workbench" class="w-full aspect-[4/5] object-cover rounded-2xl"
+                        loading="lazy" /></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== CONTACT ====== -->
+    <section id="contact" class="py-20 md:py-28 bg-linen">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <div class="reveal">
+                    <p class="text-terracotta text-xs tracking-[0.3em] uppercase font-medium mb-3">Say Hello</p>
+                    <h2 class="font-serif text-4xl md:text-5xl font-light italic mb-6">Contact</h2>
+                    <div class="space-y-4 text-sm text-stone tracking-wide">
+                        <div>
+                            <h4 class="text-night font-medium mb-1">Studio</h4>
+                            <p>Cannon Beach, Oregon (by appointment)</p>
+                        </div>
+                        <div>
+                            <h4 class="text-night font-medium mb-1">Email</h4>
+                            <p>hello@maelle-jewelry.com</p>
+                        </div>
+                        <div>
+                            <h4 class="text-night font-medium mb-1">Custom Orders</h4>
+                            <p>I accept a limited number of custom commissions each quarter. Email with your idea and
+                                I'll let you know availability.</p>
+                        </div>
+                        <div>
+                            <h4 class="text-night font-medium mb-1">Wholesale</h4>
+                            <p>Stocked at select galleries and boutiques. Email for wholesale inquiries.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="reveal" style="transition-delay:.15s">
+                    <form class="bg-cream border border-mist/30 rounded-2xl p-6 md:p-8 space-y-4">
+                        <input type="text" placeholder="Name"
+                            class="w-full px-4 py-3 bg-linen border border-mist/30 focus:border-terracotta outline-none text-sm rounded-xl transition" />
+                        <input type="email" placeholder="Email"
+                            class="w-full px-4 py-3 bg-linen border border-mist/30 focus:border-terracotta outline-none text-sm rounded-xl transition" />
+                        <select
+                            class="w-full px-4 py-3 bg-linen border border-mist/30 focus:border-terracotta outline-none text-sm text-stone rounded-xl transition">
+                            <option>I'd like to…</option>
+                            <option>Purchase a Piece</option>
+                            <option>Commission a Custom Order</option>
+                            <option>Wholesale Inquiry</option>
+                            <option>Press / Feature</option>
+                            <option>Just Say Hi</option>
+                        </select>
+                        <textarea rows="4" placeholder="Your message…"
+                            class="w-full px-4 py-3 bg-linen border border-mist/30 focus:border-terracotta outline-none text-sm rounded-xl resize-none transition"></textarea>
+                        <button type="submit"
+                            class="btn-terra w-full sm:w-auto px-10 py-3.5 bg-terracotta text-white text-xs tracking-[0.2em] uppercase font-semibold rounded-full">Send</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== FOOTER ====== -->
+    <footer class="bg-night py-14">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-10">
+                <div class="col-span-2 md:col-span-1"><a href="#home"
+                        class="font-serif text-xl italic text-terracotta">Maëlle</a>
+                    <p class="text-white/30 text-xs mt-3 tracking-wide">Handcrafted jewelry. Cannon Beach, OR.</p>
+                </div>
+                <div>
+                    <h4 class="text-white/40 text-[10px] tracking-[0.2em] uppercase mb-4">Shop</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-white/30 text-xs hover:text-terracotta transition">All Pieces</a>
+                        </li>
+                        <li><a href="#" class="text-white/30 text-xs hover:text-terracotta transition">Rings</a></li>
+                        <li><a href="#" class="text-white/30 text-xs hover:text-terracotta transition">Necklaces</a>
+                        </li>
+                        <li><a href="#" class="text-white/30 text-xs hover:text-terracotta transition">Earrings</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white/40 text-[10px] tracking-[0.2em] uppercase mb-4">Info</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-white/30 text-xs hover:text-terracotta transition">About</a></li>
+                        <li><a href="#" class="text-white/30 text-xs hover:text-terracotta transition">Shipping</a></li>
+                        <li><a href="#" class="text-white/30 text-xs hover:text-terracotta transition">Care Guide</a>
+                        </li>
+                        <li><a href="#" class="text-white/30 text-xs hover:text-terracotta transition">FAQ</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white/40 text-[10px] tracking-[0.2em] uppercase mb-4">Follow</h4>
+                    <div class="flex gap-3"><a href="#" aria-label="Instagram"
+                            class="text-white/30 hover:text-terracotta transition"><svg class="w-4 h-4"
+                                fill="currentColor" viewBox="0 0 24 24">
+                                <path
+                                    d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" />
+                            </svg></a><a href="#" aria-label="Pinterest"
+                            class="text-white/30 hover:text-terracotta transition"><svg class="w-4 h-4"
+                                fill="currentColor" viewBox="0 0 24 24">
+                                <path
+                                    d="M12.017 0C5.396 0 .029 5.367.029 11.987c0 5.079 3.158 9.417 7.618 11.162-.105-.949-.199-2.403.041-3.439.219-.937 1.406-5.957 1.406-5.957s-.359-.72-.359-1.781c0-1.668.967-2.914 2.171-2.914 1.023 0 1.518.769 1.518 1.69 0 1.029-.655 2.568-.994 3.995-.283 1.194.599 2.169 1.777 2.169 2.133 0 3.772-2.249 3.772-5.495 0-2.873-2.064-4.882-5.012-4.882-3.414 0-5.418 2.561-5.418 5.207 0 1.031.397 2.138.893 2.738a.36.36 0 01.083.345l-.333 1.36c-.053.22-.174.267-.402.161-1.499-.698-2.436-2.889-2.436-4.649 0-3.785 2.75-7.262 7.929-7.262 4.163 0 7.398 2.967 7.398 6.931 0 4.136-2.607 7.464-6.227 7.464-1.216 0-2.359-.631-2.75-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24 12.017 24c6.624 0 11.99-5.367 11.99-11.988C24.007 5.367 18.641 0 12.017 0z" />
+                            </svg></a></div>
+                </div>
+            </div>
+            <div class="border-t border-white/5 pt-6 text-center">
+                <p class="text-white/20 text-[10px] tracking-wider">&copy; 2026 Maëlle Jewelry. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('active'); observer.unobserve(e.target); } });
+            }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+            document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FORMA — Contemporary Art Gallery</title>
+    <meta name="description"
+        content="FORMA — A contemporary art gallery showcasing emerging and established artists. Current exhibitions, available works, and visiting information." />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=DM+Mono:wght@300;400;500&display=swap"
+        rel="stylesheet" />
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Space Grotesk"', 'system-ui', 'sans-serif'],
+                        mono: ['"DM Mono"', 'monospace'],
+                    },
+                    colors: {
+                        noir: '#0A0A0A',
+                        graphite: '#1A1A1A',
+                        charcoal: '#2A2A2A',
+                        smoke: '#6B6B6B',
+                        silver: '#A3A3A3',
+                        mist: '#E5E5E5',
+                        cloud: '#F5F5F5',
+                        snow: '#FAFAFA',
+                        white: '#FFFFFF',
+                        accent: '#DC2626',
+                    },
+                },
+            },
+        };
+    </script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Space Grotesk', system-ui, sans-serif;
+            background: #FAFAFA;
+            color: #0A0A0A;
+            overflow-x: hidden;
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity .7s ease, transform .7s ease;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .card {
+            transition: transform .35s, box-shadow .35s;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 16px 48px rgba(0, 0, 0, .06);
+        }
+
+        .card img {
+            transition: transform .6s ease;
+        }
+
+        .card:hover img {
+            transform: scale(1.04);
+        }
+
+        ::-webkit-scrollbar {
+            width: 3px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #FAFAFA;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #0A0A0A;
+            border-radius: 2px;
+        }
+    </style>
+</head>
+
+<body x-data="{ mobileMenu: false }" class="bg-snow text-noir">
+
+    <!-- ====== NAVIGATION ====== -->
+    <header class="fixed top-0 left-0 w-full z-50 bg-snow/90 backdrop-blur-md border-b border-mist/50">
+        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16 md:h-20">
+                <a href="#home" class="font-mono text-xl tracking-widest uppercase font-medium">FORMA</a>
+                <ul class="hidden md:flex items-center space-x-8 text-sm text-smoke font-medium tracking-wide">
+                    <li><a href="#artists" class="hover:text-noir transition">Artists</a></li>
+                    <li><a href="#exhibitions" class="hover:text-noir transition">Exhibitions</a></li>
+                    <li><a href="#works" class="hover:text-noir transition">Available Works</a></li>
+                    <li><a href="#about" class="hover:text-noir transition">About</a></li>
+                    <li><a href="#visit" class="hover:text-noir transition">Visit</a></li>
+                </ul>
+                <button @click="mobileMenu=!mobileMenu" class="md:hidden p-2" aria-label="Menu">
+                    <svg x-show="!mobileMenu" class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.5"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 9h16.5m-16.5 6.75h16.5" />
+                    </svg>
+                    <svg x-show="mobileMenu" x-cloak class="w-6 h-6" fill="none" stroke="currentColor"
+                        stroke-width="1.5" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+            <div x-show="mobileMenu" x-cloak x-transition class="md:hidden pb-6 border-t border-mist/50">
+                <ul class="flex flex-col space-y-4 pt-4 text-sm font-medium tracking-wide">
+                    <li><a @click="mobileMenu=false" href="#artists"
+                            class="block py-1 text-smoke hover:text-noir">Artists</a></li>
+                    <li><a @click="mobileMenu=false" href="#exhibitions"
+                            class="block py-1 text-smoke hover:text-noir">Exhibitions</a></li>
+                    <li><a @click="mobileMenu=false" href="#works"
+                            class="block py-1 text-smoke hover:text-noir">Available Works</a></li>
+                    <li><a @click="mobileMenu=false" href="#about"
+                            class="block py-1 text-smoke hover:text-noir">About</a></li>
+                    <li><a @click="mobileMenu=false" href="#visit" class="block py-1 text-noir font-semibold">Visit</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <!-- ====== HERO ====== -->
+    <section id="home" class="relative min-h-screen flex items-end overflow-hidden bg-noir">
+        <div class="absolute inset-0"><img
+                src="https://images.unsplash.com/photo-1531058020387-3be344556be6?w=1920&q=80&auto=format&fit=crop"
+                alt="Gallery exhibition space" class="w-full h-full object-cover opacity-50" /></div>
+        <div class="absolute inset-0 bg-gradient-to-t from-noir via-noir/40 to-transparent"></div>
+        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full pb-20 pt-32">
+            <p class="font-mono text-white/40 text-xs tracking-[0.4em] uppercase mb-4">Current Exhibition</p>
+            <h1 class="text-5xl sm:text-6xl lg:text-7xl font-bold leading-[1.05] text-white mb-4">
+                Between Silence<br /><span class="text-silver">and Structure</span>
+            </h1>
+            <p class="text-white/50 text-base sm:text-lg max-w-md mb-6">Group exhibition featuring four artists
+                exploring the tension between minimalism and gesture. Through April 12.</p>
+            <a href="#exhibitions"
+                class="inline-flex items-center gap-2 border border-white/30 text-white text-sm tracking-wider uppercase font-medium px-6 py-3 rounded-full hover:bg-white hover:text-noir transition">View
+                Exhibition →</a>
+        </div>
+    </section>
+
+    <!-- ====== ARTISTS ====== -->
+    <section id="artists" class="py-20 md:py-28 bg-snow">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 reveal">
+                <div>
+                    <p class="font-mono text-smoke text-xs tracking-[0.3em] uppercase mb-2">Represented</p>
+                    <h2 class="text-4xl md:text-5xl font-bold">Artists</h2>
+                </div>
+                <a href="#" class="text-smoke text-sm font-medium mt-3 md:mt-0 hover:text-noir transition">View All
+                    →</a>
+            </div>
+
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="card group rounded-2xl overflow-hidden reveal">
+                    <div class="aspect-square overflow-hidden bg-cloud"><img
+                            src="https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=500&q=80&auto=format&fit=crop"
+                            alt="Abstract painting by Ava Chen" class="w-full h-full object-cover" loading="lazy" />
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-semibold">Ava Chen</h3>
+                        <p class="text-smoke text-xs mt-1">Painting, Mixed Media</p>
+                        <p class="font-mono text-[10px] text-smoke mt-1">b. 1988, Portland</p>
+                    </div>
+                </div>
+                <div class="card group rounded-2xl overflow-hidden reveal" style="transition-delay:.1s">
+                    <div class="aspect-square overflow-hidden bg-cloud"><img
+                            src="https://images.unsplash.com/photo-1547891654-e66ed7ebb968?w=500&q=80&auto=format&fit=crop"
+                            alt="Sculpture by Marcus Reed" class="w-full h-full object-cover" loading="lazy" /></div>
+                    <div class="p-4">
+                        <h3 class="font-semibold">Marcus Reed</h3>
+                        <p class="text-smoke text-xs mt-1">Sculpture, Installation</p>
+                        <p class="font-mono text-[10px] text-smoke mt-1">b. 1975, Chicago</p>
+                    </div>
+                </div>
+                <div class="card group rounded-2xl overflow-hidden reveal" style="transition-delay:.15s">
+                    <div class="aspect-square overflow-hidden bg-cloud"><img
+                            src="https://images.unsplash.com/photo-1549490349-8643362247b5?w=500&q=80&auto=format&fit=crop"
+                            alt="Photography by Yuki Tanaka" class="w-full h-full object-cover" loading="lazy" /></div>
+                    <div class="p-4">
+                        <h3 class="font-semibold">Yuki Tanaka</h3>
+                        <p class="text-smoke text-xs mt-1">Photography, Video</p>
+                        <p class="font-mono text-[10px] text-smoke mt-1">b. 1992, Tokyo</p>
+                    </div>
+                </div>
+                <div class="card group rounded-2xl overflow-hidden reveal" style="transition-delay:.2s">
+                    <div class="aspect-square overflow-hidden bg-cloud"><img
+                            src="https://images.unsplash.com/photo-1531058020387-3be344556be6?w=500&q=80&auto=format&fit=crop"
+                            alt="Textile art by Elena Vasquez" class="w-full h-full object-cover" loading="lazy" />
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-semibold">Elena Vasquez</h3>
+                        <p class="text-smoke text-xs mt-1">Textile, Drawing</p>
+                        <p class="font-mono text-[10px] text-smoke mt-1">b. 1984, Mexico City</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== EXHIBITIONS ====== -->
+    <section id="exhibitions" class="py-20 md:py-28 bg-noir text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="mb-12 reveal">
+                <p class="font-mono text-white/40 text-xs tracking-[0.3em] uppercase mb-2">On View</p>
+                <h2 class="text-4xl md:text-5xl font-bold">Exhibitions</h2>
+            </div>
+
+            <!-- Current -->
+            <div class="mb-12">
+                <p class="font-mono text-accent text-xs tracking-wider uppercase mb-5">Current</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div class="card group rounded-2xl overflow-hidden bg-graphite reveal">
+                        <div class="aspect-video overflow-hidden"><img
+                                src="https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=700&q=80&auto=format&fit=crop"
+                                alt="Between Silence and Structure" class="w-full h-full object-cover" loading="lazy" />
+                        </div>
+                        <div class="p-5">
+                            <h3 class="text-xl font-bold">Between Silence and Structure</h3>
+                            <p class="text-white/50 text-sm mt-1">Group Exhibition — Chen, Reed, Tanaka, Vasquez</p>
+                            <p class="font-mono text-white/30 text-xs mt-2">Feb 8 — Apr 12, 2026</p>
+                        </div>
+                    </div>
+                    <div class="card group rounded-2xl overflow-hidden bg-graphite reveal" style="transition-delay:.1s">
+                        <div class="aspect-video overflow-hidden"><img
+                                src="https://images.unsplash.com/photo-1547891654-e66ed7ebb968?w=700&q=80&auto=format&fit=crop"
+                                alt="Marcus Reed solo show" class="w-full h-full object-cover" loading="lazy" /></div>
+                        <div class="p-5">
+                            <h3 class="text-xl font-bold">Weight & Absence</h3>
+                            <p class="text-white/50 text-sm mt-1">Marcus Reed — Solo Exhibition, Gallery 2</p>
+                            <p class="font-mono text-white/30 text-xs mt-2">Mar 1 — May 30, 2026</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Upcoming -->
+            <div>
+                <p class="font-mono text-white/40 text-xs tracking-wider uppercase mb-5">Upcoming</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div class="card rounded-2xl bg-charcoal p-5 reveal">
+                        <h3 class="font-bold">Surface Tension</h3>
+                        <p class="text-white/50 text-sm mt-1">Ava Chen — Solo Exhibition</p>
+                        <p class="font-mono text-white/30 text-xs mt-2">Opens May 10, 2026</p>
+                    </div>
+                    <div class="card rounded-2xl bg-charcoal p-5 reveal" style="transition-delay:.1s">
+                        <h3 class="font-bold">New Perspectives 2026</h3>
+                        <p class="text-white/50 text-sm mt-1">Annual Emerging Artist Showcase</p>
+                        <p class="font-mono text-white/30 text-xs mt-2">Opens Jun 21, 2026</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== AVAILABLE WORKS ====== -->
+    <section id="works" class="py-20 md:py-28 bg-snow">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 reveal">
+                <div>
+                    <p class="font-mono text-smoke text-xs tracking-[0.3em] uppercase mb-2">Acquire</p>
+                    <h2 class="text-4xl md:text-5xl font-bold">Available Works</h2>
+                </div>
+                <a href="#" class="text-smoke text-sm font-medium mt-3 md:mt-0 hover:text-noir transition">View Full
+                    Collection →</a>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                <div class="card rounded-2xl overflow-hidden reveal">
+                    <div class="aspect-[3/4] overflow-hidden bg-cloud"><img
+                            src="https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=600&q=80&auto=format&fit=crop"
+                            alt="Untitled No. 7 by Ava Chen" class="w-full h-full object-cover" loading="lazy" /></div>
+                    <div class="p-5">
+                        <h3 class="font-semibold">Untitled No. 7</h3>
+                        <p class="text-smoke text-xs mt-1">Ava Chen — Acrylic on linen, 2025</p>
+                        <p class="text-smoke text-xs">48 × 36 in</p>
+                        <p class="font-mono text-sm font-medium mt-2">$8,500</p><a href="#"
+                            class="text-accent text-xs font-medium mt-2 inline-block hover:text-noir transition">Inquire
+                            →</a>
+                    </div>
+                </div>
+                <div class="card rounded-2xl overflow-hidden reveal" style="transition-delay:.1s">
+                    <div class="aspect-[3/4] overflow-hidden bg-cloud"><img
+                            src="https://images.unsplash.com/photo-1547891654-e66ed7ebb968?w=600&q=80&auto=format&fit=crop"
+                            alt="Form Study III by Marcus Reed" class="w-full h-full object-cover" loading="lazy" />
+                    </div>
+                    <div class="p-5">
+                        <h3 class="font-semibold">Form Study III</h3>
+                        <p class="text-smoke text-xs mt-1">Marcus Reed — Bronze, 2024</p>
+                        <p class="text-smoke text-xs">18 × 12 × 12 in</p>
+                        <p class="font-mono text-sm font-medium mt-2">$12,000</p><a href="#"
+                            class="text-accent text-xs font-medium mt-2 inline-block hover:text-noir transition">Inquire
+                            →</a>
+                    </div>
+                </div>
+                <div class="card rounded-2xl overflow-hidden reveal" style="transition-delay:.15s">
+                    <div class="aspect-[3/4] overflow-hidden bg-cloud"><img
+                            src="https://images.unsplash.com/photo-1549490349-8643362247b5?w=600&q=80&auto=format&fit=crop"
+                            alt="Drift 01 by Yuki Tanaka" class="w-full h-full object-cover" loading="lazy" /></div>
+                    <div class="p-5">
+                        <h3 class="font-semibold">Drift 01</h3>
+                        <p class="text-smoke text-xs mt-1">Yuki Tanaka — Archival pigment print, 2025</p>
+                        <p class="text-smoke text-xs">Ed. of 5 + 2 AP — 40 × 30 in</p>
+                        <p class="font-mono text-sm font-medium mt-2">$3,200</p><a href="#"
+                            class="text-accent text-xs font-medium mt-2 inline-block hover:text-noir transition">Inquire
+                            →</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== ABOUT ====== -->
+    <section id="about" class="py-20 md:py-28 bg-cloud">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div class="reveal"><img
+                        src="https://images.unsplash.com/photo-1531058020387-3be344556be6?w=800&q=80&auto=format&fit=crop"
+                        alt="Forma gallery interior" class="w-full aspect-[4/3] object-cover rounded-2xl"
+                        loading="lazy" /></div>
+                <div class="reveal" style="transition-delay:.15s">
+                    <p class="font-mono text-smoke text-xs tracking-[0.3em] uppercase mb-3">Est. 2016</p>
+                    <h2 class="text-4xl md:text-5xl font-bold mb-6">About</h2>
+                    <div class="space-y-4 text-smoke leading-relaxed">
+                        <p>FORMA is a contemporary art gallery in Portland's Pearl District, representing emerging and
+                            mid-career artists working across painting, sculpture, photography, and new media.</p>
+                        <p>Founded by curator Diana Park, the gallery presents 8–10 exhibitions per year alongside
+                            artist talks, studio visits, and an annual emerging artist showcase. We work with private
+                            collectors, institutions, and first-time buyers alike.</p>
+                    </div>
+                    <div class="grid grid-cols-3 gap-6 mt-8 text-center">
+                        <div>
+                            <p class="text-3xl font-bold">12</p>
+                            <p class="text-smoke text-xs mt-1">Artists</p>
+                        </div>
+                        <div>
+                            <p class="text-3xl font-bold">8–10</p>
+                            <p class="text-smoke text-xs mt-1">Shows/Year</p>
+                        </div>
+                        <div>
+                            <p class="text-3xl font-bold">9</p>
+                            <p class="text-smoke text-xs mt-1">Years</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== VISIT ====== -->
+    <section id="visit" class="py-20 md:py-28 bg-snow">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <div class="reveal">
+                    <p class="font-mono text-smoke text-xs tracking-[0.3em] uppercase mb-3">Plan Your Visit</p>
+                    <h2 class="text-4xl md:text-5xl font-bold mb-8">Visit</h2>
+                    <div class="space-y-5 text-sm text-smoke">
+                        <div>
+                            <h4 class="text-noir font-semibold mb-1">Address</h4>
+                            <p>915 NW Flanders St, Portland, OR 97209</p>
+                        </div>
+                        <div>
+                            <h4 class="text-noir font-semibold mb-1">Hours</h4>
+                            <p>Tuesday — Saturday, 11am — 6pm<br />Thursday until 8pm</p>
+                            <p class="text-silver text-xs mt-1">Closed Sunday & Monday</p>
+                        </div>
+                        <div>
+                            <h4 class="text-noir font-semibold mb-1">Admission</h4>
+                            <p>Free and open to the public</p>
+                        </div>
+                        <div>
+                            <h4 class="text-noir font-semibold mb-1">Contact</h4>
+                            <p>info@formagallery.com<br />(503) 555-0198</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="reveal" style="transition-delay:.15s">
+                    <form class="bg-cloud rounded-2xl p-6 md:p-8 space-y-4">
+                        <p class="font-semibold text-sm mb-2">Inquire about a work or schedule a private viewing</p>
+                        <input type="text" placeholder="Name"
+                            class="w-full px-4 py-3 bg-snow border border-mist focus:border-noir outline-none text-sm rounded-xl transition" />
+                        <input type="email" placeholder="Email"
+                            class="w-full px-4 py-3 bg-snow border border-mist focus:border-noir outline-none text-sm rounded-xl transition" />
+                        <select
+                            class="w-full px-4 py-3 bg-snow border border-mist focus:border-noir outline-none text-sm text-smoke rounded-xl transition">
+                            <option>Subject</option>
+                            <option>Artwork Inquiry</option>
+                            <option>Private Viewing</option>
+                            <option>Artist Representation</option>
+                            <option>Press / Media</option>
+                            <option>General</option>
+                        </select>
+                        <textarea rows="4" placeholder="Your message…"
+                            class="w-full px-4 py-3 bg-snow border border-mist focus:border-noir outline-none text-sm rounded-xl resize-none transition"></textarea>
+                        <button type="submit"
+                            class="w-full sm:w-auto px-10 py-3.5 bg-noir text-white text-sm tracking-wider uppercase font-medium rounded-full hover:bg-charcoal transition">Send
+                            Inquiry</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== FOOTER ====== -->
+    <footer class="bg-noir py-14">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-10">
+                <div class="col-span-2 md:col-span-1"><a href="#home"
+                        class="font-mono text-lg tracking-widest uppercase text-white">FORMA</a>
+                    <p class="text-white/40 text-sm mt-3">Contemporary art. Portland, OR.</p>
+                </div>
+                <div>
+                    <h4 class="text-white/50 text-xs tracking-wider uppercase mb-4">Gallery</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-white/40 text-sm hover:text-white transition">Artists</a></li>
+                        <li><a href="#" class="text-white/40 text-sm hover:text-white transition">Exhibitions</a></li>
+                        <li><a href="#" class="text-white/40 text-sm hover:text-white transition">Available Works</a>
+                        </li>
+                        <li><a href="#" class="text-white/40 text-sm hover:text-white transition">Art Advisory</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white/50 text-xs tracking-wider uppercase mb-4">Info</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-white/40 text-sm hover:text-white transition">About</a></li>
+                        <li><a href="#" class="text-white/40 text-sm hover:text-white transition">Press</a></li>
+                        <li><a href="#" class="text-white/40 text-sm hover:text-white transition">Careers</a></li>
+                        <li><a href="#" class="text-white/40 text-sm hover:text-white transition">Contact</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white/50 text-xs tracking-wider uppercase mb-4">Follow</h4>
+                    <div class="flex gap-3"><a href="#" aria-label="Instagram"
+                            class="text-white/40 hover:text-white transition"><svg class="w-5 h-5" fill="currentColor"
+                                viewBox="0 0 24 24">
+                                <path
+                                    d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" />
+                            </svg></a></div>
+                </div>
+            </div>
+            <div class="border-t border-white/10 pt-6 text-center">
+                <p class="text-white/30 text-xs">&copy; 2026 FORMA Gallery. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('active'); observer.unobserve(e.target); } });
+            }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+            document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+        });
+    </script>
+</body>
+
+</html>

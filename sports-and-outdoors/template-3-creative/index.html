@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>VELO — Cycling Specialist</title>
+    <meta name="description"
+        content="VELO — Premium bicycles, components, and accessories. Expert fitting, professional service, and a passionate cycling community." />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap"
+        rel="stylesheet" />
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        display: ['"Space Grotesk"', 'system-ui', 'sans-serif'],
+                        sans: ['"DM Sans"', 'system-ui', 'sans-serif'],
+                    },
+                    colors: {
+                        ink: '#0A0A0A',
+                        graphite: '#1C1C1E',
+                        charcoal: '#2C2C2E',
+                        steel: '#636366',
+                        mist: '#E5E5EA',
+                        cloud: '#F2F2F7',
+                        white: '#FFFFFF',
+                        yellow: '#FFD60A',
+                        yellowDark: '#E5C009',
+                        blue: '#007AFF',
+                        red: '#FF3B30',
+                    },
+                },
+            },
+        };
+    </script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'DM Sans', system-ui, sans-serif;
+            background: #FFFFFF;
+            color: #0A0A0A;
+            overflow-x: hidden;
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity .7s ease, transform .7s ease;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .card {
+            transition: transform .35s, box-shadow .35s;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, .06);
+        }
+
+        .card img {
+            transition: transform .5s ease;
+        }
+
+        .card:hover img {
+            transform: scale(1.04);
+        }
+
+        .btn-yellow {
+            transition: transform .25s, box-shadow .25s;
+        }
+
+        .btn-yellow:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 214, 10, .3);
+        }
+
+        ::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #FFFFFF;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #FFD60A;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+
+<body x-data="{ mobileMenu: false }" class="bg-white text-ink">
+
+    <!-- ====== NAVIGATION ====== -->
+    <header class="fixed top-0 left-0 w-full z-50 bg-white/90 backdrop-blur-md border-b border-mist/50">
+        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16 md:h-20">
+                <a href="#home" class="flex items-center gap-2">
+                    <div class="w-8 h-8 rounded-full bg-yellow flex items-center justify-center"><svg
+                            class="w-4 h-4 text-ink" fill="currentColor" viewBox="0 0 24 24">
+                            <circle cx="5.5" cy="17.5" r="3.5" fill="none" stroke="currentColor" stroke-width="2" />
+                            <circle cx="18.5" cy="17.5" r="3.5" fill="none" stroke="currentColor" stroke-width="2" />
+                            <path d="M5.5 17.5l5-10h4l4 10" fill="none" stroke="currentColor" stroke-width="2" />
+                        </svg></div>
+                    <span class="font-display text-xl font-bold tracking-tight">VELO</span>
+                </a>
+                <ul class="hidden md:flex items-center space-x-7 text-sm text-steel font-medium">
+                    <li><a href="#bikes" class="hover:text-ink transition">Bikes</a></li>
+                    <li><a href="#accessories" class="hover:text-ink transition">Accessories</a></li>
+                    <li><a href="#service" class="hover:text-ink transition">Service</a></li>
+                    <li><a href="#community" class="hover:text-ink transition">Community</a></li>
+                    <li><a href="#contact" class="hover:text-ink transition">Contact</a></li>
+                </ul>
+                <a href="#service"
+                    class="hidden md:inline-flex px-5 py-2.5 bg-yellow text-ink text-xs tracking-wider uppercase font-bold rounded-full btn-yellow">Book
+                    Service</a>
+                <button @click="mobileMenu=!mobileMenu" class="md:hidden p-2" aria-label="Menu">
+                    <svg x-show="!mobileMenu" class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.5"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 9h16.5m-16.5 6.75h16.5" />
+                    </svg>
+                    <svg x-show="mobileMenu" x-cloak class="w-6 h-6" fill="none" stroke="currentColor"
+                        stroke-width="1.5" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+            <div x-show="mobileMenu" x-cloak x-transition class="md:hidden pb-6 border-t border-mist/50">
+                <ul class="flex flex-col space-y-4 pt-4 text-sm font-medium">
+                    <li><a @click="mobileMenu=false" href="#bikes"
+                            class="block py-1 text-steel hover:text-ink">Bikes</a></li>
+                    <li><a @click="mobileMenu=false" href="#accessories"
+                            class="block py-1 text-steel hover:text-ink">Accessories</a></li>
+                    <li><a @click="mobileMenu=false" href="#service"
+                            class="block py-1 text-steel hover:text-ink">Service</a></li>
+                    <li><a @click="mobileMenu=false" href="#community"
+                            class="block py-1 text-steel hover:text-ink">Community</a></li>
+                    <li><a @click="mobileMenu=false" href="#contact" class="block py-1 text-ink font-bold">Contact</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <!-- ====== HERO ====== -->
+    <section id="home" class="relative min-h-screen flex items-center overflow-hidden bg-cloud">
+        <div class="absolute top-1/4 right-0 w-[500px] h-[500px] bg-yellow/10 rounded-full blur-3xl"></div>
+        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-32">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+                <div>
+                    <span
+                        class="inline-flex items-center gap-1.5 px-3 py-1 bg-yellow/20 text-ink text-xs font-bold tracking-wider uppercase rounded-full mb-5">🚴
+                        2026 Lineup Now In Stock</span>
+                    <h1 class="font-display text-5xl sm:text-6xl lg:text-7xl font-bold leading-[1.05] mb-6">
+                        Ride <span
+                            class="text-transparent bg-clip-text bg-gradient-to-r from-yellow to-yellowDark">Further.</span><br />Ride
+                        Faster.
+                    </h1>
+                    <p class="text-steel text-base sm:text-lg leading-relaxed mb-8 max-w-md">Road, gravel, mountain, and
+                        commuter bikes — hand-built, expert-fitted, and backed by our lifetime frame warranty.</p>
+                    <div class="flex flex-col sm:flex-row gap-3">
+                        <a href="#bikes"
+                            class="btn-yellow inline-flex items-center justify-center px-8 py-3.5 bg-yellow text-ink text-sm tracking-wider uppercase font-bold rounded-full">Shop
+                            Bikes</a>
+                        <a href="#service"
+                            class="btn-yellow inline-flex items-center justify-center px-8 py-3.5 border border-mist text-ink text-sm tracking-wider uppercase font-medium rounded-full hover:bg-ink hover:text-white transition">Book
+                            a Fitting</a>
+                    </div>
+                </div>
+                <div class="relative flex justify-center">
+                    <img src="https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=700&q=80&auto=format&fit=crop"
+                        alt="Premium road bicycle" class="w-full max-w-lg" />
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== BIKES ====== -->
+    <section id="bikes" class="py-20 md:py-28 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-14 reveal">
+                <p class="text-blue text-xs tracking-[0.3em] uppercase font-semibold mb-3">Collection</p>
+                <h2 class="font-display text-4xl md:text-5xl font-bold">Our Bikes</h2>
+                <p class="text-steel mt-4 max-w-lg mx-auto">Every frame is built for performance, every ride tested by
+                    our team. Carbon, alloy, and steel options across all disciplines.</p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="card bg-cloud rounded-2xl overflow-hidden reveal">
+                    <div class="aspect-[4/3] overflow-hidden p-6 flex items-center justify-center bg-mist/30"><img
+                            src="https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=500&q=80&auto=format&fit=crop"
+                            alt="Road bike" class="w-full h-full object-contain" loading="lazy" /></div>
+                    <div class="p-5">
+                        <span class="text-blue text-[10px] tracking-wider uppercase font-bold">Road</span>
+                        <h3 class="font-display text-xl font-bold mt-1">VELO Aero SL</h3>
+                        <p class="text-steel text-sm mt-1">Full carbon • Shimano Ultegra Di2 • 7.2 kg</p>
+                        <div class="flex items-center justify-between mt-4">
+                            <span class="font-display text-2xl font-bold">$4,299</span>
+                            <a href="#"
+                                class="text-xs bg-ink text-white px-4 py-2 rounded-full font-semibold hover:bg-graphite transition">View
+                                Details</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="card bg-cloud rounded-2xl overflow-hidden reveal" style="transition-delay:.1s">
+                    <div class="aspect-[4/3] overflow-hidden p-6 flex items-center justify-center bg-mist/30"><img
+                            src="https://images.unsplash.com/photo-1571068316344-75bc76f77890?w=500&q=80&auto=format&fit=crop"
+                            alt="Mountain bike" class="w-full h-full object-contain" loading="lazy" /></div>
+                    <div class="p-5">
+                        <span class="text-red text-[10px] tracking-wider uppercase font-bold">Mountain</span>
+                        <h3 class="font-display text-xl font-bold mt-1">VELO Trail 150</h3>
+                        <p class="text-steel text-sm mt-1">29er • 150mm travel • SRAM GX Eagle</p>
+                        <div class="flex items-center justify-between mt-4">
+                            <span class="font-display text-2xl font-bold">$3,499</span>
+                            <a href="#"
+                                class="text-xs bg-ink text-white px-4 py-2 rounded-full font-semibold hover:bg-graphite transition">View
+                                Details</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="card bg-cloud rounded-2xl overflow-hidden reveal" style="transition-delay:.15s">
+                    <div class="aspect-[4/3] overflow-hidden p-6 flex items-center justify-center bg-mist/30"><img
+                            src="https://images.unsplash.com/photo-1532298229144-0ec0c57515c7?w=500&q=80&auto=format&fit=crop"
+                            alt="Gravel bike" class="w-full h-full object-contain" loading="lazy" /></div>
+                    <div class="p-5">
+                        <span
+                            class="text-yellow text-[10px] tracking-wider uppercase font-bold bg-yellow/10 px-1">Gravel</span>
+                        <h3 class="font-display text-xl font-bold mt-1">VELO Gravel X</h3>
+                        <p class="text-steel text-sm mt-1">Steel frame • GRX 800 • 40mm clearance</p>
+                        <div class="flex items-center justify-between mt-4">
+                            <span class="font-display text-2xl font-bold">$2,799</span>
+                            <a href="#"
+                                class="text-xs bg-ink text-white px-4 py-2 rounded-full font-semibold hover:bg-graphite transition">View
+                                Details</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bike Specs -->
+            <div class="mt-16 reveal">
+                <h3 class="font-display text-2xl font-bold text-center mb-6">Quick Compare</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full min-w-[600px] text-sm">
+                        <thead>
+                            <tr class="border-b border-mist">
+                                <th class="text-left py-3 text-steel font-medium">Spec</th>
+                                <th class="py-3 text-blue font-bold">Aero SL</th>
+                                <th class="py-3 text-red font-bold">Trail 150</th>
+                                <th class="py-3 font-bold">Gravel X</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-steel">
+                            <tr class="border-b border-mist/50">
+                                <td class="py-2.5">Frame</td>
+                                <td class="py-2.5 text-center text-ink">Full Carbon</td>
+                                <td class="py-2.5 text-center text-ink">Carbon Front / Alloy</td>
+                                <td class="py-2.5 text-center text-ink">CrMo Steel</td>
+                            </tr>
+                            <tr class="border-b border-mist/50">
+                                <td class="py-2.5">Weight</td>
+                                <td class="py-2.5 text-center">7.2 kg</td>
+                                <td class="py-2.5 text-center">13.1 kg</td>
+                                <td class="py-2.5 text-center">9.8 kg</td>
+                            </tr>
+                            <tr class="border-b border-mist/50">
+                                <td class="py-2.5">Groupset</td>
+                                <td class="py-2.5 text-center">Ultegra Di2</td>
+                                <td class="py-2.5 text-center">SRAM GX Eagle</td>
+                                <td class="py-2.5 text-center">GRX 800</td>
+                            </tr>
+                            <tr>
+                                <td class="py-2.5">Warranty</td>
+                                <td class="py-2.5 text-center text-ink font-medium">Lifetime</td>
+                                <td class="py-2.5 text-center text-ink font-medium">Lifetime</td>
+                                <td class="py-2.5 text-center text-ink font-medium">Lifetime</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== ACCESSORIES ====== -->
+    <section id="accessories" class="py-20 md:py-28 bg-cloud">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 reveal">
+                <div>
+                    <p class="text-blue text-xs tracking-[0.3em] uppercase font-semibold mb-2">Essentials</p>
+                    <h2 class="font-display text-4xl md:text-5xl font-bold">Accessories</h2>
+                </div>
+                <a href="#" class="text-blue text-sm font-medium mt-3 md:mt-0 hover:text-ink transition">View All →</a>
+            </div>
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="card bg-white rounded-xl overflow-hidden reveal">
+                    <div class="aspect-square bg-mist/20 overflow-hidden p-4 flex items-center justify-center"><img
+                            src="https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=300&q=80&auto=format&fit=crop"
+                            alt="Cycling helmet" class="w-full h-full object-contain" loading="lazy" /></div>
+                    <div class="p-3">
+                        <h4 class="font-medium text-sm">VELO Aero Helmet</h4>
+                        <p class="text-steel text-xs mt-0.5">MIPS • 210g</p>
+                        <p class="font-display font-bold mt-1">$189</p>
+                    </div>
+                </div>
+                <div class="card bg-white rounded-xl overflow-hidden reveal" style="transition-delay:.1s">
+                    <div class="aspect-square bg-mist/20 overflow-hidden p-4 flex items-center justify-center"><img
+                            src="https://images.unsplash.com/photo-1571068316344-75bc76f77890?w=300&q=80&auto=format&fit=crop"
+                            alt="Cycling shoes" class="w-full h-full object-contain" loading="lazy" /></div>
+                    <div class="p-3">
+                        <h4 class="font-medium text-sm">Carbon Road Shoes</h4>
+                        <p class="text-steel text-xs mt-0.5">BOA L6 • Stiffness 12</p>
+                        <p class="font-display font-bold mt-1">$249</p>
+                    </div>
+                </div>
+                <div class="card bg-white rounded-xl overflow-hidden reveal" style="transition-delay:.15s">
+                    <div class="aspect-square bg-mist/20 overflow-hidden p-4 flex items-center justify-center"><img
+                            src="https://images.unsplash.com/photo-1532298229144-0ec0c57515c7?w=300&q=80&auto=format&fit=crop"
+                            alt="Bike lights" class="w-full h-full object-contain" loading="lazy" /></div>
+                    <div class="p-3">
+                        <h4 class="font-medium text-sm">LumenPro 1200 Light</h4>
+                        <p class="text-steel text-xs mt-0.5">1200lm • USB-C • 12hr</p>
+                        <p class="font-display font-bold mt-1">$79</p>
+                    </div>
+                </div>
+                <div class="card bg-white rounded-xl overflow-hidden reveal" style="transition-delay:.2s">
+                    <div class="aspect-square bg-mist/20 overflow-hidden p-4 flex items-center justify-center"><img
+                            src="https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=300&q=80&auto=format&fit=crop"
+                            alt="Cycling kit" class="w-full h-full object-contain" loading="lazy" /></div>
+                    <div class="p-3">
+                        <h4 class="font-medium text-sm">VELO Team Jersey</h4>
+                        <p class="text-steel text-xs mt-0.5">Italian fabric • 3-pocket</p>
+                        <p class="font-display font-bold mt-1">$129</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== SERVICE ====== -->
+    <section id="service" class="py-20 md:py-28 bg-ink text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div class="reveal">
+                    <p class="text-yellow text-xs tracking-[0.3em] uppercase font-semibold mb-3">Workshop</p>
+                    <h2 class="font-display text-4xl md:text-5xl font-bold mb-6">Expert <span
+                            class="text-yellow">Service</span></h2>
+                    <p class="text-white/60 leading-relaxed mb-8">Our certified mechanics handle everything from basic
+                        tune-ups to full custom builds. Average turnaround: 24 hours. All work guaranteed.</p>
+
+                    <div class="space-y-4">
+                        <div class="flex items-start gap-4 bg-graphite rounded-xl p-4">
+                            <div
+                                class="w-10 h-10 rounded-lg bg-yellow/10 flex items-center justify-center flex-shrink-0 text-yellow text-lg">
+                                🔧</div>
+                            <div>
+                                <h4 class="font-semibold">Basic Tune-Up</h4>
+                                <p class="text-white/50 text-xs mt-0.5">Brakes, gears, chain, tire pressure, safety
+                                    check</p>
+                                <p class="text-yellow font-bold text-sm mt-1">$75</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4 bg-graphite rounded-xl p-4">
+                            <div
+                                class="w-10 h-10 rounded-lg bg-yellow/10 flex items-center justify-center flex-shrink-0 text-yellow text-lg">
+                                ⚙️</div>
+                            <div>
+                                <h4 class="font-semibold">Full Overhaul</h4>
+                                <p class="text-white/50 text-xs mt-0.5">Complete strip-down, bearing service, cable
+                                    replacement</p>
+                                <p class="text-yellow font-bold text-sm mt-1">$250</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4 bg-graphite rounded-xl p-4">
+                            <div
+                                class="w-10 h-10 rounded-lg bg-yellow/10 flex items-center justify-center flex-shrink-0 text-yellow text-lg">
+                                📐</div>
+                            <div>
+                                <h4 class="font-semibold">Professional Bike Fitting</h4>
+                                <p class="text-white/50 text-xs mt-0.5">Retül motion capture, saddle pressure mapping,
+                                    cleat alignment</p>
+                                <p class="text-yellow font-bold text-sm mt-1">$199</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="reveal" style="transition-delay:.15s">
+                    <form class="bg-graphite rounded-2xl p-6 md:p-8 space-y-5">
+                        <h3 class="font-display text-xl font-bold">Book a Service</h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <input type="text" placeholder="Name"
+                                class="w-full px-4 py-3 bg-charcoal border border-charcoal focus:border-yellow outline-none text-sm text-white placeholder-steel rounded-xl transition" />
+                            <input type="email" placeholder="Email"
+                                class="w-full px-4 py-3 bg-charcoal border border-charcoal focus:border-yellow outline-none text-sm text-white placeholder-steel rounded-xl transition" />
+                        </div>
+                        <select
+                            class="w-full px-4 py-3 bg-charcoal border border-charcoal focus:border-yellow outline-none text-sm text-steel rounded-xl transition">
+                            <option>Select Service</option>
+                            <option>Basic Tune-Up — $75</option>
+                            <option>Full Overhaul — $250</option>
+                            <option>Bike Fitting — $199</option>
+                            <option>Custom Build Consultation</option>
+                            <option>Other</option>
+                        </select>
+                        <input type="text" placeholder="Bike make & model"
+                            class="w-full px-4 py-3 bg-charcoal border border-charcoal focus:border-yellow outline-none text-sm text-white placeholder-steel rounded-xl transition" />
+                        <textarea rows="3" placeholder="Additional notes…"
+                            class="w-full px-4 py-3 bg-charcoal border border-charcoal focus:border-yellow outline-none text-sm text-white placeholder-steel rounded-xl resize-none transition"></textarea>
+                        <button type="submit"
+                            class="btn-yellow w-full sm:w-auto px-10 py-3.5 bg-yellow text-ink text-sm tracking-wider uppercase font-bold rounded-full">Book
+                            Now</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== COMMUNITY ====== -->
+    <section id="community" class="py-20 md:py-28 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-10 reveal">
+                <p class="text-blue text-xs tracking-[0.3em] uppercase font-semibold mb-3">Ride Together</p>
+                <h2 class="font-display text-4xl md:text-5xl font-bold">Community</h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="card bg-cloud rounded-2xl p-5 reveal">
+                    <div class="flex items-center gap-3 mb-3">
+                        <div class="w-10 h-10 rounded-full bg-yellow flex items-center justify-center text-ink text-lg">
+                            🚴</div>
+                        <div>
+                            <h4 class="font-semibold">Saturday Group Ride</h4>
+                            <p class="text-steel text-xs">Every Saturday • 7:30 AM</p>
+                        </div>
+                    </div>
+                    <p class="text-steel text-sm">40-mile road loop. B-pace (18–20 mph avg). All levels welcome —
+                        no-drop policy. Coffee stop at mile 25.</p>
+                    <div class="mt-3 flex items-center gap-2 text-xs text-steel"><span
+                            class="bg-mist px-2 py-0.5 rounded">Road</span><span class="bg-mist px-2 py-0.5 rounded">40
+                            mi</span><span class="bg-mist px-2 py-0.5 rounded">B-pace</span></div>
+                </div>
+                <div class="card bg-cloud rounded-2xl p-5 reveal" style="transition-delay:.1s">
+                    <div class="flex items-center gap-3 mb-3">
+                        <div class="w-10 h-10 rounded-full bg-red/10 flex items-center justify-center text-red text-lg">
+                            🏔️</div>
+                        <div>
+                            <h4 class="font-semibold">MTB Trail Night</h4>
+                            <p class="text-steel text-xs">First Wednesday • 6:00 PM</p>
+                        </div>
+                    </div>
+                    <p class="text-steel text-sm">Night ride through Forest Park singletrack. Lights required (we rent
+                        loaners). Post-ride tacos at the shop.</p>
+                    <div class="mt-3 flex items-center gap-2 text-xs text-steel"><span
+                            class="bg-mist px-2 py-0.5 rounded">MTB</span><span class="bg-mist px-2 py-0.5 rounded">12
+                            mi</span><span class="bg-mist px-2 py-0.5 rounded">Intermediate</span></div>
+                </div>
+                <div class="card bg-cloud rounded-2xl p-5 reveal" style="transition-delay:.15s">
+                    <div class="flex items-center gap-3 mb-3">
+                        <div
+                            class="w-10 h-10 rounded-full bg-blue/10 flex items-center justify-center text-blue text-lg">
+                            🛠️</div>
+                        <div>
+                            <h4 class="font-semibold">Wrench Night</h4>
+                            <p class="text-steel text-xs">2nd Thursday • 6:30 PM</p>
+                        </div>
+                    </div>
+                    <p class="text-steel text-sm">Free open-shop night. Bring your bike, use our tools, learn from our
+                        mechanics. All skill levels.</p>
+                    <div class="mt-3 flex items-center gap-2 text-xs text-steel"><span
+                            class="bg-mist px-2 py-0.5 rounded">Workshop</span><span
+                            class="bg-mist px-2 py-0.5 rounded">Free</span><span class="bg-mist px-2 py-0.5 rounded">All
+                            Levels</span></div>
+                </div>
+            </div>
+
+            <!-- Community Stats -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-12 reveal">
+                <div class="bg-cloud rounded-xl p-5 text-center">
+                    <p class="font-display text-3xl font-bold text-blue">1,200+</p>
+                    <p class="text-steel text-xs mt-1">Members</p>
+                </div>
+                <div class="bg-cloud rounded-xl p-5 text-center">
+                    <p class="font-display text-3xl font-bold text-red">180+</p>
+                    <p class="text-steel text-xs mt-1">Weekly Riders</p>
+                </div>
+                <div class="bg-cloud rounded-xl p-5 text-center">
+                    <p class="font-display text-3xl font-bold text-yellow">52</p>
+                    <p class="text-steel text-xs mt-1">Group Rides/Year</p>
+                </div>
+                <div class="bg-cloud rounded-xl p-5 text-center">
+                    <p class="font-display text-3xl font-bold text-ink">4.9★</p>
+                    <p class="text-steel text-xs mt-1">Google Rating</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== CONTACT ====== -->
+    <section id="contact" class="py-20 md:py-28 bg-cloud">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <div class="reveal">
+                    <p class="text-blue text-xs tracking-[0.3em] uppercase font-semibold mb-3">Visit Us</p>
+                    <h2 class="font-display text-4xl md:text-5xl font-bold mb-6">Contact</h2>
+                    <div class="space-y-4 text-sm text-steel">
+                        <div class="flex items-center gap-3"><svg class="w-5 h-5 text-blue" fill="none"
+                                stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
+                            </svg><span>3421 SE Hawthorne Blvd, Portland, OR 97214</span></div>
+                        <div class="flex items-center gap-3"><svg class="w-5 h-5 text-blue" fill="none"
+                                stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z" />
+                            </svg><span>(503) 555-0347</span></div>
+                        <div class="flex items-center gap-3"><svg class="w-5 h-5 text-blue" fill="none"
+                                stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+                            </svg><span>ride@velocycling.com</span></div>
+                    </div>
+                    <div class="mt-6 text-sm text-steel">
+                        <p><strong>Shop Hours:</strong> Mon–Fri 10am–7pm, Sat 9am–6pm, Sun 10am–5pm</p>
+                        <p class="mt-1"><strong>Workshop:</strong> Drop-offs 10am–5pm daily</p>
+                    </div>
+                </div>
+                <div class="reveal" style="transition-delay:.15s">
+                    <form class="bg-white border border-mist/50 rounded-2xl p-6 md:p-8 space-y-4 shadow-sm">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <input type="text" placeholder="Name"
+                                class="w-full px-4 py-3 bg-cloud border border-mist focus:border-blue outline-none text-sm rounded-xl transition" />
+                            <input type="email" placeholder="Email"
+                                class="w-full px-4 py-3 bg-cloud border border-mist focus:border-blue outline-none text-sm rounded-xl transition" />
+                        </div>
+                        <textarea rows="4" placeholder="Your message…"
+                            class="w-full px-4 py-3 bg-cloud border border-mist focus:border-blue outline-none text-sm rounded-xl resize-none transition"></textarea>
+                        <button type="submit"
+                            class="btn-yellow w-full sm:w-auto px-10 py-3.5 bg-yellow text-ink text-sm tracking-wider uppercase font-bold rounded-full">Send</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== FOOTER ====== -->
+    <footer class="bg-ink py-14">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-10">
+                <div class="col-span-2 md:col-span-1"><a href="#home" class="flex items-center gap-2">
+                        <div class="w-7 h-7 rounded-full bg-yellow flex items-center justify-center"><svg
+                                class="w-3.5 h-3.5 text-ink" fill="currentColor" viewBox="0 0 24 24">
+                                <circle cx="5.5" cy="17.5" r="3.5" fill="none" stroke="currentColor" stroke-width="2" />
+                                <circle cx="18.5" cy="17.5" r="3.5" fill="none" stroke="currentColor"
+                                    stroke-width="2" />
+                                <path d="M5.5 17.5l5-10h4l4 10" fill="none" stroke="currentColor" stroke-width="2" />
+                            </svg></div><span class="text-white font-display font-bold text-lg">VELO</span>
+                    </a>
+                    <p class="text-white/40 text-sm mt-3">Cycling specialist. Portland, OR.</p>
+                </div>
+                <div>
+                    <h4 class="text-white/50 text-xs tracking-wider uppercase mb-4">Bikes</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-white/40 text-sm hover:text-yellow transition">Road</a></li>
+                        <li><a href="#" class="text-white/40 text-sm hover:text-yellow transition">Mountain</a></li>
+                        <li><a href="#" class="text-white/40 text-sm hover:text-yellow transition">Gravel</a></li>
+                        <li><a href="#" class="text-white/40 text-sm hover:text-yellow transition">Commuter</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white/50 text-xs tracking-wider uppercase mb-4">Services</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-white/40 text-sm hover:text-yellow transition">Tune-Up</a></li>
+                        <li><a href="#" class="text-white/40 text-sm hover:text-yellow transition">Overhaul</a></li>
+                        <li><a href="#" class="text-white/40 text-sm hover:text-yellow transition">Fitting</a></li>
+                        <li><a href="#" class="text-white/40 text-sm hover:text-yellow transition">Custom Build</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white/50 text-xs tracking-wider uppercase mb-4">Community</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-white/40 text-sm hover:text-yellow transition">Group Rides</a></li>
+                        <li><a href="#" class="text-white/40 text-sm hover:text-yellow transition">Events</a></li>
+                        <li><a href="#" class="text-white/40 text-sm hover:text-yellow transition">Strava Club</a></li>
+                        <li><a href="#" class="text-white/40 text-sm hover:text-yellow transition">Blog</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-white/10 pt-6 text-center">
+                <p class="text-white/30 text-xs">&copy; 2026 VELO Cycling. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('active'); observer.unobserve(e.target); } });
+            }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+            document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+        });
+    </script>
+</body>
+
+</html>
